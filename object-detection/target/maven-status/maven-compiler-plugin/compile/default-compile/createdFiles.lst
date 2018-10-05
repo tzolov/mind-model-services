@@ -1,0 +1,15 @@
+io/mindmodel/services/object/detection/ObjectDetectionService.class
+io/mindmodel/services/object/detection/ObjectDetectionInputConverter.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass$StringIntLabelMapOrBuilder.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass$StringIntLabelMap.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass$StringIntLabelMapItem$Builder.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass$StringIntLabelMap$1.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass$StringIntLabelMapItem.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass$StringIntLabelMapItemOrBuilder.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass$StringIntLabelMapItem$1.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass$StringIntLabelMap$Builder.class
+io/mindmodel/services/object/detection/ObjectDetection.class
+io/mindmodel/services/object/detection/StringIntLabelMapOuterClass$1.class
+io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.class
+io/mindmodel/services/object/detection/ObjectDetectionOutputConverter.class

@@ -1,0 +1,151 @@
+//tag::ref-doc[]
+= Object Detection & Instance Segmentation Service for Java
+
+The Object Detection library provides out-of-the-box support for the https://github.com/tensorflow/models/blob/master/research/object_detection/README.md[TensorFlow Object Detection API].
+It allows for real-time localization and identification of multiple objects in a single image or image stream.
+The Object Detection processor uses one of the pre-trained https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[object detection] models
+and corresponding https://github.com/tensorflow/models/tree/master/research/object_detection/data[object labels].
+
+All pre-trained https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[detection_model_zoo.md] models are supported.
+You can use the following URI notation to instruct the `ObjectDetectionService` download any of the models directly from the page.
+For this just use `<zoo model tar.gz url>#<name of the frozen model file name>` URI. To speedup the bootstrap performance you may consider
+downloading the models locally and use the `file:/<path to my model>` URI schema instead!
+
+The object category labels for the pre-trained models are available at: https://github.com/tensorflow/models/tree/master/research/object_detection/data[object_detection/data]
+Use the labels applicable for the model. For performance reasons you may consider to download the labels files locally.
+
+The `ObjectDetectionService` takes as input an image or batch of images and outputs list of file://.src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java[ObjectDetection]
+instances representing the detected objects.
+
+With some pre-trained models, the `ObjectDetectionService` can perform object detection as well instance segmentation.
+
+Furthermore the `JsonMapperFunction` can be used to covert the `List<ObjectDetection>` in JSON representation:
+
+```json
+[
+  {"name":"person","confidence":0.9988778,"x1":0.16026746,"y1":0.77476984,"x2":0.20187037,"y2":0.9463669,"cid":1},
+  {"name":"kite","confidence":0.9988236,"x1":0.43766645,"y1":0.08992515,"x2":0.49562767,"y2":0.16976416,"cid":38},
+  {"name":"person","confidence":0.9973546,"x1":0.08468014,"y1":0.68195003,"x2":0.12139505,"y2":0.84821695,"cid":1},
+  {"name":"kite","confidence":0.9886335,"x1":0.2067564,"y1":0.26368475,"x2":0.22546713,"y2":0.31434113,"cid":38}]
+  ...
+]
+```
+
+The `ObjectDetectionAugmenter` allow to draw the object metadata on top of the original image.
+
+== Build
+
+```
+$ ./mvnw clean install
+```
+
+== Usage
+
+Add the `object-detection` dependency to your pom:
+
+```xml
+    <parent>
+        <groupId>io.mindmodel.services</groupId>
+        <artifactId>object-detection</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+```
+Use the latest version available
+
+==== Object Detection Example
+
+Following snipped show how to use `ObjectDetectionService` to detect objects in input images, how to use the
+`JsonMapperFunction` to convert the result into JSON text and how to use the `ObjectDetectionAugmenter` to augment the
+image with the detected objects.
+
+It uses the most accurate but slowest pre-trained model `faster_rcnn_nas_coco_2018_01_28.tar.gz#frozen_inference_graph.pb`.
+For much faster but less accurate model you can consider the `ssd_mobilenet_v1_ppn_coco`, e.g. use this URI:
+`http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_ppn_shared_box_predictor_300x300_coco14_sync_2018_07_03.tar.gz#frozen_inference_graph.pb`
+
+The complete list of available models is here: https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[detection_model_zoo.md]
+
+Also be aware that the first execution of the example will attempt to download the model (few hundreds megabytes) form
+internet and cache it locally (e.g. `CACHE_TF_MODEL = true`) . The consecutive runs will use the local cached copy.
+
+Alternatively you can pre-download and decompress the desired model locally and use it with the `file://<path to my local copy` URI.
+
+```java
+    ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+    Resource model = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2018_01_28.tar.gz#frozen_inference_graph.pb");
+
+    Resource labels = resourceLoader.getResource("https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt");
+
+    boolean CACHE_TF_MODEL = true;
+
+    boolean NO_INSTANCE_SEGMENTATION = false;
+
+    // Only object with confidence above the threshold are returned
+    float CONFIDENCE_THRESHOLD = 0.4f;
+
+    ObjectDetectionService detectionService =
+            new ObjectDetectionService(model, labels, CONFIDENCE_THRESHOLD, NO_INSTANCE_SEGMENTATION, CACHE_TF_MODEL);
+
+    String inputImageUri = "classpath:/images/object-detection.jpg";
+    try (InputStream is = resourceLoader.getResource(inputImageUri).getInputStream()) {
+
+        byte[] image = StreamUtils.copyToByteArray(is);
+
+        List<ObjectDetection> detectedObjects = detectionService.detect(image);
+
+        String jsonObjectDetections = new JsonMapperFunction().apply(detectedObjects);
+        System.out.println(jsonObjectDetections);
+
+        byte[] annotatedImage = new ObjectDetectionImageAugmenter(NO_INSTANCE_SEGMENTATION).apply(image, detectedObjects);
+        IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/object-detection-augmented.jpg"));
+    }
+```
+
+The augmented image looks like this:
+
+image:./src/test/resources/doc/object-detection-augmented.jpg[alt=Object Detection, width=640,height=480]
+
+==== Instance Segmentation Example
+
+Next snipped show part of the file://./src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java[ExampleInstanceSegmentation.java]
+shows how to use the `ObjectDetectionService` for `Instance Segmentation`. It requires a `Mask`
+capable pre-trained model to be used and setting the `NO_INSTANCE_SEGMENTATION = true` flag to true.
+
+```java
+    ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+    // Uses one of the 4 MASK pre-trained models
+    Resource model = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz#frozen_inference_graph.pb");
+    Resource labels = resourceLoader.getResource("https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt");
+
+    boolean CACHE_TF_MODEL = true;
+
+    // For the pre-trained models with mask you can set the INSTANCE_SEGMENTATION to enable object instance segmentation as well
+    boolean INSTANCE_SEGMENTATION = true;
+
+    // Only object with confidence above the threshold are returned
+    float CONFIDENCE_THRESHOLD = 0.4f;
+
+    ObjectDetectionService detectionService =
+            new ObjectDetectionService(model, labels, CONFIDENCE_THRESHOLD, INSTANCE_SEGMENTATION, CACHE_TF_MODEL);
+
+    String inputImageUri = "classpath:/images/object-detection.jpg";
+    try (InputStream is = resourceLoader.getResource(inputImageUri).getInputStream()) {
+
+        byte[] image = StreamUtils.copyToByteArray(is);
+
+        List<ObjectDetection> detectedObjects = detectionService.detect(image);
+
+        String jsonObjectDetections = new JsonMapperFunction().apply(detectedObjects);
+        System.out.println(jsonObjectDetections);
+
+        byte[] annotatedImage = new ObjectDetectionImageAugmenter(INSTANCE_SEGMENTATION).apply(image, detectedObjects);
+        IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/object-detection-segmentation-augmented.jpg"));
+    }
+```
+
+The The augmented image with the segment masks looks like this:
+
+image:./src/test/resources/doc/object-detection-segmentation-augmented.jpg[alt=Object Detection, width=640,height=480]
+
+Find the file://./src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java[ExampleInstanceSegmentation.java]

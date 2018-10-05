@@ -1,0 +1,95 @@
+//tag::ref-doc[]
+= Semantic Segmentation (Java 2D/Graphics 2D) Service
+
+Java, real-time Semantic Image Segmentation with Tensorflow. This implementation uses
+the state-of-art deep learning, Tensorflow model: https://github.com/tensorflow/models/tree/master/research/deeplab[DeepLab].
+
+> Semantic Segmentation is the process of associating each pixel of an image with a class label, (such as flower, person, road, sky, ocean, or car).
+
+The `semantic segmentation` produces class-aware masks, unlike the `instance segmentation` produces instance-aware region masks.
+For `instance segmentation` check the https://github.com/spring-cloud-stream-app-starters/tensorflow/tree/master/spring-cloud-starter-stream-processor-object-detection[SCDF Object Detection Processor].
+
+Three sets of pre-trained models, ready to use:
+
+* https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-pascal-voc-2012[PASCAL VOC 2012]
+
+image:src/test/resources/doc/VikiMaxiAdi-all.png[]
+
+* https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-cityscapes[DeepLab models trained on Cityscapes]
+
+image:src/test/resources/doc/cityscape-all-small.png[]
+
+* http://download.tensorflow.org/models/deeplabv3_xception_ade20k_train_2018_05_29.tar.gz#frozen_inference_graph.pb[DeepLab models trained on ADE20K]
+
+image:src/test/resources/doc/ADE20K-all-small.png[]
+
+Download the preferred model tar.gz from the https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md[model zoo] uncompress it and use the `frozen_inference_graph.pb` inside as model.
+
+Alternatively you can use any of the following pre-trained models:
+
+[%header,cols=2*]
+|===
+|Model Name
+|Model URI
+
+|PASCAL VOC 2012 (default)
+|http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_pascal_train_aug_frozen_inference_graph.pb
+
+|CITYSCAPE
+|http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_cityscapes_train_2018_02_05_frozen_inference_graph.pb
+
+|ADE20K
+|http://dl.bintray.com/big-data/generic/deeplabv3_xception_ade20k_train_2018_05_29_frozen_inference_graph.pb
+|===
+
+
+===== References:
+
+* https://ai.googleblog.com/2018/03/semantic-image-segmentation-with.html[Semantic Image Segmentation with DeepLab in TensorFlow]
+* https://github.com/tensorflow/models/tree/master/research/deeplab[DeepLab Project]
+* https://medium.freecodecamp.org/how-to-use-deeplab-in-tensorflow-for-object-segmentation-using-deep-learning-a5777290ab6b[How to re-train DeepLab Segmentation models using Transfer Learning]
+
+== Options
+
+$$mask-transparency$$:: $$Blended mask transparency. Value is between 0.0 (0% transparency) and 1.0 (100% transparent).$$ *($$Double$$, default: `$$0.3$$`)*
+$$model$$:: $$The location of the pre-trained TensorFlow model file. The file, http and classpath schemas are supported. For archive locations takes the first file with '.pb' extension. Use the URI fragment parameter to specify an exact model name (e.g. https://foo/bar/model.tar.gz#frozen_inference_graph.pb)$$ *($$Resource$$, default: `$$<none>$$`)*
+$$model-fetch$$:: $$The TensorFlow graph model outputs. Comma separate list of TensorFlow operation names to fetch the output Tensors from.$$ *($$List<String>$$, default: `$$<none>$$`)*
+
+//end::ref-doc[]
+
+== Build
+
+```
+$ ./mvnw clean install
+```
+
+== Examples
+
+Following issues demos how to use the PASCAL VOC model to apply mask to an input image
+
+```java
+
+	public static void main(String[] args) throws IOException {
+
+		Resource PASCAL_VOC_2012_MODEL = new DefaultResourceLoader().getResource(
+				"http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb");
+		SemanticSegmentationService segmentationService = new SemanticSegmentationService(PASCAL_VOC_2012_MODEL);
+
+		byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi.jpg");
+
+		// Read get the segmentation mask as separate image
+		byte[] imageMask = segmentationService.masksAsImage(inputImage);
+		writeImage(imageMask, "png", "./semantic-segmentation/target/masks.png");
+
+		// Blend the segmentation mask on top of the original image
+		byte[] augmentedImage = segmentationService.augment(inputImage);
+		IOUtils.write(augmentedImage,
+				new FileOutputStream("./semantic-segmentation/target/VikiMaxiAdi_augmented.jpg"));
+	}
+
+	private static void writeImage(byte[] image, String imageFormat, String outputPath) throws IOException {
+		BufferedImage i1 = ImageIO.read(new ByteArrayInputStream(image));
+		ImageIO.write(i1, imageFormat, new FileOutputStream(outputPath));
+	}
+
+```
