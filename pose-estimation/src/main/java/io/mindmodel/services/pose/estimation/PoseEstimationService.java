@@ -25,8 +25,12 @@ public class PoseEstimationService {
 	private final TensorFlowService tfService;
 
 	public PoseEstimationService(Resource modelResource) {
+		this(modelResource, false);
+	}
+
+	public PoseEstimationService(Resource modelResource, boolean cacheModel) {
 		this(new PoseEstimationTensorflowInputConverter(), new PoseEstimationTensorflowOutputConverter(FETCH_NAMES),
-				new TensorFlowService(modelResource, FETCH_NAMES));
+				new TensorFlowService(modelResource, FETCH_NAMES, cacheModel));
 	}
 
 	public PoseEstimationService(PoseEstimationTensorflowInputConverter inputConverter,

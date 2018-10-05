@@ -47,31 +47,6 @@ When the `tensorflow.mode=header` property is set the JSON metadata passed insid
 contains a copy of the input image. If the `tensorflow.pose.estimation.drawPoses=true` is set the copied input image is
 augmented with the poses described in the JSON metadata.
 
-== Options
-
-The **$$pose-estimation$$** $$processor$$ has the following options:
-
-//tag::configuration-properties[]
-$$tensorflow.expression$$:: $$How to obtain the input data from the input message. If empty it defaults to the input message payload. The payload.myInTupleName expression treats the input payload as a Tuple, and myInTupleName stands for a Tuple key. The headers[myHeaderName] expression to get input data from message's header using myHeaderName as a key.$$ *($$Expression$$, default: `$$<none>$$`)*
-$$tensorflow.mode$$:: $$Defines how to store the output data and if the input payload is passed through or discarded. Payload (Default) stores the output data in the outbound message payload. The input payload is discarded. Header stores the output data in outputName message's header. The the input payload is passed through. Tuple stores the output data in an Tuple payload, using the outputName key. The input payload is passed through in the same Tuple using the 'original.input.data'. If the input payload is already a Tuple that contains a 'original.input.data' key, then copy the input Tuple into the new Tuple to be returned.$$ *($$OutputMode$$, default: `$$<none>$$`, possible values: `payload`,`tuple`,`header`)*
-$$tensorflow.model$$:: $$The location of the pre-trained TensorFlow model file. The file, http and classpath schemas are supported. For archive locations takes the first file with '.pb' extension. Use the URI fragment parameter to specify an exact model name (e.g. https://foo/bar/model.tar.gz#frozen_inference_graph.pb)$$ *($$Resource$$, default: `$$<none>$$`)*
-$$tensorflow.model-fetch$$:: $$The TensorFlow graph model outputs. Comma separate list of TensorFlow operation names to fetch the output Tensors from.$$ *($$List<String>$$, default: `$$<none>$$`)*
-$$tensorflow.output-name$$:: $$The output data key used in the Header or Tuple modes.$$ *($$String$$, default: `$$result$$`)*
-$$tensorflow.pose.estimation.body-drawing-color-schema$$:: $$When drawPoses is enabled, one can decide to draw all body poses in one color (monochrome), have every body pose drawn in an unique color (bodyInstance) or use common color schema drawing different limbs.$$ *($$BodyDrawingColorSchema$$, default: `$$<none>$$`, possible values: `monochrome`,`bodyInstance`,`limbType`)*
-$$tensorflow.pose.estimation.debug-visualisation-enabled$$:: $$If enabled the inference operation will produce 4 additional debug visualization of the intermediate processing stages:  - PartHeatMap - Part heat map as computed by DL  - PafField - PAF limb field as computed by DL  - PartCandidates - Part final candidates as computed by the post-processor  - LimbCandidates - Limb final candidates as computed by the post-processor  Note: Do NOT enable this feature in production or in streaming mode!$$ *($$Boolean$$, default: `$$false$$`)*
-$$tensorflow.pose.estimation.debug-visualization-output-path$$:: $$Parent directory to save the  debug images produced for the intermediate processing stages$$ *($$String$$, default: `$$./target$$`)*
-$$tensorflow.pose.estimation.draw-line-width$$:: $$When drawPoses is enabled, defines the line width for drawing the limbs$$ *($$Integer$$, default: `$$2$$`)*
-$$tensorflow.pose.estimation.draw-part-labels$$:: $$if drawPoses is enabled, drawPartLabels will show the party type ids and description.$$ *($$Boolean$$, default: `$$false$$`)*
-$$tensorflow.pose.estimation.draw-part-radius$$:: $$When drawPoses is enabled, defines the radius of the oval drawn for each part instance$$ *($$Integer$$, default: `$$4$$`)*
-$$tensorflow.pose.estimation.draw-poses$$:: $$When set to true, the output image will be augmented with the computed person skeletons$$ *($$Boolean$$, default: `$$true$$`)*
-$$tensorflow.pose.estimation.min-body-part-count$$:: $$Minimum number of parts a body should contain. Body instances with less parts are discarded.$$ *($$Integer$$, default: `$$5$$`)*
-$$tensorflow.pose.estimation.nms-threshold$$:: $$Only return instance detections that have part score greater or equal to this value.$$ *($$Float$$, default: `$$0.15$$`)*
-$$tensorflow.pose.estimation.nms-window-size$$:: $$Non-maximum suppression (NMS) distance for Part instances. Two parts suppress each other if they are less than `nmsWindowSize` pixels away.$$ *($$Integer$$, default: `$$4$$`)*
-$$tensorflow.pose.estimation.paf-count-threshold$$:: $$Minimum number of integration intervals with paf score above the stepPafScoreThreshold, to consider the parts connected.$$ *($$Integer$$, default: `$$2$$`)*
-$$tensorflow.pose.estimation.step-paf-score-threshold$$:: $$Minimal paf score between two Parts at individual integration step, to consider the parts connected$$ *($$Float$$, default: `$$0.1$$`)*
-$$tensorflow.pose.estimation.total-paf-score-threshold$$:: $$Minimal paf score between two parts to consider them being connected and part of the same limb$$ *($$Float$$, default: `$$4.4$$`)*
-//end::configuration-properties[]
-
 //end::ref-doc[]
 == Build
 
@@ -80,17 +55,52 @@ $$tensorflow.pose.estimation.total-paf-score-threshold$$:: $$Minimal paf score b
 $ mvn clean install
 ```
 
-== Examples
+== Usage
 
+Add the `pose-estimation` dependency to your pom:
+
+```xml
+    <parent>
+        <groupId>io.mindmodel.services</groupId>
+        <artifactId>pose-estimation</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 ```
-java -jar pose-estimation-processor.jar --tensorflow.model= --tensorflow.modelFetch= --tensorflow.mode=
+(_Use the latest version available_)
+
+
+Then create a `PoseEstimationService` with one of the pre-trained models and detect the poses input image.
+
+```java
+    ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+    try (InputStream is = resourceLoader.getResource("classpath:/images/tourists.jpg").getInputStream()) {
+
+        byte[] inputImage = StreamUtils.copyToByteArray(is);
+
+        Resource model = resourceLoader.getResource("https://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb");
+        PoseEstimationService poseEstimationService = new PoseEstimationService(model, true);
+
+        List<Body> bodies = poseEstimationService.detect(inputImage);
+        System.out.println("Body List: " + bodies);
+
+        ...
+    }
+```
+You can use the `JsonMapperFunction` function to turn the `Body` list into JSON objects:
+
+```java
+
+        String bodiesJson = new JsonMapperFunction().apply(bodies);
+        System.out.println("Pose JSON: " + bodiesJson);
 ```
 
-And here is a example pipeline that process images in `file` source and outputs the annotated images to `file` sink directory:
+Or the `PoseEstimateImageAugmenter` function to draw the detected body skeletons on top of the input image:
 
+```java
+        byte[] augmentedImage = new PoseEstimateImageAugmenter().apply(inputImage, bodies);
+        IOUtils.write(augmentedImage, new FileOutputStream("./pose-estimation/target/tourists-augmented.jpg"));
 ```
-pose-estimation-stream=in: file --directory='/tmp/images'
-| pose-estimation --tensorflow.mode=header --tensorflow.model='http://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb'
-| out: file --directory='/tmp/output' --name-expression='headers[file_name]'
-```
+
+image:./src/test/resources/doc/tourists-augmented.jpg[]
 
