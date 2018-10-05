@@ -10,25 +10,22 @@ import java.util.function.Function;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oracle.javafx.jmx.json.JSONException;
 import io.mindmodel.services.common.GraphicsUtils;
 import io.mindmodel.services.common.JsonMapperFunction;
 import io.mindmodel.services.common.TensorFlowService;
 import io.mindmodel.services.pose.estimation.domain.Body;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StreamUtils;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  * @author Christian Tzolov
@@ -36,14 +33,14 @@ import static org.hamcrest.CoreMatchers.*;
 public class PoseEstimationServiceTest {
 
 	private static ResourceLoader resourceLoader = new DefaultResourceLoader();
-	private static List<String> fetchNames = Arrays.asList("Openpose/concat_stage7");
 	private static Resource mobilnetModel = resourceLoader.getResource("https://dl.bintray.com/big-data/generic/2018-30-05-mobilenet_thin_graph_opt.pb");
 	private static Resource cmuModel = resourceLoader.getResource("https://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb");
 
+	@Ignore
 	@Test
-	public void testPoseDetectionCmu() throws IOException, JSONException {
+	public void testPoseDetectionCmu() throws IOException {
 
-		PoseEstimationService poseEstimationService = new PoseEstimationService(cmuModel, fetchNames);
+		PoseEstimationService poseEstimationService = new PoseEstimationService(cmuModel);
 		poseEstimationService.getOutputConverter().setMinBodyPartCount(5);
 		poseEstimationService.getOutputConverter().setTotalPafScoreThreshold(4.4f);
 
@@ -68,9 +65,9 @@ public class PoseEstimationServiceTest {
 	}
 
 	@Test
-	public void testPoseDetectionCmu2() throws IOException, JSONException {
+	public void testPoseDetectionCmu2() throws IOException {
 
-		PoseEstimationService poseEstimationService = new PoseEstimationService(cmuModel, fetchNames);
+		PoseEstimationService poseEstimationService = new PoseEstimationService(cmuModel);
 		poseEstimationService.getOutputConverter().setMinBodyPartCount(5);
 		poseEstimationService.getOutputConverter().setTotalPafScoreThreshold(4.4f);
 
@@ -91,7 +88,7 @@ public class PoseEstimationServiceTest {
 		PoseEstimationTensorflowInputConverter inputConverter = new PoseEstimationTensorflowInputConverter();
 		PoseEstimationTensorflowOutputConverter outputConverter = new PoseEstimationTensorflowOutputConverter(fetchNames);
 
-		TensorFlowService tfService = new TensorFlowService(modelResource, fetchNames);
+		TensorFlowService tfService = new TensorFlowService(modelResource, fetchNames, true);
 
 		Function<byte[][], List<List<Body>>> poseEstimationFunction = inputConverter.andThen(tfService).andThen(outputConverter);
 

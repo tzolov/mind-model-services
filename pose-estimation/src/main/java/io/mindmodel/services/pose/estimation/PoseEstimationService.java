@@ -1,5 +1,6 @@
 package io.mindmodel.services.pose.estimation;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -15,15 +16,17 @@ import org.springframework.util.CollectionUtils;
  */
 public class PoseEstimationService {
 
+	public static List<String> FETCH_NAMES = Arrays.asList("Openpose/concat_stage7");
+
 	private final Function<byte[][], List<List<Body>>> poseEstimationFunction;
 
 	private final PoseEstimationTensorflowInputConverter inputConverter;
 	private final PoseEstimationTensorflowOutputConverter outputConverter;
 	private final TensorFlowService tfService;
 
-	public PoseEstimationService(Resource modelResource, List<String> fetchNames) {
-		this(new PoseEstimationTensorflowInputConverter(), new PoseEstimationTensorflowOutputConverter(fetchNames),
-				new TensorFlowService(modelResource, fetchNames));
+	public PoseEstimationService(Resource modelResource) {
+		this(new PoseEstimationTensorflowInputConverter(), new PoseEstimationTensorflowOutputConverter(FETCH_NAMES),
+				new TensorFlowService(modelResource, FETCH_NAMES));
 	}
 
 	public PoseEstimationService(PoseEstimationTensorflowInputConverter inputConverter,

@@ -16,6 +16,8 @@
 
 package io.mindmodel.services.object.detection.domain;
 
+import java.util.Arrays;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
@@ -96,5 +98,19 @@ public class ObjectDetection {
 
 	public void setMask(float[][] mask) {
 		this.mask = mask;
+	}
+
+	@Override
+	public String toString() {
+		return "ObjectDetection{" +
+				"name='" + name + '\'' +
+				", confidence=" + confidence +
+				", x1=" + x1 +
+				", y1=" + y1 +
+				", x2=" + x2 +
+				", y2=" + y2 +
+				", mask=" + Arrays.toString(mask) +
+				", cid=" + cid +
+				'}';
 	}
 }

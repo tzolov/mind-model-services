@@ -1,4 +1,0 @@
-package io.mindmodel.services.pose.estimation.benchmark.generated;
-public class PoseEstimationServiceBenchmark_ExecutionPlan_jmhType extends PoseEstimationServiceBenchmark_ExecutionPlan_jmhType_B3 {
-}
-

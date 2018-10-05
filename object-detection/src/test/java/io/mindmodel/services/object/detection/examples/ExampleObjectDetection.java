@@ -44,16 +44,16 @@ public class ExampleObjectDetection {
 		// You can download pre-trained models directly from the zoo: https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 		// Just use the notation <zoo model tar.gz url>#<name of the frozen model file name>
 		// For performance reasons you may consider downloading the model locally and use the file:/<path to my model> URI instead!
-		//Resource model = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2018_01_28.tar.gz#frozen_inference_graph.pb");
+		Resource model = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2018_01_28.tar.gz#frozen_inference_graph.pb");
 		//Resource model = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_fgvc_2018_07_19.tar.gz#frozen_inference_graph.pb");
-		Resource model = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet50_fgvc_2018_07_19.tar.gz#frozen_inference_graph.pb");
+		//Resource model = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet50_fgvc_2018_07_19.tar.gz#frozen_inference_graph.pb");
 
 		// All labels for the pre-trained models are available at:
 		// https://github.com/tensorflow/models/tree/master/research/object_detection/data
 		// Use the labels applicable for the model.
 		// Also, for performance reasons you may consider to download the labels and load them from file: instead.
-		//Resource labels = resourceLoader.getResource("https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt");
-		Resource labels = resourceLoader.getResource("https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/fgvc_2854_classes_label_map.pbtxt");
+		Resource labels = resourceLoader.getResource("https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt");
+		//Resource labels = resourceLoader.getResource("https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/fgvc_2854_classes_label_map.pbtxt");
 
 		// You can cache the TF model on the local file system to improve the bootstrap performance on consecutive runs!
 		boolean CACHE_TF_MODEL = true;
@@ -68,8 +68,7 @@ public class ExampleObjectDetection {
 				new ObjectDetectionService(model, labels, CONFIDENCE_THRESHOLD, NO_INSTANCE_SEGMENTATION, CACHE_TF_MODEL);
 
 		// You can use file:, http: or classpath: to provide the path to the input image.
-		//String inputImageUri = "classpath:/images/object-detection.jpg";
-		String inputImageUri = "classpath:/images/wild-animals-15.jpg";
+		String inputImageUri = "classpath:/images/object-detection.jpg";
 		try (InputStream is = resourceLoader.getResource(inputImageUri).getInputStream()) {
 
 			byte[] image = StreamUtils.copyToByteArray(is);
@@ -83,7 +82,7 @@ public class ExampleObjectDetection {
 
 			// Draw the detected object metadata on top of the original image and store the result
 			byte[] annotatedImage = new ObjectDetectionImageAugmenter(NO_INSTANCE_SEGMENTATION).apply(image, detectedObjects);
-			IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/wild-animals-augmented.jpg"));
+			IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/object-detection-augmented.jpg"));
 		}
 	}
 }
