@@ -33,14 +33,14 @@ import static org.junit.Assert.assertThat;
 public class PoseEstimationServiceTest {
 
 	private static ResourceLoader resourceLoader = new DefaultResourceLoader();
-	private static Resource mobilnetModel = resourceLoader.getResource("https://dl.bintray.com/big-data/generic/2018-30-05-mobilenet_thin_graph_opt.pb");
-	private static Resource cmuModel = resourceLoader.getResource("https://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb");
+	private static String mobilnetModel = "https://dl.bintray.com/big-data/generic/2018-30-05-mobilenet_thin_graph_opt.pb";
+	private static String cmuModel = "https://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb";
 
 	@Ignore
 	@Test
 	public void testPoseDetectionCmu() throws IOException {
 
-		PoseEstimationService poseEstimationService = new PoseEstimationService(cmuModel);
+		PoseEstimationService poseEstimationService = new PoseEstimationService(cmuModel, true);
 		poseEstimationService.getOutputConverter().setMinBodyPartCount(5);
 		poseEstimationService.getOutputConverter().setTotalPafScoreThreshold(4.4f);
 
@@ -67,7 +67,7 @@ public class PoseEstimationServiceTest {
 	@Test
 	public void testPoseDetectionCmu2() throws IOException {
 
-		PoseEstimationService poseEstimationService = new PoseEstimationService(cmuModel);
+		PoseEstimationService poseEstimationService = new PoseEstimationService(cmuModel, true);
 		poseEstimationService.getOutputConverter().setMinBodyPartCount(5);
 		poseEstimationService.getOutputConverter().setTotalPafScoreThreshold(4.4f);
 

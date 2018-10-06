@@ -42,6 +42,43 @@ Alternatively you can use any of the following pre-trained models:
 |http://dl.bintray.com/big-data/generic/deeplabv3_xception_ade20k_train_2018_05_29_frozen_inference_graph.pb
 |===
 
+== Usage
+
+Add the `semantic-segmentation` dependency to your pom (_Use the latest version available_):
+
+```xml
+<groupId>io.mindmodel.services</groupId>
+<artifactId>semantic-segmentation</artifactId>
+<version>1.0.0-SNAPSHOT</version>
+```
+
+Following snippet demos how to use the PASCAL VOC model to apply mask to an input image
+
+```java
+
+public static void main(String[] args) throws IOException {
+    String PASCAL_VOC_2012_MODEL =
+            "http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb";
+    SemanticSegmentationService segmentationService = new SemanticSegmentationService(PASCAL_VOC_2012_MODEL, true);
+
+    byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi.jpg");
+
+    // Read get the segmentation mask as separate image
+    byte[] imageMask = segmentationService.masksAsImage(inputImage);
+    writeImage(imageMask, "png", "./semantic-segmentation/target/VikiMaxiAdi_masks.png");
+
+    // Blend the segmentation mask on top of the original image
+    byte[] augmentedImage = segmentationService.augment(inputImage);
+    IOUtils.write(augmentedImage,
+            new FileOutputStream("./semantic-segmentation/target/VikiMaxiAdi_augmented.jpg"));
+}
+
+private static void writeImage(byte[] image, String imageFormat, String outputPath) throws IOException {
+    BufferedImage i1 = ImageIO.read(new ByteArrayInputStream(image));
+    ImageIO.write(i1, imageFormat, new FileOutputStream(outputPath));
+}
+
+```
 
 ===== References:
 
@@ -63,33 +100,3 @@ $$model-fetch$$:: $$The TensorFlow graph model outputs. Comma separate list of T
 $ ./mvnw clean install
 ```
 
-== Examples
-
-Following issues demos how to use the PASCAL VOC model to apply mask to an input image
-
-```java
-
-	public static void main(String[] args) throws IOException {
-
-		Resource PASCAL_VOC_2012_MODEL = new DefaultResourceLoader().getResource(
-				"http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb");
-		SemanticSegmentationService segmentationService = new SemanticSegmentationService(PASCAL_VOC_2012_MODEL);
-
-		byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi.jpg");
-
-		// Read get the segmentation mask as separate image
-		byte[] imageMask = segmentationService.masksAsImage(inputImage);
-		writeImage(imageMask, "png", "./semantic-segmentation/target/masks.png");
-
-		// Blend the segmentation mask on top of the original image
-		byte[] augmentedImage = segmentationService.augment(inputImage);
-		IOUtils.write(augmentedImage,
-				new FileOutputStream("./semantic-segmentation/target/VikiMaxiAdi_augmented.jpg"));
-	}
-
-	private static void writeImage(byte[] image, String imageFormat, String outputPath) throws IOException {
-		BufferedImage i1 = ImageIO.read(new ByteArrayInputStream(image));
-		ImageIO.write(i1, imageFormat, new FileOutputStream(outputPath));
-	}
-
-```

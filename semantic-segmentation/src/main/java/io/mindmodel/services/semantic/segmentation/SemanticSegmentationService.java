@@ -20,6 +20,7 @@ import java.util.function.Function;
 
 import io.mindmodel.services.common.TensorFlowService;
 
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
 /**
@@ -34,9 +35,10 @@ public class SemanticSegmentationService {
 		return segmentationConfiguration;
 	}
 
-	public SemanticSegmentationService(Resource modelResource, boolean cachedModel) {
+	public SemanticSegmentationService(String modelUri, boolean cachedModel) {
 		this(new SemanticSegmentationConfiguration(),
-				new TensorFlowService(modelResource, Arrays.asList(SemanticSegmentationUtils.OUTPUT_TENSOR_NAME), cachedModel));
+				new TensorFlowService(new DefaultResourceLoader().getResource(modelUri),
+						Arrays.asList(SemanticSegmentationUtils.OUTPUT_TENSOR_NAME), cachedModel));
 	}
 
 	public SemanticSegmentationService(SemanticSegmentationConfiguration segmentationConfiguration,

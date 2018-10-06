@@ -21,9 +21,9 @@ import org.springframework.core.io.Resource;
  */
 public class SemanticSegmentationServiceTest {
 
-	private static Resource modelADE20K = new DefaultResourceLoader().getResource("http://download.tensorflow.org/models/deeplabv3_xception_ade20k_train_2018_05_29.tar.gz#frozen_inference_graph.pb");
-	private static Resource modelCITYSCAPE = new DefaultResourceLoader().getResource("http://download.tensorflow.org/models/deeplabv3_mnv2_cityscapes_train_2018_02_05.tar.gz#frozen_inference_graph.pb");
-	private static Resource modelPASCALVOC2012 = new DefaultResourceLoader().getResource("http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb");
+	private static String modelADE20K = "http://download.tensorflow.org/models/deeplabv3_xception_ade20k_train_2018_05_29.tar.gz#frozen_inference_graph.pb";
+	private static String modelCITYSCAPE = "http://download.tensorflow.org/models/deeplabv3_mnv2_cityscapes_train_2018_02_05.tar.gz#frozen_inference_graph.pb";
+	private static String modelPASCALVOC2012 = "http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb";
 
 	@Test
 	public void testADE20K() throws IOException {

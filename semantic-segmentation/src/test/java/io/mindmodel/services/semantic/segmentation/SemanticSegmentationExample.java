@@ -20,9 +20,8 @@ public class SemanticSegmentationExample {
 
 
 	public static void main(String[] args) throws IOException {
-
-		Resource PASCAL_VOC_2012_MODEL = new DefaultResourceLoader().getResource(
-				"http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb");
+		String PASCAL_VOC_2012_MODEL =
+				"http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb";
 		SemanticSegmentationService segmentationService = new SemanticSegmentationService(PASCAL_VOC_2012_MODEL, true);
 
 		byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi.jpg");

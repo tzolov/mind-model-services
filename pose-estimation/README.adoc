@@ -1,93 +1,92 @@
 //tag::ref-doc[]
-:image-root: https://raw.githubusercontent.com/spring-cloud-stream-app-starters/tensorflow/master/images
 = Pose Estimation Service
 
+[frame=none]
+[grid=none]
 [cols=2*]
 |===
-| Real-time, multi-person Pose Estimation service for detecting human figures in images and video. Determines where different body parts
-  are located in an image an how are they spatially relate to each other.
-
-  Based on the https://arxiv.org/pdf/1611.08050.pdf[Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields],
-   https://github.com/CMU-Perceptual-Computing-Lab/openpose[OpenPose] and https://github.com/ildoonet/tf-pose-estimation[tf-pose-estimation].
-| image:./src/test/resources/doc/webcamPoseEstimation.gif[]
+| Multi-person Pose Estimation service for detecting human figures in images and videos. It detects where different
+body parts are located in an image an how are they spatially relate to each other. The implementation is based on the
+https://arxiv.org/pdf/1611.08050.pdf[Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields],
+ https://github.com/CMU-Perceptual-Computing-Lab/openpose[OpenPose] and
+ https://github.com/ildoonet/tf-pose-estimation[tf-pose-estimation].
+| image:./src/test/resources/doc/webcamPoseEstimation.gif[ch,width=400]
 |===
 
+[frame=none]
+[grid=none]
+[cols=2*]
+|===
+| image:./src/test/resources/doc/VikiMaxiAdi.gif[wk,width=400]
+|Service uses pre-trained https://github.com/ildoonet/tf-pose-estimation[tf-pose-estimation] TensorFlow models. Flowing
+pre-trained models are available: http://dl.bintray.com/big-data/generic/2018-30-05-mobilenet_thin_graph_opt.pb[2018-30-05-mobilenet_thin_graph_opt.pb] - Faster but less accurate (default)
+, http://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb[2018-05-14-cmu-graph_opt.pb] - More accurate but slower and higher footprint
 
-The Pose Estimation Service works with a pre-trained https://github.com/ildoonet/tf-pose-estimation[tf-pose-estimation] `TensorFlow` models
-for predicting the heatmaps with the parts locations and their affinity. Next as post-processing step the service implements few greedy algorithms
-that helps to refine the heatmaps, select the right body parts and group them into poses.
-
-There are two pre-trained models available out of the box:
-
-*  `http://dl.bintray.com/big-data/generic/2018-30-05-mobilenet_thin_graph_opt.pb` (default) - fast but less accurate
-*  `http://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb` - accurate but slower
-
-The Pose Estimation Service input is an image or batch of images and the output is a list of Bodies.
-The *Body* represents a single body posture found on the image. The Body contains Parts connected by Limbs.
-The Limb contains a `PAF` (Part Affiliation Field) confidence score and the `from` and `to` parts it connects.
-The *Part* contains the `type` and `coordinates` in the image.
-
-
-//end::ref-doc[]
-== Build
-
-```
-$ mvn clean install
-```
+Models predict the locations and the affinity of the body parts. Predictions are represented by `heatmaps`.
+Next the service applied few greedy algorithms to refine the parts in the heatmaps and to group them into poses.
+|===
 
 == Usage
-
-Add the `pose-estimation` dependency to your pom:
+Add the `pose-estimation` dependency to your pom (_Use the latest version available_):
 
 ```xml
-    <parent>
-        <groupId>io.mindmodel.services</groupId>
-        <artifactId>pose-estimation</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
+<groupId>io.mindmodel.services</groupId>
+<artifactId>pose-estimation</artifactId>
+<version>1.0.0-SNAPSHOT</version>
 ```
-(_Use the latest version available_)
 
-Then create a `PoseEstimationService` with one of the pre-trained models and detect the poses input image.
+Create a `PoseEstimationService` with the `cmu-graph_opt.pb` pre-trained model and use it to detect the poses
+in the `tourists.jpg` image:
 
 ```java
-    ResourceLoader resourceLoader = new DefaultResourceLoader();
-
-    try (InputStream is = resourceLoader.getResource("classpath:/images/tourists.jpg").getInputStream()) {
-
-        byte[] inputImage = StreamUtils.copyToByteArray(is);
-
-        Resource model = resourceLoader.getResource("https://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb");
-        PoseEstimationService poseEstimationService = new PoseEstimationService(model, true);
-
-        List<Body> bodies = poseEstimationService.detect(inputImage);
-    }
+try (InputStream is = new DefaultResourceLoader().getResource("classpath:/images/tourists.jpg").getInputStream()) {
+    byte[] inputImage = StreamUtils.copyToByteArray(is);
+    String modelUri = "https://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb";
+    PoseEstimationService poseEstimationService = new PoseEstimationService(modelUri, true);
+    List<Body> bodies = poseEstimationService.detect(inputImage);
+}
 ```
+The Pose Estimation Service takes an image or batch of images and the produces a list of detected Bodies.
+The *Body* represents a single body posture found on the image. The Body is composed of Parts connected by Limbs.
+The Limb contains a `PAF` (Part Affiliation Field) confidence score and the `from` and `to` parts it connects.
+The *Part* has `type` and `coordinates` in the image.
 
 You can use the `JsonMapperFunction` function to turn the `Body` list into JSON objects:
 
 ```java
 
-        String bodiesJson = new JsonMapperFunction().apply(bodies);
+    String bodiesJson = new JsonMapperFunction().apply(bodies);
 ```
 
 The output JSON format looks like:
 
 ```json
-[{ "limbs": [ { "score": 8.4396105, "from": { "type": "lShoulder", "y": 56, "x": 160 }, "to": { "type": "lEar", "y": 24, "x": 152 } },
-              { "score": 10.145516, "from": { "type": "neck", "y": 56, "x": 144 }, "to": { "type": "rShoulder", "y": 56, "x": 128 } },
- { "limbs": [ { "score": 7.85779, "from": { "type": "neck", "y": 48, "x": 328 }, "to": { "type": "rHip", "y": 128, "x": 328 } },
-              { "score": 6.8949876, "from": { "type": "neck", "y": 48, "x": 328 }, "to": { "type": "lHip", "y": 128, "x": 304 } } ]
-...
+[{"id":0, "limbs": [{ "score": 8.4396105, "from": { "type": "lShoulder", "y": 56, "x": 160 }, "to": { "type": "lEar", "y": 24, "x": 152 } },
+                    { "score": 10.145516, "from": { "type": "neck", "y": 56, "x": 144 }, "to": { "type": "rShoulder", "y": 56, "x": 128 } },
+ {"id":1, "limbs": [{ "score": 7.85779, "from": { "type": "neck", "y": 48, "x": 328 }, "to": { "type": "rHip", "y": 128, "x": 328 } },
+                    { "score": 6.8949876, "from": { "type": "neck", "y": 48, "x": 328 }, "to": { "type": "lHip", "y": 128, "x": 304 } } ]
 }]
 ```
 
 Or the `PoseEstimateImageAugmenter` function to draw the detected body skeletons on top of the input image:
 
 ```java
-        byte[] augmentedImage = new PoseEstimateImageAugmenter().apply(inputImage, bodies);
-        IOUtils.write(augmentedImage, new FileOutputStream("./pose-estimation/target/tourists-augmented.jpg"));
+    byte[] augmentedImage = new PoseEstimateImageAugmenter().apply(inputImage, bodies);
+    IOUtils.write(augmentedImage, new FileOutputStream("./pose-estimation/target/tourists-augmented.jpg"));
 ```
 
+The annotated images would look like this:
+
 image:./src/test/resources/doc/tourists-augmented.jpg[]
+
+You can configure the `PoseEstimateImageAugmenter` to use different color schema or graphic characteristics.
+
+== Build
+
+```
+git clone git@github.com:tzolov/mind-model-services.git
+cd mind-model-services
+$ mvn clean install
+```
+
 
