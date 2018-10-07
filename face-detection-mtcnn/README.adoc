@@ -1,0 +1,69 @@
+//tag::ref-doc[]
+= Face Detection (MTCNN)
+
+This is just a placeholder for the existing https://github.com/tzolov/mtcnn-java[Face Detection MTCNN-JAVA] project.
+
+Mind that this service uses the Tensorflow binding from the ND4J. That means that you can't have in the same project
+dependency on the other `mind-model-services`.
+
+I'm considering moving the `mtcnn-java` code under this project umbrella. But until then follow the instruction provided there.
+
+= Usage
+
+Use the following dependency to add the `mtcnn` utility to your project
+```xml
+<dependency>
+  <groupId>net.tzolov.cv</groupId>
+  <artifactId>mtcnn</artifactId>
+  <version>0.0.4</version>
+</dependency>
+```
+Also register `jcentral` to your list of maven repository (it is available out of the box for Gradle).
+```xml
+<repositories>
+    <repository>
+      <id>jcenter</id>
+      <url>https://jcenter.bintray.com/</url>
+    </repository>
+</repositories>
+```
+The https://github.com/tzolov/mtcnn-java/blob/master/src/test/java/net/tzolov/cv/mtcnn/sample/FaceDetectionSample1.java[FaceDetectionSample1.java] demonstrates how to use `MtcnnService` for detecting faces in images.
+
+image:https://github.com/tzolov/mtcnn-java/raw/master/src/test/resources/docs/AnnotatedImage.png[]
+
+Here is the essence this sample:
+
+```java
+// 1. Create face detection service.
+MtcnnService mtcnnService = new MtcnnService(30, 0.709, new double[] { 0.6, 0.7, 0.7 });
+
+try (InputStream imageInputStream = new DefaultResourceLoader() .getResource("classpath:/pivotal-ipo-nyse.jpg").getInputStream()) {
+    // 2. Load the input image (you can use http:/, file:/ or classpath:/ URIs to resolve the input image
+    BufferedImage inputImage = ImageIO.read(imageInputStream);
+    // 3. Run face detection
+    FaceAnnotation[] faceAnnotations = mtcnnService.faceDetection(inputImage);
+    // 4. Augment the input image with the detected faces
+    BufferedImage annotatedImage = MtcnnUtil.drawFaceAnnotations(inputImage, faceAnnotations);
+    // 5. Store face-annotated image
+    ImageIO.write(annotatedImage, "png", new File("./AnnotatedImage.png"));
+    // 6. Print the face annotations as JSON
+    System.out.println("Face Annotations (JSON): " + new ObjectMapper().writeValueAsString(faceAnnotations));
+}
+```
+It takes an input image detect the faces, produces json annotations and augments the image with the faces.
+
+The face annotation json format looks like this:
+
+```json
+[ {
+  "bbox" : { "x" : 331, "y" : 92, "w" : 58, "h" : 71 }, "confidence" : 0.9999871253967285,
+  "landmarks" : [ {
+    "type" : "LEFT_EYE", "position" : { "x" : 346, "y" : 120 } }, {
+    "type" : "RIGHT_EYE", "position" : { "x" : 374, "y" : 119 } }, {
+    "type" : "NOSE", "position" : { "x" : 359, "y" : 133 } }, {
+    "type" : "MOUTH_LEFT", "position" : { "x" : 347, "y" : 147 } }, {
+    "type" : "MOUTH_RIGHT", "position" : { "x" : 371, "y" : 147 },
+  } ]
+}, { ...
+```
+

@@ -28,11 +28,16 @@ import org.springframework.core.io.Resource;
  */
 public class SemanticSegmentationService {
 
+	public static final String DEFAULT_MODEL_URI = "http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_pascal_train_aug_frozen_inference_graph.pb";
 	private final SemanticSegmentationConfiguration segmentationConfiguration;
 	private final Function<byte[], long[][]> segmentationFunction;
 
 	public SemanticSegmentationConfiguration getSegmentationConfiguration() {
 		return segmentationConfiguration;
+	}
+
+	public SemanticSegmentationService() {
+		this(DEFAULT_MODEL_URI, true);
 	}
 
 	public SemanticSegmentationService(String modelUri, boolean cachedModel) {
