@@ -27,6 +27,7 @@ import io.mindmodel.services.common.TensorFlowService;
 import io.mindmodel.services.object.detection.domain.ObjectDetection;
 
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.DescriptiveResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
@@ -62,19 +63,27 @@ public class ObjectDetectionService {
 	private final ObjectDetectionOutputConverter outputConverter;
 	private final TensorFlowService tensorFlowService;
 
+	public ObjectDetectionService() {
+		this("http://dl.bintray.com/big-data/generic/ssdlite_mobilenet_v2_coco_2018_05_09_frozen_inference_graph.pb",
+				"http://dl.bintray.com/big-data/generic/mscoco_label_map.pbtxt",
+				0.4f, false, true);
+	}
+
 	/**
 	 * Convenience constructor that would initialize all necessary internal components.
-	 * @param modelResource {@link Resource} URI of the pre-trained, frozen Tensorflow model.
-	 * @param labelsResource
+	 * @param modelUri URI of the pre-trained, frozen Tensorflow model.
+	 * @param labelsUri URI of the pre-trained category labels.
 	 * @param confidence Confidence threshold. Only objects detected wth confidence above this threshold will be returned.
 	 * @param withMasks If a Mask model is selected then you can use this flag to extract the instance segmentation masks as well.
 	 */
-	public ObjectDetectionService(Resource modelResource, Resource labelsResource,
+	public ObjectDetectionService(String modelUri, String labelsUri,
 			float confidence, boolean withMasks, boolean cacheModel) {
 		this.inputConverter = new ObjectDetectionInputConverter();
 		List<String> fetchNames = withMasks ? FETCH_NAMES_WITH_MASKS : FETCH_NAMES;
-		this.outputConverter = new ObjectDetectionOutputConverter(labelsResource, confidence, fetchNames);
-		this.tensorFlowService = new TensorFlowService(modelResource, fetchNames, cacheModel);
+		this.outputConverter = new ObjectDetectionOutputConverter(
+				new DefaultResourceLoader().getResource(labelsUri), confidence, fetchNames);
+		this.tensorFlowService = new TensorFlowService(
+				new DefaultResourceLoader().getResource(modelUri), fetchNames, cacheModel);
 	}
 
 	/**

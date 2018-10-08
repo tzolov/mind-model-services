@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import io.mindmodel.services.common.GraphicsUtils;
 import io.mindmodel.services.common.JsonMapperFunction;
 import io.mindmodel.services.object.detection.ObjectDetectionImageAugmenter;
 import io.mindmodel.services.object.detection.ObjectDetectionService;
@@ -54,13 +55,13 @@ public class ExampleInstanceSegmentation {
 		// You can download pre-trained models directly from the zoo: https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 		// Just use the notation <zoo model tar.gz url>#<name of the frozen model file name>
 		// For performance reasons you may consider downloading the model locally and use the file:/<path to my model> URI instead!
-		Resource model = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz#frozen_inference_graph.pb");
+		String model = "http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz#frozen_inference_graph.pb";
 
 		// All labels for the pre-trained models are available at:
 		// https://github.com/tensorflow/models/tree/master/research/object_detection/data
 		// Use the labels applicable for the model.
 		// Also, for performance reasons you may consider to download the labels and load them from file: instead.
-		Resource labels = resourceLoader.getResource("https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt");
+		String labels = "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt";
 
 		// You can cache the TF model on the local file system to improve the bootstrap performance on consecutive runs!
 		boolean CACHE_TF_MODEL = true;
@@ -75,21 +76,17 @@ public class ExampleInstanceSegmentation {
 				new ObjectDetectionService(model, labels, CONFIDENCE_THRESHOLD, INSTANCE_SEGMENTATION, CACHE_TF_MODEL);
 
 		// You can use file:, http: or classpath: to provide the path to the input image.
-		String inputImageUri = "classpath:/images/object-detection.jpg";
-		try (InputStream is = resourceLoader.getResource(inputImageUri).getInputStream()) {
+		byte[] image = GraphicsUtils.loadAsByteArray("classpath:/images/object-detection.jpg");
 
-			byte[] image = StreamUtils.copyToByteArray(is);
+		// Returns a list ObjectDetection domain classes to allow programmatic accesses to the detected objects's metadata
+		List<ObjectDetection> detectedObjects = detectionService.detect(image);
 
-			// Returns a list ObjectDetection domain classes to allow programmatic accesses to the detected objects's metadata
-			List<ObjectDetection> detectedObjects = detectionService.detect(image);
+		// Get JSON representation of the detected objects
+		String jsonObjectDetections = new JsonMapperFunction().apply(detectedObjects);
+		System.out.println(jsonObjectDetections);
 
-			// Get JSON representation of the detected objects
-			String jsonObjectDetections = new JsonMapperFunction().apply(detectedObjects);
-			System.out.println(jsonObjectDetections);
-
-			// Draw the detected object metadata on top of the original image and store the result
-			byte[] annotatedImage = new ObjectDetectionImageAugmenter(INSTANCE_SEGMENTATION).apply(image, detectedObjects);
-			IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/object-detection-segmentation-augmented.jpg"));
-		}
+		// Draw the detected object metadata on top of the original image and store the result
+		byte[] annotatedImage = new ObjectDetectionImageAugmenter(INSTANCE_SEGMENTATION).apply(image, detectedObjects);
+		IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/object-detection-segmentation-augmented.jpg"));
 	}
 }

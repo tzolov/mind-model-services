@@ -31,15 +31,12 @@ import org.springframework.core.io.ResourceLoader;
 public class SimpleExample {
 
 	public static void main(String[] args) {
-
-		ResourceLoader resourceLoader = new DefaultResourceLoader();
-
 		// Select a pre-trained model from the model zoo: https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 		// Just use the notation <model zoo url>#<name of the frozen model file in the zoo's tar.gz>
-		Resource model = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_ppn_shared_box_predictor_300x300_coco14_sync_2018_07_03.tar.gz#frozen_inference_graph.pb");
+		String model = "http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_ppn_shared_box_predictor_300x300_coco14_sync_2018_07_03.tar.gz#frozen_inference_graph.pb";
 
 		// All labels for the pre-trained models are available at: https://github.com/tensorflow/models/tree/master/research/object_detection/data
-		Resource labels = resourceLoader.getResource("https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt");
+		String labels = "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt";
 
 		ObjectDetectionService detectionService = new ObjectDetectionService(model, labels,
 				0.4f, // Only object with confidence above the threshold are returned. Confidence range is [0, 1].

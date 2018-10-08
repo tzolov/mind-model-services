@@ -31,7 +31,6 @@ import org.junit.Test;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StreamUtils;
 
@@ -42,8 +41,8 @@ public class ObjectDetectionServiceTest {
 
 	ResourceLoader resourceLoader = new DefaultResourceLoader();
 
-	Resource labelResource = resourceLoader.getResource("http://dl.bintray.com/big-data/generic/mscoco_label_map.pbtxt");
-	Resource modelResource = resourceLoader.getResource("http://dl.bintray.com/big-data/generic/ssdlite_mobilenet_v2_coco_2018_05_09_frozen_inference_graph.pb");
+	String labelResource = "http://dl.bintray.com/big-data/generic/mscoco_label_map.pbtxt";
+	String modelResource = "http://dl.bintray.com/big-data/generic/ssdlite_mobilenet_v2_coco_2018_05_09_frozen_inference_graph.pb";
 
 	@Test
 	public void testObjectDetection() throws IOException {
@@ -85,9 +84,9 @@ public class ObjectDetectionServiceTest {
 	@Test
 	public void testObjectDetection3() throws IOException {
 		//
-		Resource modelResource = resourceLoader.getResource("file:///Users/ctzolov/Downloads/faster_rcnn_resnet101_fgvc_2018_07_19/frozen_inference_graph.pb");
-		//Resource modelResource = resourceLoader.getResource("http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_fgvc_2018_07_19.tar.gz#frozen_inference_graph.pb");
-		Resource labelResource = resourceLoader.getResource("https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/fgvc_2854_classes_label_map.pbtxt");
+		String modelResource = "file:///Users/ctzolov/Downloads/faster_rcnn_resnet101_fgvc_2018_07_19/frozen_inference_graph.pb";
+		//String modelResource = "http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_fgvc_2018_07_19.tar.gz#frozen_inference_graph.pb";
+		String labelResource = "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/fgvc_2854_classes_label_map.pbtxt";
 		ObjectDetectionService objectDetectionService =
 				new ObjectDetectionService(modelResource, labelResource, 0.1f, false, false);
 		try (InputStream is = new ClassPathResource("/images/north-american-wildlife-7.gif").getInputStream()) {
@@ -106,8 +105,8 @@ public class ObjectDetectionServiceTest {
 
 	@Test
 	public void testObjectDetection4() throws IOException {
-		Resource labelResource = resourceLoader.getResource("http://dl.bintray.com/big-data/generic/mscoco_label_map.pbtxt");
-		Resource modelResource = resourceLoader.getResource("http://dl.bintray.com/big-data/generic/ssdlite_mobilenet_v2_coco_2018_05_09_frozen_inference_graph.pb");
+		String labelResource = "http://dl.bintray.com/big-data/generic/mscoco_label_map.pbtxt";
+		String modelResource = "http://dl.bintray.com/big-data/generic/ssdlite_mobilenet_v2_coco_2018_05_09_frozen_inference_graph.pb";
 
 		ObjectDetectionService objectDetectionService = new ObjectDetectionService(modelResource, labelResource, 0.4f, false, false);
 
