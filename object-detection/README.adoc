@@ -19,17 +19,8 @@ instances representing the detected objects.
 
 With some pre-trained models, the `ObjectDetectionService` can perform object detection as well instance segmentation.
 
-Furthermore the `JsonMapperFunction` can be used to covert the `List<ObjectDetection>` in JSON representation:
-
-[source,json]
-----
-[{"name":"person","confidence":0.9988778,"x1":0.16026746,"y1":0.77476984,"x2":0.20187037,"y2":0.9463669,"cid":1},
-  {"name":"kite","confidence":0.9988236,"x1":0.43766645,"y1":0.08992515,"x2":0.49562767,"y2":0.16976416,"cid":38},
-  {"name":"person","confidence":0.9973546,"x1":0.08468014,"y1":0.68195003,"x2":0.12139505,"y2":0.84821695,"cid":1},
-  {"name":"kite","confidence":0.9886335,"x1":0.2067564,"y1":0.26368475,"x2":0.22546713,"y2":0.31434113,"cid":38}]]
-----
-
-The `ObjectDetectionAugmenter` allow to draw the object metadata on top of the original image.
+Furthermore the `JsonMapperFunction` can be used to covert the `List<ObjectDetection>` in JSON representation, while
+the `ObjectDetectionAugmenter` allow to draw the object metadata on top of the original image.
 
 ==== Usage
 
@@ -44,7 +35,7 @@ Add the `object-detection` dependency to your pom:
 
 Use the latest version available
 
-===== Object Detection
+===== Example1: Object Detection
 
 Following snipped show how to use `ObjectDetectionService` to detect objects in input images, how to use the
 `JsonMapperFunction` to convert the result into JSON text and how to use the `ObjectDetectionAugmenter` to augment the
@@ -61,33 +52,56 @@ internet and cache it locally (e.g. `CACHE_TF_MODEL = true`) . The consecutive r
 
 Alternatively you can pre-download and decompress the desired model locally and use it with the `file://<path to my local copy` URI.
 
-[source,java,linenums,%autofit]
+[source,java,linenums]
 ----
-String model = "http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2018_01_28.tar.gz#frozen_inference_graph.pb";
-String labels = "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt";
+ObjectDetectionService detectionService = new ObjectDetectionService(
+   "http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2018_01_28.tar.gz#frozen_inference_graph.pb", // <1>
+   "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt", // <2>
+   0.4f, // <3>
+   false, // <4>
+   true); // <5>
 
-ObjectDetectionService detectionService =
-        new ObjectDetectionService(model, labels,
-                0.4f,
-                false,
-                true);
+byte[] image = GraphicsUtils.loadAsByteArray("classpath:/images/object-detection.jpg"); // <6>
 
-byte[] image = GraphicsUtils.loadAsByteArray("classpath:/images/object-detection.jpg");
+List<ObjectDetection> detectedObjects = detectionService.detect(image); // <7>
+----
+<1> Pre-trained object detection Tensorflow model
+<2> Object category labels (e.g. names) for the model
+<3> Confidence threshold - Only object with confidence above the threshold are returned
+<4> Indicate that this is not a `mask` (e.g. instance segmentation) model type
+<5> Cache the model in the local file system.
+<6> Load the input image to evaluate
+<7> Detect the objects in the image and represent the result as a list of ObjectDetection instances.
 
-List<ObjectDetection> detectedObjects = detectionService.detect(image);
+Next you can convert the result in JSON format.
 
+[source,java,linenums]
+----
 String jsonObjectDetections = new JsonMapperFunction().apply(detectedObjects);
 System.out.println(jsonObjectDetections);
+----
 
+.Object Detection JSON representation
+[source,json]
+----
+[{"name":"person","confidence":0.9988778,"x1":0.16026746,"y1":0.77476984,"x2":0.20187037,"y2":0.9463669,"cid":1},
+  {"name":"kite","confidence":0.9988236,"x1":0.43766645,"y1":0.08992515,"x2":0.49562767,"y2":0.16976416,"cid":38},
+  {"name":"person","confidence":0.9973546,"x1":0.08468014,"y1":0.68195003,"x2":0.12139505,"y2":0.84821695,"cid":1},
+  {"name":"kite","confidence":0.9886335,"x1":0.2067564,"y1":0.26368475,"x2":0.22546713,"y2":0.31434113,"cid":38}]]
+----
+
+Or use the `ObjectDetectionImageAugmenter` to augment the input image with the detected objects.
+
+[source,java,linenums]
+----
 byte[] annotatedImage = new ObjectDetectionImageAugmenter(false).apply(image, detectedObjects);
 IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/object-detection-augmented.jpg"));
 ----
 
-The augmented image looks like this:
-
+.Augmented Object Detection image
 image:{docdir}/object-detection/src/test/resources/doc/object-detection-augmented.jpg[alt=Object Detection, width=640,height=480]
 
-===== Instance Segmentation Example
+===== Example2: Instance Segmentation
 
 Next snipped show part of the file://./src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java[ExampleInstanceSegmentation.java]
 shows how to use the `ObjectDetectionService` for `Instance Segmentation`. It requires a `Mask`
