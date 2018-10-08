@@ -1,5 +1,5 @@
-//tag::ref-doc[]
-= Object Detection & Instance Segmentation Service for Java
+
+=== Object Detection
 
 The Object Detection library provides out-of-the-box support for the https://github.com/tensorflow/models/blob/master/research/object_detection/README.md[TensorFlow Object Detection API].
 It allows for real-time localization and identification of multiple objects in a single image or image stream.
@@ -33,13 +33,7 @@ Furthermore the `JsonMapperFunction` can be used to covert the `List<ObjectDetec
 
 The `ObjectDetectionAugmenter` allow to draw the object metadata on top of the original image.
 
-== Build
-
-```
-$ ./mvnw clean install
-```
-
-== Usage
+==== Usage
 
 Add the `object-detection` dependency to your pom:
 
@@ -50,7 +44,7 @@ Add the `object-detection` dependency to your pom:
 ```
 Use the latest version available
 
-==== Object Detection Example
+===== Object Detection
 
 Following snipped show how to use `ObjectDetectionService` to detect objects in input images, how to use the
 `JsonMapperFunction` to convert the result into JSON text and how to use the `ObjectDetectionAugmenter` to augment the
@@ -101,9 +95,9 @@ Alternatively you can pre-download and decompress the desired model locally and 
 
 The augmented image looks like this:
 
-image:./src/test/resources/doc/object-detection-augmented.jpg[alt=Object Detection, width=640,height=480]
+image:{docdir}/object-detection/src/test/resources/doc/object-detection-augmented.jpg[alt=Object Detection, width=640,height=480]
 
-==== Instance Segmentation Example
+===== Instance Segmentation Example
 
 Next snipped show part of the file://./src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java[ExampleInstanceSegmentation.java]
 shows how to use the `ObjectDetectionService` for `Instance Segmentation`. It requires a `Mask`
@@ -144,6 +138,12 @@ capable pre-trained model to be used and setting the `NO_INSTANCE_SEGMENTATION =
 
 The The augmented image with the segment masks looks like this:
 
-image:./src/test/resources/doc/object-detection-segmentation-augmented.jpg[alt=Object Detection, width=640,height=480]
+image:object-detection-segmentation-augmented.jpg[alt=Object Detection, width=640,height=480]
 
 Find the file://./src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java[ExampleInstanceSegmentation.java]
+
+==== Build
+
+```
+$ ./mvnw clean install
+```

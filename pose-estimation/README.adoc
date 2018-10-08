@@ -1,23 +1,23 @@
-//tag::ref-doc[]
-= Pose Estimation Service
+
+=== Pose Estimation Service
 
 [frame=none]
 [grid=none]
-[cols=2*]
+[cols="3,1"]
 |===
 | Multi-person Pose Estimation service for detecting human figures in images and videos. It detects where different
 body parts are located in an image an how are they spatially relate to each other. The implementation is based on the
 https://arxiv.org/pdf/1611.08050.pdf[Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields],
  https://github.com/CMU-Perceptual-Computing-Lab/openpose[OpenPose] and
  https://github.com/ildoonet/tf-pose-estimation[tf-pose-estimation].
-| image:./src/test/resources/doc/webcamPoseEstimation.gif[ch,width=400]
+| image:https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/webcamPoseEstimation.gif[ch,width=50%]
 |===
 
 [frame=none]
 [grid=none]
-[cols=2*]
+[cols="1,5"]
 |===
-| image:./src/test/resources/doc/VikiMaxiAdi.gif[wk,width=400]
+| image:https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/VikiMaxiAdi.gif[wk,width=100%]
 |Service uses pre-trained https://github.com/ildoonet/tf-pose-estimation[tf-pose-estimation] TensorFlow models. Flowing
 pre-trained models are available: http://dl.bintray.com/big-data/generic/2018-30-05-mobilenet_thin_graph_opt.pb[2018-30-05-mobilenet_thin_graph_opt.pb] - Faster but less accurate (default)
 , http://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb[2018-05-14-cmu-graph_opt.pb] - More accurate but slower and higher footprint
@@ -26,28 +26,31 @@ Models predict the locations and the affinity of the body parts. Predictions are
 Next the service applied few greedy algorithms to refine the parts in the heatmaps and to group them into poses.
 |===
 
-== Usage
+==== Usage
 Add the `pose-estimation` dependency to your pom (_Use the latest version available_):
 
-```xml
+[source,xml]
+----
 <groupId>io.mindmodel.services</groupId>
 <artifactId>pose-estimation</artifactId>
 <version>1.0.0-SNAPSHOT</version>
-```
+----
 
 Create a `PoseEstimationService` with the `cmu-graph_opt.pb` pre-trained model and use it to detect the poses
 in the `tourists.jpg` image:
 
-```java
+[source,java,linenums]
+----
 try (InputStream is = new DefaultResourceLoader().getResource("classpath:/images/tourists.jpg").getInputStream()) {
     byte[] inputImage = StreamUtils.copyToByteArray(is);
-    String modelUri = "https://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb";
-    PoseEstimationService poseEstimationService = new PoseEstimationService(modelUri, true);
-    List<Body> bodies = poseEstimationService.detect(inputImage);
+    String modelUri = "https://dl.bintray.com/big-data/generic/2018-05-14-cmu-graph_opt.pb";//<1>
+    PoseEstimationService poseEstimationService = new PoseEstimationService(modelUri, true);//<2>
+    List<Body> bodies = poseEstimationService.detect(inputImage);//<3>
 }
-```
-The Pose Estimation Service takes an image or batch of images and the produces a list of detected Bodies.
-The *Body* represents a single body posture found on the image. The Body is composed of Parts connected by Limbs.
+----
+<1> URI of the pre-trained, frozen Tensorflow model
+<2> Create a `PoseEstimationService` instance using the model URI and cache it locally (e.g. `true`). Service takes an image (or batch of images) and the produces a list of detected Bodies.
+<3> The *Body* represents a single body posture found on the image. The Body is composed of Parts connected by Limbs.
 The Limb contains a `PAF` (Part Affiliation Field) confidence score and the `from` and `to` parts it connects.
 The *Part* has `type` and `coordinates` in the image.
 
@@ -77,11 +80,11 @@ Or the `PoseEstimateImageAugmenter` function to draw the detected body skeletons
 
 The annotated images would look like this:
 
-image:./src/test/resources/doc/tourists-augmented.jpg[]
+image:https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/tourists-augmented.jpg[]
 
 You can configure the `PoseEstimateImageAugmenter` to use different color schema or graphic characteristics.
 
-== Build
+==== Build
 
 ```
 git clone git@github.com:tzolov/mind-model-services.git

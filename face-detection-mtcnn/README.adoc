@@ -1,14 +1,13 @@
-//tag::ref-doc[]
-= Face Detection (MTCNN)
+=== Face Detection (MTCNN)
 
 This is just a placeholder for the existing https://github.com/tzolov/mtcnn-java[Face Detection MTCNN-JAVA] project.
 
-Mind that this service uses the Tensorflow binding from the ND4J. That means that you can't have in the same project
+WARNING: Mind that this service uses the Tensorflow binding from the ND4J. That means that you can't have in the same project
 dependency on the other `mind-model-services`.
 
 I'm considering moving the `mtcnn-java` code under this project umbrella. But until then follow the instruction provided there.
 
-= Usage
+===== Usage
 
 Use the following dependency to add the `mtcnn` utility to your project
 ```xml
@@ -64,6 +63,6 @@ The face annotation json format looks like this:
     "type" : "MOUTH_LEFT", "position" : { "x" : 347, "y" : 147 } }, {
     "type" : "MOUTH_RIGHT", "position" : { "x" : 371, "y" : 147 },
   } ]
-}, { ...
+}, {
 ```
 

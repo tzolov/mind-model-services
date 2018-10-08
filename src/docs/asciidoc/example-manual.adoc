@@ -1,0 +1,61 @@
+= Mind Models Services Manual
+Doc Writer <christian.tzolov@mindmodel.io>
+2018-08-10
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../../main/java]
+
+This is a user manual for the `mind-model-services` collection of projects.
+
+== Introduction
+
+Java libraries aim to enable and simplify the application of various state of the art Deep Learning models.
+
+You can use them in standalone java application, SpringBoot microservices as well as streaming, batch and serverless
+programing models.
+
+== Source Code
+
+[source,java]
+.Java code from project
+----
+include::{sourcedir}/example/StringUtils.java[tags=contains,indent=0]
+----
+
+This page was built by the following command:
+
+ $ mvn
+
+== Images
+
+[.thumb]
+image::object-detection.jpg[scaledwidth=25%]
+image::object-detection.jpg[width=25%]
+
+== Attributes
+
+.Built-in
+asciidoctor-version:: {asciidoctor-version}
+safe-mode-name:: {safe-mode-name}
+docdir:: {docdir}
+docfile:: {docfile}
+imagesdir:: {imagesdir}
+
+.Custom
+project-version:: {project-version}
+sourcedir:: {sourcedir}
+endpoint-url:: {endpoint-url}
+
+== ML/DL Services
+
+include::{docdir}/object-detection/README.adoc[]
+
+include::{docdir}/pose-estimation/README.adoc[]
+
+include::{docdir}/semantic-segmentation/README.adoc[]
+
+include::{docdir}/face-detection-mtcnn/README.adoc[]
+
+
+

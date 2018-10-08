@@ -1,5 +1,4 @@
-//tag::ref-doc[]
-= Semantic Segmentation (Java 2D/Graphics 2D) Service
+=== Semantic Segmentation
 
 Java, real-time Semantic Image Segmentation with Tensorflow. This implementation uses
 the state-of-art deep learning, Tensorflow model: https://github.com/tensorflow/models/tree/master/research/deeplab[DeepLab].
@@ -42,7 +41,7 @@ Alternatively you can use any of the following pre-trained models:
 |http://dl.bintray.com/big-data/generic/deeplabv3_xception_ade20k_train_2018_05_29_frozen_inference_graph.pb
 |===
 
-== Usage
+==== Usage
 
 Add the `semantic-segmentation` dependency to your pom (_Use the latest version available_):
 
@@ -86,15 +85,13 @@ private static void writeImage(byte[] image, String imageFormat, String outputPa
 * https://github.com/tensorflow/models/tree/master/research/deeplab[DeepLab Project]
 * https://medium.freecodecamp.org/how-to-use-deeplab-in-tensorflow-for-object-segmentation-using-deep-learning-a5777290ab6b[How to re-train DeepLab Segmentation models using Transfer Learning]
 
-== Options
+==== Options
 
 $$mask-transparency$$:: $$Blended mask transparency. Value is between 0.0 (0% transparency) and 1.0 (100% transparent).$$ *($$Double$$, default: `$$0.3$$`)*
 $$model$$:: $$The location of the pre-trained TensorFlow model file. The file, http and classpath schemas are supported. For archive locations takes the first file with '.pb' extension. Use the URI fragment parameter to specify an exact model name (e.g. https://foo/bar/model.tar.gz#frozen_inference_graph.pb)$$ *($$Resource$$, default: `$$<none>$$`)*
 $$model-fetch$$:: $$The TensorFlow graph model outputs. Comma separate list of TensorFlow operation names to fetch the output Tensors from.$$ *($$List<String>$$, default: `$$<none>$$`)*
 
-//end::ref-doc[]
-
-== Build
+==== Build
 
 ```
 $ ./mvnw clean install
