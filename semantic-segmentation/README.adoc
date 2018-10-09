@@ -1,9 +1,9 @@
 === Semantic Segmentation
-
+[.lead]
 Java, real-time Semantic Image Segmentation with Tensorflow. This implementation uses
 the state-of-art deep learning, Tensorflow model: https://github.com/tensorflow/models/tree/master/research/deeplab[DeepLab].
 
-> Semantic Segmentation is the process of associating each pixel of an image with a class label, (such as flower, person, road, sky, ocean, or car).
+ Semantic Segmentation is the process of associating each pixel of an image with a class label, (such as flower, person, road, sky, ocean, or car).
 
 The `semantic segmentation` produces class-aware masks, unlike the `instance segmentation` produces instance-aware region masks.
 For `instance segmentation` check the https://github.com/spring-cloud-stream-app-starters/tensorflow/tree/master/spring-cloud-starter-stream-processor-object-detection[SCDF Object Detection Processor].

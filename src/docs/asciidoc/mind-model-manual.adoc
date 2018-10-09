@@ -27,18 +27,4 @@ include::{docdir}/semantic-segmentation/README.adoc[]
 include::{docdir}/face-detection-mtcnn/README.adoc[]
 ---
 
-== Attributes
-
-.Built-in
-asciidoctor-version:: {asciidoctor-version}
-safe-mode-name:: {safe-mode-name}
-docdir:: {docdir}
-docfile:: {docfile}
-imagesdir:: {imagesdir}
-
-.Custom
-project-version:: {project-version}
-sourcedir:: {sourcedir}
-endpoint-url:: {endpoint-url}
-
 

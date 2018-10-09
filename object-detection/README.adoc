@@ -1,75 +1,62 @@
 
 === Object Detection
+[.lead]
+Java model inference library for the https://github.com/tensorflow/models/blob/master/research/object_detection/README.md[TensorFlow Object Detection API].
+Allows real-time localization and identification of multiple objects in a single or batch of images.
+Works with all https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[pre-trained zoo models]
+and https://github.com/tensorflow/models/tree/master/research/object_detection/data[object labels].
 
-The Object Detection library provides out-of-the-box support for the https://github.com/tensorflow/models/blob/master/research/object_detection/README.md[TensorFlow Object Detection API].
-It allows for real-time localization and identification of multiple objects in a single image or image stream.
-The Object Detection processor uses one of the pre-trained https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[object detection] models
-and corresponding https://github.com/tensorflow/models/tree/master/research/object_detection/data[object labels].
+[cols="1,2", frame=none, grid=none]
+|===
+| image:object_detection_1.jpg[alt=Object Detection 1, width=100%]
+| The file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionService.java[ObjectDetectionService] takes an image or a batch of images and outputs a list of predicted objects bounding boxes
+  represented by file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java[ObjectDetection].
+  For the models supporting https://github.com/tensorflow/models/tree/master/research/object_detection#february-9-2018[Instance Segmentation],
+  the `ObjectDetectionService` can predict the instance segmentation `masks` in addition to object bounding boxes.
 
-All pre-trained https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[detection_model_zoo.md] models are supported.
-You can use the following URI notation to instruct the `ObjectDetectionService` download any of the models directly from the page.
-For this just use `<zoo model tar.gz url>#<name of the frozen model file name>` URI. To speedup the bootstrap performance you may consider
-downloading the models locally and use the `file:/<path to my model>` URI schema instead!
-
-The object category labels for the pre-trained models are available at: https://github.com/tensorflow/models/tree/master/research/object_detection/data[object_detection/data]
-Use the labels applicable for the model. For performance reasons you may consider to download the labels files locally.
-
-The `ObjectDetectionService` takes as input an image or batch of images and outputs list of file://.src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java[ObjectDetection]
-instances representing the detected objects.
-
-With some pre-trained models, the `ObjectDetectionService` can perform object detection as well instance segmentation.
-
-Furthermore the `JsonMapperFunction` can be used to covert the `List<ObjectDetection>` in JSON representation, while
-the `ObjectDetectionAugmenter` allow to draw the object metadata on top of the original image.
-
+  The file://{docdir}/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java[JsonMapperFunction] permits
+  converting the `List<ObjectDetection>` into JSON objects and the
+  file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java[ObjectDetectionImageAugmenter]
+  allow to augment the input image with the detected bounding boxes and segmentation masks.
+|===
 ==== Usage
 
-Add the `object-detection` dependency to your pom:
+Add the `object-detection` dependency to the pom (use the latest version available):
 
 [source,xml]
 ----
-<groupId>io.mindmodel.services</groupId>
-<artifactId>object-detection</artifactId>
-<version>1.0.0-SNAPSHOT</version>
+<dependency>
+    <groupId>io.mindmodel.services</groupId>
+    <artifactId>object-detection</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
 ----
 
-Use the latest version available
+===== Example 1: Object Detection
 
-===== Example1: Object Detection
-
-Following snipped show how to use `ObjectDetectionService` to detect objects in input images, how to use the
-`JsonMapperFunction` to convert the result into JSON text and how to use the `ObjectDetectionAugmenter` to augment the
-image with the detected objects.
-
-It uses the most accurate but slowest pre-trained model `faster_rcnn_nas_coco_2018_01_28.tar.gz#frozen_inference_graph.pb`.
-For much faster but less accurate model you can consider the `ssd_mobilenet_v1_ppn_coco`, e.g. use this URI:
-`http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_ppn_shared_box_predictor_300x300_coco14_sync_2018_07_03.tar.gz#frozen_inference_graph.pb`
-
-The complete list of available models is here: https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[detection_model_zoo.md]
-
-Also be aware that the first execution of the example will attempt to download the model (few hundreds megabytes) form
-internet and cache it locally (e.g. `CACHE_TF_MODEL = true`) . The consecutive runs will use the local cached copy.
-
-Alternatively you can pre-download and decompress the desired model locally and use it with the `file://<path to my local copy` URI.
+Demonstrate how to use the `ObjectDetectionService` to detect objects in input images, convert the result into JSON or
+augment the image with the founded object bounding boxes.
 
 [source,java,linenums]
 ----
 ObjectDetectionService detectionService = new ObjectDetectionService(
-   "http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2018_01_28.tar.gz#frozen_inference_graph.pb", // <1>
-   "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt", // <2>
-   0.4f, // <3>
-   false, // <4>
-   true); // <5>
+ "http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2018_01_28.tar.gz#frozen_inference_graph.pb", //<1>
+ "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt", //<2>
+ 0.4f, //<3>
+ false, //<4>
+ true); //<5>
 
-byte[] image = GraphicsUtils.loadAsByteArray("classpath:/images/object-detection.jpg"); // <6>
+byte[] image = GraphicsUtils.loadAsByteArray("classpath:/images/object-detection.jpg"); //<6>
 
-List<ObjectDetection> detectedObjects = detectionService.detect(image); // <7>
+List<ObjectDetection> detectedObjects = detectionService.detect(image); //<7>
 ----
-<1> Pre-trained object detection Tensorflow model
+<1> Downloads and loads a pre-trained `frozen_inference_graph.pb` model directly from the `faster_rcnn_nas_coco.tar.gz` archive in the
+Tensorflow model zoo. Mind that on first attempt it will download few hundreds of MBs. The consecutive runs will use the
+cached copy (5) instead.
 <2> Object category labels (e.g. names) for the model
 <3> Confidence threshold - Only object with confidence above the threshold are returned
 <4> Indicate that this is not a `mask` (e.g. instance segmentation) model type
-<5> Cache the model in the local file system.
+<5> Cache the model on the local file system.
 <6> Load the input image to evaluate
 <7> Detect the objects in the image and represent the result as a list of ObjectDetection instances.
 
@@ -99,49 +86,100 @@ IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/ob
 ----
 
 .Augmented Object Detection image
-image:{docdir}/object-detection/src/test/resources/doc/object-detection-augmented.jpg[alt=Object Detection, width=640,height=480]
+image:{docdir}/object-detection/src/test/resources/doc/object-detection-augmented.jpg[alt=Object Detection, width=60%]
 
-===== Example2: Instance Segmentation
+===== Example 2: Instance Segmentation
 
-Next snipped show part of the file://./src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java[ExampleInstanceSegmentation.java]
-shows how to use the `ObjectDetectionService` for `Instance Segmentation`. It requires a `Mask`
-capable pre-trained model to be used and setting the `NO_INSTANCE_SEGMENTATION = true` flag to true.
+The file://{docdir}/object-detection/src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java[ExampleInstanceSegmentation.java]
+sample shows how to use the `ObjectDetectionService` for `Instance Segmentation`. It requires a
+a pre-trained model that supports `MASKS` and setting the instance segmentation (e.g. `useMasks`) flag to true.
 
 [source,java,linenums]
 ----
-String model = // <1>
-"http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz#frozen_inference_graph.pb";
-String labels = "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt";
-
-ObjectDetectionService detectionService =
-        new ObjectDetectionService(model, labels,
-                0.4f, // <2>
-                true, // <3>
-                true); // <4>
+ObjectDetectionService detectionService = new ObjectDetectionService(
+   "http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz#frozen_inference_graph.pb", // <1>
+   "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt", // <2>
+   0.4f, // <3>
+   true, // <4>
+   true); // <5>
 
 byte[] image = GraphicsUtils.loadAsByteArray("classpath:/images/object-detection.jpg");
 
-List<ObjectDetection> detectedObjects = detectionService.detect(image); // <5>
+List<ObjectDetection> detectedObjects = detectionService.detect(image); // <6>
 
-String jsonObjectDetections = new JsonMapperFunction().apply(detectedObjects); // <6>
+String jsonObjectDetections = new JsonMapperFunction().apply(detectedObjects); // <7>
 System.out.println(jsonObjectDetections);
 
-byte[] annotatedImage = new ObjectDetectionImageAugmenter(true).apply(image, detectedObjects); // <7>
+byte[] annotatedImage = new ObjectDetectionImageAugmenter(true).apply(image, detectedObjects); // <8>
 IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/object-detection-segmentation-augmented.jpg"));
 ----
 <1> Uses one of the 4 MASK pre-trained models
-<2> Confidence threshold - Only object with confidence above the threshold are returned
-<3> Use masks output - For the pre-trained models instruct to use the extended fetch names that include instance segmentation masks as well.
-<4> Cache model - Create a local copy of the model to speed up consecutive runs.
-<5> Evaluate the model to predict the object in the input image.
-<6> Convert the detected object in to JSON array.
-<7> Draw the detected object on top of the input image.
+<2>
+<3> Confidence threshold - Only object with confidence above the threshold are returned
+<4> Use masks output - For the pre-trained models instruct to use the extended fetch names that include instance segmentation masks as well.
+<5> Cache model - Create a local copy of the model to speed up consecutive runs.
+<6> Evaluate the model to predict the object in the input image.
+<7> Convert the detected object in to JSON array.
+<8> Draw the detected object on top of the input image.
 
-The The augmented image with the segment masks looks like this:
+.Augmented Object Detection image with the segment masks
+image:object-detection-segmentation-augmented.jpg[alt=Object Detection Augmented, width=60%]
 
-image:object-detection-segmentation-augmented.jpg[alt=Object Detection, width=640,height=480]
+==== Models
+All pre-trained https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[detection_model_zoo.md]
+models are supported. Following URI notation can be used to download any of the models directly from the zoo.
 
-Find the file://./src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java[ExampleInstanceSegmentation.java]
+----
+http://<zoo model tar.gz url>#frozen_inference_graph.pb
+----
+
+The `frozen_inference_graph.pb` is the frozen model file name within the archive.
+
+NOTE: For some models this name may differ. You have to download and open the archive to find the real name.
+
+TIP: To speedup the bootstrap performance you may consider extracting the `frozen_inference_graph.pb` and caching it
+locally. Then you can use the `file://path-to-my-local-copy` URI schema to access it.
+
+Following models can be used for `Instance Segmentation` as well:
+
+[frame=none, grid=none]
+|===
+| http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz[mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz]
+| http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_v2_coco_2018_01_28.tar.gz[mask_rcnn_inception_v2_coco_2018_01_28.tar.gz]
+| http://download.tensorflow.org/models/object_detection/mask_rcnn_resnet101_atrous_coco_2018_01_28.tar.gz[mask_rcnn_resnet101_atrous_coco_2018_01_28.tar.gz]
+| http://download.tensorflow.org/models/object_detection/mask_rcnn_resnet50_atrous_coco_2018_01_28.tar.gz[mask_rcnn_resnet50_atrous_coco_2018_01_28.tar.gz]
+|===
+
+In addition to the model, the `ObjectDetectionService` requires a list of labels that correspond to the categories detectable by the selected model.
+All labels files are available in the https://github.com/tensorflow/models/tree/master/research/object_detection/data[object_detection/data] folder.
+
+NOTE: It is important to use the labels that correspond to the model being used! Table below highlights this mapping.
+
+.Relationsip between trained model types and category labels
+[%header, cols="1,2", frame=none, grid=none]
+|===
+| Model
+| Labels
+
+| https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md#coco-trained-models[coco]
+| https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt[mscoco_label_map.pbtxt]
+
+| https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md#kitti-trained-models[kitti]
+| https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/kitti_label_map.pbtxt[kitti_label_map.pbtxt]
+
+| https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md#open-images-trained-models[open-images]
+| https://github.com/tensorflow/models/blob/master/research/object_detection/data/oid_bbox_trainable_label_map.pbtxt[oid_bbox_trainable_label_map.pbtxt]
+
+| https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md#inaturalist-species-trained-models[inaturalist-species]
+| https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/fgvc_2854_classes_label_map.pbtxt[fgvc_2854_classes_label_map.pbtxt]
+
+| https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md#ava-v21-trained-models[ava]
+| https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/ava_label_map_v2.1.pbtxt[ava_label_map_v2.1.pbtxt]
+
+|===
+
+TIP: For performance reasons you may consider downloading the required label files to the local file system.
+
 
 ==== Build
 

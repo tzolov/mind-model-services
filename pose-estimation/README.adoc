@@ -1,11 +1,9 @@
 
 === Pose Estimation Service
-
+[.lead]
 Multi-person pose estimation service for detecting human figures in images and videos.
 
-[frame=none]
-[grid=none]
-[cols="1, 4, 1"]
+[cols="1, 4, 1", frame=none, grid=none]
 |===
 | image:https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/VikiMaxiAdi.gif[wk,width=100%]
 | The pose estimation service predicts where different body parts are located an how are they spatially relate to each
@@ -52,11 +50,15 @@ The *Part* has `type` and `coordinates` in the image.
 [source,json]
 ----
 [{"id":0, "limbs": [
-    {"score":8.4396105,"from":{"type":"lShoulder","y":56,"x":160},"to":{"type":"lEar","y":24,"x":152}},
-    {"score":10.145516,"from":{ "type":"neck","y": 56,"x":144},"to":{"type":"rShoulder","y":56,"x":128}},
+    {"score":8.4396105,"from":{"type":"lShoulder","y":56,"x":160},
+                         "to":{"type":"lEar","y":24,"x":152}},
+    {"score":10.145516,"from":{ "type":"neck","y": 56,"x":144},
+                         "to":{"type":"rShoulder","y":56,"x":128}},
  {"id":1, "limbs": [
-    {"score":7.85779,"from":{"type":"neck","y":48,"x":328},"to":{"type":"rHip","y":128,"x":328}},
-    {"score":6.8949876,"from":{"type":"neck","y":48,"x":328 },"to":{"type":"lHip","y":128,"x":304}}]
+    {"score":7.85779,  "from":{"type":"neck","y":48,"x":328},
+                         "to":{"type":"rHip","y":128,"x":328}},
+    {"score":6.8949876,"from":{"type":"neck","y":48,"x":328 },
+                         "to":{"type":"lHip","y":128,"x":304}}]
 }]
 ----
 
