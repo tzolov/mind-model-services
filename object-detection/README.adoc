@@ -8,7 +8,7 @@ and https://github.com/tensorflow/models/tree/master/research/object_detection/d
 
 [cols="1,2", frame=none, grid=none]
 |===
-| image:object_detection_1.jpg[alt=Object Detection 1, width=100%]
+| image:{docdir}/src/docs/asciidoc/images/object_detection_1.jpg[alt=Object Detection 1, width=100%]
 | The file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionService.java[ObjectDetectionService] takes an image or a batch of images and outputs a list of predicted objects bounding boxes
   represented by file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java[ObjectDetection].
   For the models supporting https://github.com/tensorflow/models/tree/master/research/object_detection#february-9-2018[Instance Segmentation],
@@ -34,8 +34,9 @@ Add the `object-detection` dependency to the pom (use the latest version availab
 
 ===== Example 1: Object Detection
 
-Demonstrate how to use the `ObjectDetectionService` to detect objects in input images, convert the result into JSON or
-augment the image with the founded object bounding boxes.
+The file://{docdir}/object-detection/src/test/java/io/mindmodel/services/object/detection/examples/ExampleObjectDetection.java[ExampleObjectDetection.java]
+sample demonstrates how to use the `ObjectDetectionService` for detecting objects in input images. It also shows how to
+convert the result into JSON format and augment the input image with the detected object bounding boxes.
 
 [source,java,linenums]
 ----
@@ -55,7 +56,7 @@ Tensorflow model zoo. Mind that on first attempt it will download few hundreds o
 cached copy (5) instead.
 <2> Object category labels (e.g. names) for the model
 <3> Confidence threshold - Only object with confidence above the threshold are returned
-<4> Indicate that this is not a `mask` (e.g. instance segmentation) model type
+<4> Indicate that this is not a `mask` (e.g. not an instance segmentation) model type
 <5> Cache the model on the local file system.
 <6> Load the input image to evaluate
 <7> Detect the objects in the image and represent the result as a list of ObjectDetection instances.
@@ -68,31 +69,36 @@ String jsonObjectDetections = new JsonMapperFunction().apply(detectedObjects);
 System.out.println(jsonObjectDetections);
 ----
 
-.Object Detection JSON representation
+.Sample Object Detection JSON representation
 [source,json]
 ----
-[{"name":"person","confidence":0.9988778,"x1":0.16026746,"y1":0.77476984,"x2":0.20187037,"y2":0.9463669,"cid":1},
-  {"name":"kite","confidence":0.9988236,"x1":0.43766645,"y1":0.08992515,"x2":0.49562767,"y2":0.16976416,"cid":38},
-  {"name":"person","confidence":0.9973546,"x1":0.08468014,"y1":0.68195003,"x2":0.12139505,"y2":0.84821695,"cid":1},
-  {"name":"kite","confidence":0.9886335,"x1":0.2067564,"y1":0.26368475,"x2":0.22546713,"y2":0.31434113,"cid":38}]]
+[{"name":"person","confidence":0.998,"x1":0.160,"y1":0.774,"x2":0.201,"y2":0.946,"cid":1},
+ {"name":"kite","confidence":0.998,"x1":0.437,"y1":0.089,"x2":0.495,"y2":0.169,"cid":38},
+ {"name":"person","confidence":0.997,"x1":0.084,"y1":0.681,"x2":0.121,"y2":0.848,"cid":1},
+ {"name":"kite","confidence":0.988,"x1":0.206,"y1":0.263,"x2":0.225,"y2":0.314,"cid":38}]]
 ----
 
-Or use the `ObjectDetectionImageAugmenter` to augment the input image with the detected objects.
+Use the file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java[ObjectDetectionImageAugmenter]
+to draw the detected objects on top of the input image.
 
 [source,java,linenums]
 ----
-byte[] annotatedImage = new ObjectDetectionImageAugmenter(false).apply(image, detectedObjects);
-IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/object-detection-augmented.jpg"));
+byte[] annotatedImage = new ObjectDetectionImageAugmenter(false).apply(image, detectedObjects); // <1>
+IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/object-detection-augmented.jpg")); //<2>
 ----
+<1> Augment the image with the detected object bounding boxes (Uses Java2D internally).
+<2> Stores the augmented image as `object-detection-augmented.jpg` image file.
 
-.Augmented Object Detection image
+.Augmented object-detection-augmented.jpg file
 image:{docdir}/object-detection/src/test/resources/doc/object-detection-augmented.jpg[alt=Object Detection, width=60%]
+
+TIP: Set the `ObjectDetectionImageAugmenter#agnosticColors` property to `true` to use a monochrome color schema.
 
 ===== Example 2: Instance Segmentation
 
 The file://{docdir}/object-detection/src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java[ExampleInstanceSegmentation.java]
-sample shows how to use the `ObjectDetectionService` for `Instance Segmentation`. It requires a
-a pre-trained model that supports `MASKS` and setting the instance segmentation (e.g. `useMasks`) flag to true.
+sample shows how to use the `ObjectDetectionService` for `Instance Segmentation`.
+NOTE: It requires a trained model that supports `Masks` as well as setting the instance segmentation (e.g. `useMasks`) flag to `true`.
 
 [source,java,linenums]
 ----
@@ -119,11 +125,11 @@ IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/ob
 <4> Use masks output - For the pre-trained models instruct to use the extended fetch names that include instance segmentation masks as well.
 <5> Cache model - Create a local copy of the model to speed up consecutive runs.
 <6> Evaluate the model to predict the object in the input image.
-<7> Convert the detected object in to JSON array.
+<7> Convert the detected object in to JSON array. NOTE: that with mask there is an additional filed: `mask`
 <8> Draw the detected object on top of the input image.
 
-.Augmented Object Detection image with the segment masks
-image:object-detection-segmentation-augmented.jpg[alt=Object Detection Augmented, width=60%]
+.Result augmented object-detection-segmentation-augmented.jpg file
+image:{docdir}/object-detection/src/test/resources/doc/object-detection-segmentation-augmented.jpg[alt=Object Detection Augmented, width=60%]
 
 ==== Models
 All pre-trained https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[detection_model_zoo.md]
