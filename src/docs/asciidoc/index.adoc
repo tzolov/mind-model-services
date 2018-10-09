@@ -1,9 +1,12 @@
+
 = Machine and Deep Learning Inference Services
 Doc Writer <christian.tzolov@mindmodel.io>
 2018-08-10
 :revnumber: {project-version}
 :example-caption!:
-ifndef::imagesdir[:imagesdir: images]
+
+ifndef::imagesdir[:imagesdir: images/..]
+
 ifndef::sourcedir[:sourcedir: ../../main/java]
 
 User manual for the `mind-model-services` collection of projects.

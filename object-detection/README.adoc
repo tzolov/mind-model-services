@@ -1,5 +1,10 @@
-
 === Object Detection
+
+ifdef::env-github[]
+:imagesdir: /src/docs/asciidoc/images/images
+endif::[]
+
+
 [.lead]
 Java model inference library for the https://github.com/tensorflow/models/blob/master/research/object_detection/README.md[TensorFlow Object Detection API].
 Allows real-time localization and identification of multiple objects in a single or batch of images.
@@ -8,16 +13,16 @@ and https://github.com/tensorflow/models/tree/master/research/object_detection/d
 
 [cols="1,2", frame=none, grid=none]
 |===
-| image:object_detection_1.jpg[alt=Object Detection 1, width=100%]
-| The file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionService.java[ObjectDetectionService] takes an image or a batch of images and outputs a list of predicted objects bounding boxes
-  represented by file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java[ObjectDetection].
-  For the models supporting https://github.com/tensorflow/models/tree/master/research/object_detection#february-9-2018[Instance Segmentation],
-  the `ObjectDetectionService` can predict the instance segmentation `masks` in addition to object bounding boxes.
+| image:{imagesdir}/../object_detection_1.jpg[alt=Object Detection 1, width=100%]
+|The link:{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionService.java[ObjectDetectionService] takes an image or a batch of images and outputs a list of predicted objects bounding boxes
+represented by file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java[ObjectDetection].
+For the models supporting https://github.com/tensorflow/models/tree/master/research/object_detection#february-9-2018[Instance Segmentation],
+the `ObjectDetectionService` can predict the instance segmentation `masks` in addition to object bounding boxes.
 
-  The file://{docdir}/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java[JsonMapperFunction] permits
-  converting the `List<ObjectDetection>` into JSON objects and the
-  file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java[ObjectDetectionImageAugmenter]
-  allow to augment the input image with the detected bounding boxes and segmentation masks.
+The file://{docdir}/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java[JsonMapperFunction] permits
+converting the `List<ObjectDetection>` into JSON objects and the
+file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java[ObjectDetectionImageAugmenter]
+allow to augment the input image with the detected bounding boxes and segmentation masks.
 |===
 ==== Usage
 

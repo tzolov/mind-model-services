@@ -586,15 +586,15 @@ and <a href="https://github.com/tensorflow/models/tree/master/research/object_de
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="./images/object_detection_1.jpg" alt="Object Detection 1" width="100%"></span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionService.java">ObjectDetectionService</a> takes an image or a batch of images and outputs a list of predicted objects bounding boxes
-  represented by <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java">ObjectDetection</a>.
-  For the models supporting <a href="https://github.com/tensorflow/models/tree/master/research/object_detection#february-9-2018">Instance Segmentation</a>,
-  the <code>ObjectDetectionService</code> can predict the instance segmentation <code>masks</code> in addition to object bounding boxes.</p>
-<p class="tableblock">  The <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java">JsonMapperFunction</a> permits
-  converting the <code>List&lt;ObjectDetection&gt;</code> into JSON objects and the
-  <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java">ObjectDetectionImageAugmenter</a>
-  allow to augment the input image with the detected bounding boxes and segmentation masks.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/object_detection_1.jpg" alt="Object Detection 1" width="100%"></span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <a href="/Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionService.java">ObjectDetectionService</a> takes an image or a batch of images and outputs a list of predicted objects bounding boxes
+represented by <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java">ObjectDetection</a>.
+For the models supporting <a href="https://github.com/tensorflow/models/tree/master/research/object_detection#february-9-2018">Instance Segmentation</a>,
+the <code>ObjectDetectionService</code> can predict the instance segmentation <code>masks</code> in addition to object bounding boxes.</p>
+<p class="tableblock">The <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java">JsonMapperFunction</a> permits
+converting the <code>List&lt;ObjectDetection&gt;</code> into JSON objects and the
+<a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java">ObjectDetectionImageAugmenter</a>
+allow to augment the input image with the detected bounding boxes and segmentation masks.</p></td>
 </tr>
 </tbody>
 </table>
@@ -732,7 +732,7 @@ IOUtils.write(annotatedImage, <span class="keyword">new</span> <span class="pred
 </div>
 <div class="paragraph">
 <div class="title">Augmented object-detection-augmented.jpg file</div>
-<p><span class="image"><img src="./images/object-detection-augmented.jpg" alt="Object Detection" width="60%"></span></p>
+<p><span class="image"><img src="images/object-detection-augmented.jpg" alt="Object Detection" width="60%"></span></p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -828,7 +828,7 @@ IOUtils.write(annotatedImage, <span class="keyword">new</span> <span class="pred
 </div>
 <div class="paragraph">
 <div class="title">Result augmented object-detection-segmentation-augmented.jpg file</div>
-<p><span class="image"><img src="./images/object-detection-segmentation-augmented.jpg" alt="Object Detection Augmented" width="60%"></span></p>
+<p><span class="image"><img src="images/object-detection-segmentation-augmented.jpg" alt="Object Detection Augmented" width="60%"></span></p>
 </div>
 </div>
 </div>
@@ -1424,7 +1424,7 @@ MtcnnService mtcnnService = <span class="keyword">new</span> MtcnnService(<span 
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2018-10-09 12:18:29 CEST
+Last updated 2018-10-10 13:15:14 CEST
 </div>
 </div>
 </body>
