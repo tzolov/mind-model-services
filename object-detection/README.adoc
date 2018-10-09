@@ -8,7 +8,7 @@ and https://github.com/tensorflow/models/tree/master/research/object_detection/d
 
 [cols="1,2", frame=none, grid=none]
 |===
-| image:{docdir}/src/docs/asciidoc/images/object_detection_1.jpg[alt=Object Detection 1, width=100%]
+| image:object_detection_1.jpg[alt=Object Detection 1, width=100%]
 | The file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionService.java[ObjectDetectionService] takes an image or a batch of images and outputs a list of predicted objects bounding boxes
   represented by file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java[ObjectDetection].
   For the models supporting https://github.com/tensorflow/models/tree/master/research/object_detection#february-9-2018[Instance Segmentation],
