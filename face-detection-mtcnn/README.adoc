@@ -5,10 +5,16 @@ ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
 [.lead]
 This is just a placeholder for the existing https://github.com/tzolov/mtcnn-java[Face Detection MTCNN-JAVA] project.
 
-WARNING: Mind that this service uses the Tensorflow binding from the ND4J. That means that you can't have in the same project
+[cols="1,2", frame=none, grid=none]
+|===
+|image:{imagesdir}/../face-detection-maxi.gif[alt=Face Detection Maxi, width=100%]
+|WARNING: Mind that this service uses the Tensorflow binding from the ND4J. That means that you can't have in the same project
 dependency on the other `mind-model-services`.
 
 I'm considering moving the `mtcnn-java` code under this project umbrella. But until then follow the instruction provided there.
+|===
+
+
 
 ===== Usage
 

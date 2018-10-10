@@ -28,7 +28,7 @@ Add the `semantic-segmentation` dependency to your pom (_use the latest version 
 <dependency>
     <groupId>io.mindmodel.services</groupId>
     <artifactId>semantic-segmentation</artifactId>
-    <version>{project-version}</version>
+    <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ----
 
