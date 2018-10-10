@@ -1,5 +1,5 @@
 
-= Machine and Deep Learning Inference Services
+= Deep Learning Inference Services
 Doc Writer <christian.tzolov@mindmodel.io>
 2018-08-10
 :revnumber: {project-version}

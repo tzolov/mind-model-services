@@ -28,7 +28,7 @@ Add the `pose-estimation` dependency to your pom (_Use the latest version availa
 <dependency>
     <groupId>io.mindmodel.services</groupId>
     <artifactId>pose-estimation</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ----
 
