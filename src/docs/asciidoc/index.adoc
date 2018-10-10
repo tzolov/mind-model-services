@@ -5,9 +5,11 @@ Doc Writer <christian.tzolov@mindmodel.io>
 :revnumber: {project-version}
 :example-caption!:
 
-ifndef::imagesdir[:imagesdir: images/..]
+ifndef::imagesdir[:imagesdir: images]
 
 ifndef::sourcedir[:sourcedir: ../../main/java]
+
+ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
 
 User manual for the `mind-model-services` collection of projects.
 
@@ -23,9 +25,9 @@ application, SpringBoot microservices as well as streaming, batch and serverless
 ---
 include::{docdir}/object-detection/README.adoc[]
 ---
-include::{docdir}/pose-estimation/README.adoc[]
----
 include::{docdir}/semantic-segmentation/README.adoc[]
+---
+include::{docdir}/pose-estimation/README.adoc[]
 ---
 include::{docdir}/face-detection-mtcnn/README.adoc[]
 ---

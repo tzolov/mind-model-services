@@ -1,11 +1,14 @@
 === Semantic Segmentation
+
+ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
+
 [.lead]
 Java, real-time Semantic Image Segmentation with Tensorflow. This implementation uses
 the state-of-art deep learning, Tensorflow model: https://github.com/tensorflow/models/tree/master/research/deeplab[DeepLab].
 
 [cols="1,2", frame=none, grid=none]
 |===
-| image:{docdir}/semantic-segmentation/src/test/resources/doc/VikiMaxiAdi-all.png[width=100%]
+| image:{imagesdir}/../VikiMaxiAdi-all.png[width=100%]
 |Semantic Segmentation is the process of associating each pixel of an image with a class label, (such as flower, person, road, sky, ocean, or car).
 Unlike the `Instance Segmentation`, which produces instance-aware region masks, the `Semantic Segmentation` produces class-aware masks.
 For implementing `Instance Segmentation` consult the link:{docdir}/object-detection/README.adoc[Object Detection Service] instead.
@@ -60,13 +63,13 @@ Based on the training datasets, three groups of pre-trained models provided:
 
 [cols="1,2", frame=none, grid=none]
 |===
-| image:{docdir}/semantic-segmentation/src/test/resources/doc/VikiMaxiAdi-all.png[width=100%]
+| image:{imagesdir}/../VikiMaxiAdi-all.png[width=100%]
 | https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-pascal-voc-2012[DeepLab models trained on PASCAL VOC 2012]
 
-| image:{docdir}/semantic-segmentation/src/test/resources/doc/cityscape-all-small.png[width=100%]
+| image:{imagesdir}/../cityscape-all-small.png[width=100%]
 | https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-cityscapes[DeepLab models trained on Cityscapes]
 
-| image:{docdir}/semantic-segmentation/src/test/resources/doc/ADE20K-all-small.png[width=100%]
+| image:{imagesdir}/../ADE20K-all-small.png[width=100%]
 | https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-ade20k[DeepLab models trained on ADE20K]
 |===
 

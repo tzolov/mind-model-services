@@ -1,11 +1,13 @@
-
 === Pose Estimation Service
+
+ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
+
 [.lead]
 Multi-person pose estimation service for detecting human figures in images and videos.
 
 [cols="1, 4, 1", frame=none, grid=none]
 |===
-| image:https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/VikiMaxiAdi.gif[wk,width=100%]
+| image:{imagesdir}/../VikiMaxiAdi.gif[wk,width=100%]
 | The pose estimation service predicts where different body parts are located an how are they spatially relate to each
 other. The implementation is based on the https://arxiv.org/pdf/1611.08050.pdf[Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields],
  https://github.com/CMU-Perceptual-Computing-Lab/openpose[OpenPose] and
@@ -15,7 +17,7 @@ Service uses pre-trained https://github.com/ildoonet/tf-pose-estimation[tf-pose-
   to predict the locations and the affinity of the body parts. Predictions are represented by `heatmaps`. Next
   the service applied few greedy algorithms to refine the parts in the heatmaps and to group them into poses.
 
-| image:https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/webcamPoseEstimation.gif[ch,width=100%]
+| image:{imagesdir}/../webcamPoseEstimation.gif[ch,width=100%]
 |===
 
 ==== Usage
@@ -23,9 +25,11 @@ Add the `pose-estimation` dependency to your pom (_Use the latest version availa
 
 [source,xml]
 ----
-<groupId>io.mindmodel.services</groupId>
-<artifactId>pose-estimation</artifactId>
-<version>1.0.0-SNAPSHOT</version>
+<dependency>
+    <groupId>io.mindmodel.services</groupId>
+    <artifactId>pose-estimation</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
 ----
 
 Create a `PoseEstimationService` with the `cmu-graph_opt.pb` pre-trained model and use it to detect the poses
@@ -72,7 +76,7 @@ IOUtils.write(augmentedImage, new FileOutputStream("./pose-estimation/target/tou
 
 The annotated images would look like this:
 
-image:https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/tourists-augmented.jpg[]
+image:{imagesdir}/../tourists-augmented.jpg[]
 
 You can configure the `PoseEstimateImageAugmenter` to use different color schema or graphic characteristics.
 

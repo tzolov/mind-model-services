@@ -1,8 +1,8 @@
 === Object Detection
 
-ifdef::env-github[]
-:imagesdir: /src/docs/asciidoc/images/images
-endif::[]
+ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
+//:imagesdir: /src/docs/asciidoc/images/images
+//endif::[]
 
 
 [.lead]
@@ -95,7 +95,7 @@ IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/ob
 <2> Stores the augmented image as `object-detection-augmented.jpg` image file.
 
 .Augmented object-detection-augmented.jpg file
-image:object-detection-augmented.jpg[alt=Object Detection, width=60%]
+image:{imagesdir}/../object-detection-augmented.jpg[alt=Object Detection, width=60%]
 
 TIP: Set the `ObjectDetectionImageAugmenter#agnosticColors` property to `true` to use a monochrome color schema.
 
@@ -134,7 +134,7 @@ IOUtils.write(annotatedImage, new FileOutputStream("./object-detection/target/ob
 <8> Draw the detected object on top of the input image.
 
 .Result augmented object-detection-segmentation-augmented.jpg file
-image:object-detection-segmentation-augmented.jpg[alt=Object Detection Augmented, width=60%]
+image:{imagesdir}/../object-detection-segmentation-augmented.jpg[alt=Object Detection Augmented, width=60%]
 
 ==== Models
 All pre-trained https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md[detection_model_zoo.md]

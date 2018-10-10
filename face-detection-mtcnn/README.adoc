@@ -1,5 +1,8 @@
 === Face Detection (MTCNN)
 
+ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
+
+[.lead]
 This is just a placeholder for the existing https://github.com/tzolov/mtcnn-java[Face Detection MTCNN-JAVA] project.
 
 WARNING: Mind that this service uses the Tensorflow binding from the ND4J. That means that you can't have in the same project
@@ -10,29 +13,36 @@ I'm considering moving the `mtcnn-java` code under this project umbrella. But un
 ===== Usage
 
 Use the following dependency to add the `mtcnn` utility to your project
-```xml
+
+[source,xml]
+----
 <dependency>
   <groupId>net.tzolov.cv</groupId>
   <artifactId>mtcnn</artifactId>
   <version>0.0.4</version>
 </dependency>
-```
+----
+
 Also register `jcentral` to your list of maven repository (it is available out of the box for Gradle).
-```xml
+
+[source,xml]
+----
 <repositories>
     <repository>
       <id>jcenter</id>
       <url>https://jcenter.bintray.com/</url>
     </repository>
 </repositories>
-```
+----
+
 The https://github.com/tzolov/mtcnn-java/blob/master/src/test/java/net/tzolov/cv/mtcnn/sample/FaceDetectionSample1.java[FaceDetectionSample1.java] demonstrates how to use `MtcnnService` for detecting faces in images.
 
-image:https://github.com/tzolov/mtcnn-java/raw/master/src/test/resources/docs/AnnotatedImage.png[]
+image:{imagesdir}/../FaceDetectionJavaMTCNN.png[]
 
 Here is the essence this sample:
 
-```java
+[source,java]
+----
 // 1. Create face detection service.
 MtcnnService mtcnnService = new MtcnnService(30, 0.709, new double[] { 0.6, 0.7, 0.7 });
 
@@ -48,12 +58,14 @@ try (InputStream imageInputStream = new DefaultResourceLoader() .getResource("cl
     // 6. Print the face annotations as JSON
     System.out.println("Face Annotations (JSON): " + new ObjectMapper().writeValueAsString(faceAnnotations));
 }
-```
+----
+
 It takes an input image detect the faces, produces json annotations and augments the image with the faces.
 
 The face annotation json format looks like this:
 
-```json
+[source,json]
+----
 [ {
   "bbox" : { "x" : 331, "y" : 92, "w" : 58, "h" : 71 }, "confidence" : 0.9999871253967285,
   "landmarks" : [ {
@@ -64,5 +76,5 @@ The face annotation json format looks like this:
     "type" : "MOUTH_RIGHT", "position" : { "x" : 371, "y" : 147 },
   } ]
 }, {
-```
+----
 

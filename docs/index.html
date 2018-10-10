@@ -539,8 +539,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#service-catalog">Service Catalog</a>
 <ul class="sectlevel2">
 <li><a href="#object-detection">Object Detection</a></li>
-<li><a href="#pose-estimation-service">Pose Estimation Service</a></li>
 <li><a href="#semantic-segmentation">Semantic Segmentation</a></li>
+<li><a href="#pose-estimation-service">Pose Estimation Service</a></li>
 <li><a href="#face-detection-mtcnn">Face Detection (MTCNN)</a></li>
 </ul>
 </li>
@@ -968,6 +968,199 @@ For performance reasons you may consider downloading the required label files to
 </div>
 </div>
 <div class="sect2">
+<h3 id="semantic-segmentation"><a class="anchor" href="#semantic-segmentation"></a>Semantic Segmentation</h3>
+<div class="paragraph lead">
+<p>Java, real-time Semantic Image Segmentation with Tensorflow. This implementation uses
+the state-of-art deep learning, Tensorflow model: <a href="https://github.com/tensorflow/models/tree/master/research/deeplab">DeepLab</a>.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/VikiMaxiAdi-all.png" alt="VikiMaxiAdi all" width="100%"></span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Semantic Segmentation is the process of associating each pixel of an image with a class label, (such as flower, person, road, sky, ocean, or car).
+Unlike the <code>Instance Segmentation</code>, which produces instance-aware region masks, the <code>Semantic Segmentation</code> produces class-aware masks.
+For implementing <code>Instance Segmentation</code> consult the <a href="/Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/README.adoc">Object Detection Service</a> instead.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java">JsonMapperFunction</a> permits
+converting the <code>List&lt;ObjectDetection&gt;</code> into JSON objects and the
+<a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java">ObjectDetectionImageAugmenter</a>
+allow to augment the input image with the detected bounding boxes and segmentation masks.</p>
+</div>
+<div class="sect3">
+<h4 id="usage-2"><a class="anchor" href="#usage-2"></a>Usage</h4>
+<div class="paragraph">
+<p>Add the <code>semantic-segmentation</code> dependency to your pom (<em>use the latest version available</em>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>io.mindmodel.services<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>semantic-segmentation<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Following snippet demos how to use the PASCAL VOC model to apply mask to an input image</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>
+SemanticSegmentationService segmentationService = <span class="keyword">new</span> SemanticSegmentationService(
+  <span class="string"><span class="delimiter">&quot;</span><span class="content">http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb</span><span class="delimiter">&quot;</span></span>, <i class="conum" data-value="1"></i><b>(1)</b>
+  <span class="predefined-constant">true</span>); <i class="conum" data-value="2"></i><b>(2)</b>
+
+<span class="type">byte</span><span class="type">[]</span> inputImage = GraphicsUtils.loadAsByteArray(<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:/images/VikiMaxiAdi.jpg</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="3"></i><b>(3)</b>
+
+<span class="type">byte</span><span class="type">[]</span> imageMask = segmentationService.masksAsImage(inputImage); <i class="conum" data-value="4"></i><b>(4)</b>
+<span class="predefined-type">BufferedImage</span> bi = <span class="predefined-type">ImageIO</span>.read(<span class="keyword">new</span> <span class="predefined-type">ByteArrayInputStream</span>(imageMask));
+<span class="predefined-type">ImageIO</span>.write(bi, <span class="string"><span class="delimiter">&quot;</span><span class="content">png</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> <span class="predefined-type">FileOutputStream</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">./semantic-segmentation/target/VikiMaxiAdi_masks.png</span><span class="delimiter">&quot;</span></span>));
+
+<span class="type">byte</span><span class="type">[]</span> augmentedImage = segmentationService.augment(inputImage); <i class="conum" data-value="5"></i><b>(5)</b>
+IOUtils.write(augmentedImage, <span class="keyword">new</span> <span class="predefined-type">FileOutputStream</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">./semantic-segmentation/target/VikiMaxiAdi_augmented.jpg</span><span class="delimiter">&quot;</span></span>));</pre></td>
+</tr></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Download the PASCAL 2012 trained model directly from the web. The <code>frozen_inference_graph.pb</code> is the name of the model
+file inside the <code>tar.gz</code> archive.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Cache the downloaded model locally</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Load the input image as byte array</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Read get the segmentation mask as separate image</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Blend the segmentation mask on top of the original image</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="models-2"><a class="anchor" href="#models-2"></a>Models</h4>
+<div class="paragraph">
+<p>Based on the training datasets, three groups of pre-trained models provided:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/VikiMaxiAdi-all.png" alt="VikiMaxiAdi all" width="100%"></span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-pascal-voc-2012">DeepLab models trained on PASCAL VOC 2012</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/cityscape-all-small.png" alt="cityscape all small" width="100%"></span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-cityscapes">DeepLab models trained on Cityscapes</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/ADE20K-all-small.png" alt="ADE20K all small" width="100%"></span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-ade20k">DeepLab models trained on ADE20K</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Select the model you want to use, copy its archive download Url and add a <code>#frozen_inference_graph.pb</code> fragment to it.
+Later fragment is the frozen model&#8217;s file name inside the archive</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Download the archive and uncompress the <code>frozen_inference_graph.pb</code> for required model. Then use the <code><a href="file://&lt;local-file-name&gt" class="bare">file://&lt;local-file-name&gt</a>;</code> URI schema.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Also convenience there are a couple of models, extracted from the archive and uploaded to bintray:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PASCAL VOC 2012 (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_pascal_train_aug_frozen_inference_graph.pb" class="bare">http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_pascal_train_aug_frozen_inference_graph.pb</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITYSCAPE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_cityscapes_train_2018_02_05_frozen_inference_graph.pb" class="bare">http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_cityscapes_train_2018_02_05_frozen_inference_graph.pb</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ADE20K</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://dl.bintray.com/big-data/generic/deeplabv3_xception_ade20k_train_2018_05_29_frozen_inference_graph.pb" class="bare">http://dl.bintray.com/big-data/generic/deeplabv3_xception_ade20k_train_2018_05_29_frozen_inference_graph.pb</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="references"><a class="anchor" href="#references"></a>References:</h5>
+<div class="ulist small">
+<ul>
+<li>
+<p><a href="https://ai.googleblog.com/2018/03/semantic-image-segmentation-with.html">Semantic Image Segmentation with DeepLab in TensorFlow</a></p>
+</li>
+<li>
+<p><a href="https://github.com/tensorflow/models/tree/master/research/deeplab">DeepLab Project</a></p>
+</li>
+<li>
+<p><a href="https://medium.freecodecamp.org/how-to-use-deeplab-in-tensorflow-for-object-segmentation-using-deep-learning-a5777290ab6b">How to re-train DeepLab Segmentation models using Transfer Learning</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="build-2"><a class="anchor" href="#build-2"></a>Build</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ ./mvnw clean install</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
 <h3 id="pose-estimation-service"><a class="anchor" href="#pose-estimation-service"></a>Pose Estimation Service</h3>
 <div class="paragraph lead">
 <p>Multi-person pose estimation service for detecting human figures in images and videos.</p>
@@ -980,7 +1173,7 @@ For performance reasons you may consider downloading the required label files to
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/VikiMaxiAdi.gif" alt="wk" width="100%"></span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/VikiMaxiAdi.gif" alt="wk" width="100%"></span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The pose estimation service predicts where different body parts are located an how are they spatially relate to each
 other. The implementation is based on the <a href="https://arxiv.org/pdf/1611.08050.pdf">Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields</a>,
  <a href="https://github.com/CMU-Perceptual-Computing-Lab/openpose">OpenPose</a> and
@@ -988,20 +1181,22 @@ other. The implementation is based on the <a href="https://arxiv.org/pdf/1611.08
 <p class="tableblock">Service uses pre-trained <a href="https://github.com/ildoonet/tf-pose-estimation">tf-pose-estimation</a> TensorFlow models
   to predict the locations and the affinity of the body parts. Predictions are represented by <code>heatmaps</code>. Next
   the service applied few greedy algorithms to refine the parts in the heatmaps and to group them into poses.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/webcamPoseEstimation.gif" alt="ch" width="100%"></span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/webcamPoseEstimation.gif" alt="ch" width="100%"></span></p></td>
 </tr>
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="usage-2"><a class="anchor" href="#usage-2"></a>Usage</h4>
+<h4 id="usage-3"><a class="anchor" href="#usage-3"></a>Usage</h4>
 <div class="paragraph">
 <p>Add the <code>pose-estimation</code> dependency to your pom (<em>Use the latest version available</em>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;groupId&gt;</span>io.mindmodel.services<span class="tag">&lt;/groupId&gt;</span>
-<span class="tag">&lt;artifactId&gt;</span>pose-estimation<span class="tag">&lt;/artifactId&gt;</span>
-<span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>io.mindmodel.services<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>pose-estimation<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1082,14 +1277,14 @@ IOUtils.write(augmentedImage, <span class="keyword">new</span> <span class="pred
 <p>The annotated images would look like this:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://raw.githubusercontent.com/tzolov/mind-model-services/master/pose-estimation/src/test/resources/doc/tourists-augmented.jpg" alt="tourists augmented"></span></p>
+<p><span class="image"><img src="images/tourists-augmented.jpg" alt="tourists augmented"></span></p>
 </div>
 <div class="paragraph">
 <p>You can configure the <code>PoseEstimateImageAugmenter</code> to use different color schema or graphic characteristics.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="models-2"><a class="anchor" href="#models-2"></a>Models</h4>
+<h4 id="models-3"><a class="anchor" href="#models-3"></a>Models</h4>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Pre-build models to use with the Pose Estimation Service</caption>
 <colgroup>
@@ -1115,7 +1310,7 @@ IOUtils.write(augmentedImage, <span class="keyword">new</span> <span class="pred
 </table>
 </div>
 <div class="sect3">
-<h4 id="build-2"><a class="anchor" href="#build-2"></a>Build</h4>
+<h4 id="build-3"><a class="anchor" href="#build-3"></a>Build</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="bash">git clone git@github.com:tzolov/mind-model-services.git
@@ -1127,201 +1322,8 @@ $ mvn clean install</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="semantic-segmentation"><a class="anchor" href="#semantic-segmentation"></a>Semantic Segmentation</h3>
-<div class="paragraph lead">
-<p>Java, real-time Semantic Image Segmentation with Tensorflow. This implementation uses
-the state-of-art deep learning, Tensorflow model: <a href="https://github.com/tensorflow/models/tree/master/research/deeplab">DeepLab</a>.</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="/Users/ctzolov/Dev/projects/mindmodel/mind-model-services/semantic-segmentation/src/test/resources/doc/VikiMaxiAdi-all.png" alt="VikiMaxiAdi all" width="100%"></span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Semantic Segmentation is the process of associating each pixel of an image with a class label, (such as flower, person, road, sky, ocean, or car).
-Unlike the <code>Instance Segmentation</code>, which produces instance-aware region masks, the <code>Semantic Segmentation</code> produces class-aware masks.
-For implementing <code>Instance Segmentation</code> consult the <a href="/Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/README.adoc">Object Detection Service</a> instead.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>The <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java">JsonMapperFunction</a> permits
-converting the <code>List&lt;ObjectDetection&gt;</code> into JSON objects and the
-<a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java">ObjectDetectionImageAugmenter</a>
-allow to augment the input image with the detected bounding boxes and segmentation masks.</p>
-</div>
-<div class="sect3">
-<h4 id="usage-3"><a class="anchor" href="#usage-3"></a>Usage</h4>
-<div class="paragraph">
-<p>Add the <code>semantic-segmentation</code> dependency to your pom (<em>use the latest version available</em>):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
-    <span class="tag">&lt;groupId&gt;</span>io.mindmodel.services<span class="tag">&lt;/groupId&gt;</span>
-    <span class="tag">&lt;artifactId&gt;</span>semantic-segmentation<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-<span class="tag">&lt;/dependency&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Following snippet demos how to use the PASCAL VOC model to apply mask to an input image</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-</pre></td>
-  <td class="code"><pre>
-SemanticSegmentationService segmentationService = <span class="keyword">new</span> SemanticSegmentationService(
-  <span class="string"><span class="delimiter">&quot;</span><span class="content">http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb</span><span class="delimiter">&quot;</span></span>, <i class="conum" data-value="1"></i><b>(1)</b>
-  <span class="predefined-constant">true</span>); <i class="conum" data-value="2"></i><b>(2)</b>
-
-<span class="type">byte</span><span class="type">[]</span> inputImage = GraphicsUtils.loadAsByteArray(<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:/images/VikiMaxiAdi.jpg</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="3"></i><b>(3)</b>
-
-<span class="type">byte</span><span class="type">[]</span> imageMask = segmentationService.masksAsImage(inputImage); <i class="conum" data-value="4"></i><b>(4)</b>
-<span class="predefined-type">BufferedImage</span> bi = <span class="predefined-type">ImageIO</span>.read(<span class="keyword">new</span> <span class="predefined-type">ByteArrayInputStream</span>(imageMask));
-<span class="predefined-type">ImageIO</span>.write(bi, <span class="string"><span class="delimiter">&quot;</span><span class="content">png</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> <span class="predefined-type">FileOutputStream</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">./semantic-segmentation/target/VikiMaxiAdi_masks.png</span><span class="delimiter">&quot;</span></span>));
-
-<span class="type">byte</span><span class="type">[]</span> augmentedImage = segmentationService.augment(inputImage); <i class="conum" data-value="5"></i><b>(5)</b>
-IOUtils.write(augmentedImage, <span class="keyword">new</span> <span class="predefined-type">FileOutputStream</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">./semantic-segmentation/target/VikiMaxiAdi_augmented.jpg</span><span class="delimiter">&quot;</span></span>));</pre></td>
-</tr></table></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Download the PASCAL 2012 trained model directly from the web. The <code>frozen_inference_graph.pb</code> is the name of the model
-file inside the <code>tar.gz</code> archive.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Cache the downloaded model locally</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Load the input image as byte array</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Read get the segmentation mask as separate image</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Blend the segmentation mask on top of the original image</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="models-3"><a class="anchor" href="#models-3"></a>Models</h4>
-<div class="paragraph">
-<p>Based on the training datasets, three groups of pre-trained models provided:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="/Users/ctzolov/Dev/projects/mindmodel/mind-model-services/semantic-segmentation/src/test/resources/doc/VikiMaxiAdi-all.png" alt="VikiMaxiAdi all" width="100%"></span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-pascal-voc-2012">DeepLab models trained on PASCAL VOC 2012</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="/Users/ctzolov/Dev/projects/mindmodel/mind-model-services/semantic-segmentation/src/test/resources/doc/cityscape-all-small.png" alt="cityscape all small" width="100%"></span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-cityscapes">DeepLab models trained on Cityscapes</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="/Users/ctzolov/Dev/projects/mindmodel/mind-model-services/semantic-segmentation/src/test/resources/doc/ADE20K-all-small.png" alt="ADE20K all small" width="100%"></span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/tensorflow/models/blob/master/research/deeplab/g3doc/model_zoo.md#deeplab-models-trained-on-ade20k">DeepLab models trained on ADE20K</a></p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>Select the model you want to use, copy its archive download Url and add a <code>#frozen_inference_graph.pb</code> fragment to it.
-Later fragment is the frozen model&#8217;s file name inside the archive</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Download the archive and uncompress the <code>frozen_inference_graph.pb</code> for required model. Then use the <code><a href="file://&lt;local-file-name&gt" class="bare">file://&lt;local-file-name&gt</a>;</code> URI schema.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Also convenience there are a couple of models, extracted from the archive and uploaded to bintray:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PASCAL VOC 2012 (default)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_pascal_train_aug_frozen_inference_graph.pb" class="bare">http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_pascal_train_aug_frozen_inference_graph.pb</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITYSCAPE</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_cityscapes_train_2018_02_05_frozen_inference_graph.pb" class="bare">http://dl.bintray.com/big-data/generic/deeplabv3_mnv2_cityscapes_train_2018_02_05_frozen_inference_graph.pb</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ADE20K</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://dl.bintray.com/big-data/generic/deeplabv3_xception_ade20k_train_2018_05_29_frozen_inference_graph.pb" class="bare">http://dl.bintray.com/big-data/generic/deeplabv3_xception_ade20k_train_2018_05_29_frozen_inference_graph.pb</a></p></td>
-</tr>
-</tbody>
-</table>
-<div class="sect4">
-<h5 id="references"><a class="anchor" href="#references"></a>References:</h5>
-<div class="ulist small">
-<ul>
-<li>
-<p><a href="https://ai.googleblog.com/2018/03/semantic-image-segmentation-with.html">Semantic Image Segmentation with DeepLab in TensorFlow</a></p>
-</li>
-<li>
-<p><a href="https://github.com/tensorflow/models/tree/master/research/deeplab">DeepLab Project</a></p>
-</li>
-<li>
-<p><a href="https://medium.freecodecamp.org/how-to-use-deeplab-in-tensorflow-for-object-segmentation-using-deep-learning-a5777290ab6b">How to re-train DeepLab Segmentation models using Transfer Learning</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="build-3"><a class="anchor" href="#build-3"></a>Build</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>$ ./mvnw clean install</code></pre>
-</div>
-</div>
-<hr>
-</div>
-</div>
-<div class="sect2">
 <h3 id="face-detection-mtcnn"><a class="anchor" href="#face-detection-mtcnn"></a>Face Detection (MTCNN)</h3>
-<div class="paragraph">
+<div class="paragraph lead">
 <p>This is just a placeholder for the existing <a href="https://github.com/tzolov/mtcnn-java">Face Detection MTCNN-JAVA</a> project.</p>
 </div>
 <div class="admonitionblock warning">
@@ -1371,7 +1373,7 @@ dependency on the other <code>mind-model-services</code>.
 <p>The <a href="https://github.com/tzolov/mtcnn-java/blob/master/src/test/java/net/tzolov/cv/mtcnn/sample/FaceDetectionSample1.java">FaceDetectionSample1.java</a> demonstrates how to use <code>MtcnnService</code> for detecting faces in images.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://github.com/tzolov/mtcnn-java/raw/master/src/test/resources/docs/AnnotatedImage.png" alt="AnnotatedImage"></span></p>
+<p><span class="image"><img src="images/FaceDetectionJavaMTCNN.png" alt="FaceDetectionJavaMTCNN"></span></p>
 </div>
 <div class="paragraph">
 <p>Here is the essence this sample:</p>
@@ -1424,7 +1426,7 @@ MtcnnService mtcnnService = <span class="keyword">new</span> MtcnnService(<span 
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2018-10-10 13:15:14 CEST
+Last updated 2018-10-10 15:13:10 CEST
 </div>
 </div>
 </body>
