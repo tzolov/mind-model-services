@@ -540,8 +540,9 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#object-detection">Object Detection</a></li>
 <li><a href="#semantic-segmentation">Semantic Segmentation</a></li>
-<li><a href="#pose-estimation-service">Pose Estimation Service</a></li>
+<li><a href="#pose-estimation">Pose Estimation</a></li>
 <li><a href="#face-detection-mtcnn">Face Detection (MTCNN)</a></li>
+<li><a href="#twitter-sentiment">Twitter Sentiment</a></li>
 </ul>
 </li>
 </ul>
@@ -660,7 +661,7 @@ cached copy (5) instead.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Confidence threshold - Only object with confidence above the threshold are returned</td>
+<td>Confidence threshold - Only object with estimate above the threshold are returned</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
@@ -697,10 +698,10 @@ cached copy (5) instead.</td>
 <div class="listingblock">
 <div class="title">Sample Object Detection JSON representation</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="json">[{<span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">confidence</span><span class="delimiter">&quot;</span></span>:<span class="float">0.998</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.160</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.774</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.201</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.946</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">cid</span><span class="delimiter">&quot;</span></span>:<span class="integer">1</span>},
- {<span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">kite</span><span class="delimiter">&quot;</span></span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">confidence</span><span class="delimiter">&quot;</span></span>:<span class="float">0.998</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.437</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.089</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.495</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.169</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">cid</span><span class="delimiter">&quot;</span></span>:<span class="integer">38</span>},
- {<span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">confidence</span><span class="delimiter">&quot;</span></span>:<span class="float">0.997</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.084</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.681</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.121</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.848</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">cid</span><span class="delimiter">&quot;</span></span>:<span class="integer">1</span>},
- {<span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">kite</span><span class="delimiter">&quot;</span></span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">confidence</span><span class="delimiter">&quot;</span></span>:<span class="float">0.988</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.206</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.263</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.225</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.314</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">cid</span><span class="delimiter">&quot;</span></span>:<span class="integer">38</span>}]]</code></pre>
+<pre class="CodeRay highlight"><code data-lang="json">[{<span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">estimate</span><span class="delimiter">&quot;</span></span>:<span class="float">0.998</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.160</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.774</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.201</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.946</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">cid</span><span class="delimiter">&quot;</span></span>:<span class="integer">1</span>},
+ {<span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">kite</span><span class="delimiter">&quot;</span></span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">estimate</span><span class="delimiter">&quot;</span></span>:<span class="float">0.998</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.437</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.089</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.495</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.169</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">cid</span><span class="delimiter">&quot;</span></span>:<span class="integer">38</span>},
+ {<span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">estimate</span><span class="delimiter">&quot;</span></span>:<span class="float">0.997</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.084</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.681</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.121</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.848</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">cid</span><span class="delimiter">&quot;</span></span>:<span class="integer">1</span>},
+ {<span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">kite</span><span class="delimiter">&quot;</span></span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">estimate</span><span class="delimiter">&quot;</span></span>:<span class="float">0.988</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.206</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y1</span><span class="delimiter">&quot;</span></span>:<span class="float">0.263</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">x2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.225</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">y2</span><span class="delimiter">&quot;</span></span>:<span class="float">0.314</span>,<span class="key"><span class="delimiter">&quot;</span><span class="content">cid</span><span class="delimiter">&quot;</span></span>:<span class="integer">38</span>}]]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -802,7 +803,7 @@ IOUtils.write(annotatedImage, <span class="keyword">new</span> <span class="pred
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Confidence threshold - Only object with confidence above the threshold are returned</td>
+<td>Confidence threshold - Only object with estimate above the threshold are returned</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -1161,7 +1162,7 @@ Download the archive and uncompress the <code>frozen_inference_graph.pb</code> f
 </div>
 </div>
 <div class="sect2">
-<h3 id="pose-estimation-service"><a class="anchor" href="#pose-estimation-service"></a>Pose Estimation Service</h3>
+<h3 id="pose-estimation"><a class="anchor" href="#pose-estimation"></a>Pose Estimation</h3>
 <div class="paragraph lead">
 <p>Multi-person pose estimation service for detecting human figures in images and videos.</p>
 </div>
@@ -1235,7 +1236,7 @@ in the <code>tourists.jpg</code> image:</p>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
 <td>Service takes an image (or batch of images) and the produces a list of detected Bodies.. The <strong>Body</strong> represents a single body posture found on the image. The Body is composed of Parts connected by Limbs.
-The Limb contains a <code>PAF</code> (Part Affiliation Field) confidence score and the <code>from</code> and <code>to</code> parts it connects.
+The Limb contains a <code>PAF</code> (Part Affiliation Field) estimate score and the <code>from</code> and <code>to</code> parts it connects.
 The <strong>Part</strong> has <code>type</code> and <code>coordinates</code> in the image.</td>
 </tr>
 <tr>
@@ -1285,7 +1286,7 @@ IOUtils.write(augmentedImage, <span class="keyword">new</span> <span class="pred
 </div>
 <div class="sect3">
 <h4 id="models-3"><a class="anchor" href="#models-3"></a>Models</h4>
-<table class="tableblock frame-all grid-all stretch">
+<table class="tableblock frame-none grid-none stretch">
 <caption class="title">Table 2. Pre-build models to use with the Pose Estimation Service</caption>
 <colgroup>
 <col style="width: 33.3333%;">
@@ -1404,7 +1405,7 @@ MtcnnService mtcnnService = <span class="keyword">new</span> MtcnnService(<span 
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="json">[ {
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">bbox</span><span class="delimiter">&quot;</span></span> : { <span class="key"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span> : <span class="integer">331</span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span> : <span class="integer">92</span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">w</span><span class="delimiter">&quot;</span></span> : <span class="integer">58</span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">h</span><span class="delimiter">&quot;</span></span> : <span class="integer">71</span> }, <span class="key"><span class="delimiter">&quot;</span><span class="content">confidence</span><span class="delimiter">&quot;</span></span> : <span class="float">0.9999871253967285</span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">bbox</span><span class="delimiter">&quot;</span></span> : { <span class="key"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span> : <span class="integer">331</span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span> : <span class="integer">92</span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">w</span><span class="delimiter">&quot;</span></span> : <span class="integer">58</span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">h</span><span class="delimiter">&quot;</span></span> : <span class="integer">71</span> }, <span class="key"><span class="delimiter">&quot;</span><span class="content">estimate</span><span class="delimiter">&quot;</span></span> : <span class="float">0.9999871253967285</span>,
   <span class="key"><span class="delimiter">&quot;</span><span class="content">landmarks</span><span class="delimiter">&quot;</span></span> : [ {
     <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">LEFT_EYE</span><span class="delimiter">&quot;</span></span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">position</span><span class="delimiter">&quot;</span></span> : { <span class="key"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span> : <span class="integer">346</span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span> : <span class="integer">120</span> } }, {
     <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">RIGHT_EYE</span><span class="delimiter">&quot;</span></span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">position</span><span class="delimiter">&quot;</span></span> : { <span class="key"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span> : <span class="integer">374</span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span> : <span class="integer">119</span> } }, {
@@ -1418,13 +1419,167 @@ MtcnnService mtcnnService = <span class="keyword">new</span> MtcnnService(<span 
 <hr>
 </div>
 </div>
+<div class="sect2">
+<h3 id="twitter-sentiment"><a class="anchor" href="#twitter-sentiment"></a>Twitter Sentiment</h3>
+<div class="paragraph lead">
+<p>Performs sentiment classification on tweets. Uses a pre-trained TensorFlow model build with
+<a href="https://github.com/danielegrattarola/twitter-sentiment-cnn">twitter-sentiment-cnn</a>.</p>
+</div>
+<div class="paragraph">
+<p>Service can evaluates Tweet messages (in JSON format) and detects the sentiment: <code>POSITIVE</code>, <code>NEGATIVE</code> and <code>NEUTRAL</code>.</p>
+</div>
+<div class="paragraph">
+<p>For real life application of the Twitter Sentiment Analysis check:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="https://www.youtube.com/watch?v=QzF2Iii4s5c[Real-time Twitter Sentiment Analytics with TensorFlow and Spring Cloud Dataflow]"><img src="https://i9.ytimg.com/vi/QzF2Iii4s5c/mqdefault.jpg?sqp=CLSW_N0F&rs=AOn4CLB9Dtu7wOe6HWfEMaN_8o5Pr-z9yA&time=1539247018224" alt="mqdefault"></a>
+</div>
+<div class="title">Figure 1. Real-time Twitter Sentiment Analytics with TensorFlow and Spring Cloud Dataflow</div>
+</div>
+<div class="sect3">
+<h4 id="usage-5"><a class="anchor" href="#usage-5"></a>Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td>
+  <td class="code"><pre><span class="predefined-type">String</span> tweet = <span class="string"><span class="delimiter">&quot;</span><span class="content">{</span><span class="char">\&quot;</span><span class="content">text</span><span class="char">\&quot;</span><span class="content">: </span><span class="char">\&quot;</span><span class="content">This is really bad</span><span class="char">\&quot;</span><span class="content">, </span><span class="char">\&quot;</span><span class="content">id</span><span class="char">\&quot;</span><span class="content">:666, </span><span class="char">\&quot;</span><span class="content">lang</span><span class="char">\&quot;</span><span class="content">:</span><span class="char">\&quot;</span><span class="content">en</span><span class="char">\&quot;</span><span class="content"> }</span><span class="delimiter">&quot;</span></span>; <i class="conum" data-value="1"></i><b>(1)</b>
+
+TwitterSentimentService twitterSentimentService = <span class="keyword">new</span> TwitterSentimentService(
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">http://dl.bintray.com/big-data/generic/minimal_graph.proto</span><span class="delimiter">&quot;</span></span>, <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="string"><span class="delimiter">&quot;</span><span class="content">http://dl.bintray.com/big-data/generic/vocab.csv</span><span class="delimiter">&quot;</span></span>,           <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="predefined-constant">true</span>); <i class="conum" data-value="4"></i><b>(4)</b>
+
+SentimentResult tweetSentiment = twitterSentimentService.tweetSentiment(tweet); <i class="conum" data-value="5"></i><b>(5)</b>
+
+<span class="predefined-type">System</span>.out.println(tweetSentiment.getSentiment() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> : </span><span class="delimiter">&quot;</span></span> + tweetSentiment.getEstimate());</pre></td>
+</tr></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Sample tweet message in JSON format.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Pre-trained model Uri.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The Uri of the Word vocabulary used to train the model.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Cache the TensorFlow model on the local file system.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Use the service to detect the sentiment</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Would yield a result like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">NEGATIVE : 0.03941632</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next you can convert the result in JSON format.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="predefined-type">String</span> jsonTweetSentiment = <span class="keyword">new</span> JsonMapperFunction().apply(tweetSentiment);
+<span class="predefined-type">System</span>.out.println(jsonTweetSentiment);</pre></td>
+</tr></table></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Sample tweet sentiment JSON representation</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+ <span class="key"><span class="delimiter">&quot;</span><span class="content">sentiment</span><span class="delimiter">&quot;</span></span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">NEGATIVE</span><span class="delimiter">&quot;</span></span>,
+ <span class="key"><span class="delimiter">&quot;</span><span class="content">estimate</span><span class="delimiter">&quot;</span></span>:<span class="float">0.03941632</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="models-4"><a class="anchor" href="#models-4"></a>Models</h4>
+<table class="tableblock frame-none grid-none stretch">
+<caption class="title">Table 3. Pre-build models to use with the Twitter Setnimnet Service</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Model</th>
+<th class="tableblock halign-left valign-top">URI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minimal_graph (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://dl.bintray.com/big-data/generic/minimal_graph.proto" class="bare">http://dl.bintray.com/big-data/generic/minimal_graph.proto</a></p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-none grid-none stretch">
+<caption class="title">Table 4. Pre-build vacabulary to use with the Twitter Setnimnet Service</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Vocabulary</th>
+<th class="tableblock halign-left valign-top">URI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vocab.csv for minimal_graph(default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://dl.bintray.com/big-data/generic/vocab.csv" class="bare">http://dl.bintray.com/big-data/generic/vocab.csv</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="build-4"><a class="anchor" href="#build-4"></a>Build</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ mvn clean install</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2018-10-10 15:27:41 CEST
+Last updated 2018-10-11 08:45:00 CEST
 </div>
 </div>
 </body>

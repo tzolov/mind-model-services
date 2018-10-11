@@ -31,5 +31,7 @@ include::{docdir}/pose-estimation/README.adoc[]
 ---
 include::{docdir}/face-detection-mtcnn/README.adoc[]
 ---
+include::{docdir}/twitter-sentiment/README.adoc[]
+---
 
 

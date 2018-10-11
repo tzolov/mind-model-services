@@ -21,6 +21,7 @@
 		<module>common</module>
 		<module>pose-estimation</module>
 		<module>semantic-segmentation</module>
+		<module>twitter-sentiment</module>
 		<!--<module>face-detection-mtcnn</module>-->
 	</modules>
 

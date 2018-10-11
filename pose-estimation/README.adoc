@@ -1,4 +1,4 @@
-=== Pose Estimation Service
+=== Pose Estimation
 
 ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
 
@@ -47,7 +47,7 @@ String bodiesJson = new JsonMapperFunction().apply(bodies); //<4>
 <1> URI of the pre-trained, frozen Tensorflow model
 <2> Download and cache the model locally.
 <3> Service takes an image (or batch of images) and the produces a list of detected Bodies.. The *Body* represents a single body posture found on the image. The Body is composed of Parts connected by Limbs.
-The Limb contains a `PAF` (Part Affiliation Field) confidence score and the `from` and `to` parts it connects.
+The Limb contains a `PAF` (Part Affiliation Field) estimate score and the `from` and `to` parts it connects.
 The *Part* has `type` and `coordinates` in the image.
 <4> Use the `JsonMapperFunction` to turn the `Body` list into JSON objects. The output JSON format looks like:
 
@@ -83,7 +83,7 @@ You can configure the `PoseEstimateImageAugmenter` to use different color schema
 ==== Models
 
 .Pre-build models to use with the Pose Estimation Service
-[%header,cols="1,2"]
+[%header,cols="1,2", frame=none, grid=none]
 |===
 |Model Name
 |Model URI

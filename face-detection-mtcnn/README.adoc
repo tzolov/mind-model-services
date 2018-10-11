@@ -73,7 +73,7 @@ The face annotation json format looks like this:
 [source,json]
 ----
 [ {
-  "bbox" : { "x" : 331, "y" : 92, "w" : 58, "h" : 71 }, "confidence" : 0.9999871253967285,
+  "bbox" : { "x" : 331, "y" : 92, "w" : 58, "h" : 71 }, "estimate" : 0.9999871253967285,
   "landmarks" : [ {
     "type" : "LEFT_EYE", "position" : { "x" : 346, "y" : 120 } }, {
     "type" : "RIGHT_EYE", "position" : { "x" : 374, "y" : 119 } }, {

@@ -1,0 +1,89 @@
+=== Twitter Sentiment
+
+[.lead]
+Performs sentiment classification on tweets. Uses a pre-trained TensorFlow model build with
+https://github.com/danielegrattarola/twitter-sentiment-cnn[twitter-sentiment-cnn].
+
+Service can evaluates Tweet messages (in JSON format) and detects the sentiment: `POSITIVE`, `NEGATIVE` and `NEUTRAL`.
+
+For real life application of the Twitter Sentiment Analysis check:
+
+.Real-time Twitter Sentiment Analytics with TensorFlow and Spring Cloud Dataflow
+image::https://i9.ytimg.com/vi/QzF2Iii4s5c/mqdefault.jpg?sqp=CLSW_N0F&rs=AOn4CLB9Dtu7wOe6HWfEMaN_8o5Pr-z9yA&time=1539247018224[link=https://www.youtube.com/watch?v=QzF2Iii4s5c[Real-time Twitter Sentiment Analytics with TensorFlow and Spring Cloud Dataflow]]
+
+
+==== Usage
+
+[source,java,linenums]
+----
+String tweet = "{\"text\": \"This is really bad\", \"id\":666, \"lang\":\"en\" }"; //<1>
+
+TwitterSentimentService twitterSentimentService = new TwitterSentimentService(
+        "http://dl.bintray.com/big-data/generic/minimal_graph.proto", // <2>
+        "http://dl.bintray.com/big-data/generic/vocab.csv",           // <3>
+        true); // <4>
+
+SentimentResult tweetSentiment = twitterSentimentService.tweetSentiment(tweet); // <5>
+
+System.out.println(tweetSentiment.getSentiment() + " : " + tweetSentiment.getEstimate());
+----
+<1> Sample tweet message in JSON format.
+<2> Pre-trained model Uri.
+<3> The Uri of the Word vocabulary used to train the model.
+<4> Cache the TensorFlow model on the local file system.
+<5> Use the service to detect the sentiment
+
+Would yield a result like:
+
+[source,bash]
+----
+NEGATIVE : 0.03941632
+----
+
+Next you can convert the result in JSON format.
+
+[source,java,linenums]
+----
+String jsonTweetSentiment = new JsonMapperFunction().apply(tweetSentiment);
+System.out.println(jsonTweetSentiment);
+----
+
+.Sample tweet sentiment JSON representation
+[source,json]
+----
+{
+ "sentiment":"NEGATIVE",
+ "estimate":0.03941632
+}
+----
+
+==== Models
+
+.Pre-build models to use with the Twitter Setnimnet Service
+[%header,cols="1,2", frame=none, grid=none]
+|===
+|Model
+|URI
+
+| minimal_graph (default)
+| http://dl.bintray.com/big-data/generic/minimal_graph.proto
+
+|===
+
+.Pre-build vacabulary to use with the Twitter Setnimnet Service
+[%header,cols="1,2", frame=none, grid=none]
+|===
+|Vocabulary
+|URI
+
+| vocab.csv for minimal_graph(default)
+| http://dl.bintray.com/big-data/generic/vocab.csv
+|===
+
+
+==== Build
+
+```
+$ mvn clean install
+```
+
