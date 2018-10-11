@@ -14,9 +14,9 @@ Unlike the `Instance Segmentation`, which produces instance-aware region masks, 
 For implementing `Instance Segmentation` consult the link:{docdir}/object-detection/README.adoc[Object Detection Service] instead.
 |===
 
-The file://{docdir}/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java[JsonMapperFunction] permits
+The https://github.com/tzolov/mind-model-services/blob/master/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java[JsonMapperFunction] permits
 converting the `List<ObjectDetection>` into JSON objects and the
-file://{docdir}/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java[ObjectDetectionImageAugmenter]
+https://github.com/tzolov/mind-model-services/blob/master/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java[ObjectDetectionImageAugmenter]
 allow to augment the input image with the detected bounding boxes and segmentation masks.
 
 ==== Usage
