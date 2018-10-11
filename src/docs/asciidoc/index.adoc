@@ -3,13 +3,16 @@
 Doc Writer <christian.tzolov@mindmodel.io>
 2018-08-10
 :revnumber: {project-version}
-:example-caption!:
 
 ifndef::imagesdir[:imagesdir: images]
 
 ifndef::sourcedir[:sourcedir: ../../main/java]
 
 ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
+
+image::{imagesdir}/../twitter_logo.png[link=https://twitter.com/christzolov[https://twitter.com/christzolov], width=30]
+
+:example-caption!:
 
 User manual for the `mind-model-services` collection of projects.
 
