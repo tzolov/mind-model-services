@@ -9,8 +9,7 @@ Service can evaluates Tweet messages (in JSON format) and detects the sentiment:
 For real life application of the Twitter Sentiment Analysis check:
 
 .Real-time Twitter Sentiment Analytics with TensorFlow and Spring Cloud Dataflow
-image::https://i9.ytimg.com/vi/QzF2Iii4s5c/mqdefault.jpg?sqp=CLSW_N0F&rs=AOn4CLB9Dtu7wOe6HWfEMaN_8o5Pr-z9yA&time=1539247018224[link=https://www.youtube.com/watch?v=QzF2Iii4s5c[Real-time Twitter Sentiment Analytics with TensorFlow and Spring Cloud Dataflow]]
-
+image::{imagesdir}/../tf-ts.jpg[width=30%, link=https://www.youtube.com/watch?v=QzF2Iii4s5c[Real-time Twitter Sentiment Analytics with TensorFlow and Spring Cloud Dataflow]]
 
 ==== Usage
 
