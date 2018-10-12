@@ -10,29 +10,35 @@ ifndef::sourcedir[:sourcedir: ../../main/java]
 
 ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
 
-[cols=2, , frame=none, grid=none]
+[role=right]
+--
+[cols=3, , frame=none, grid=none]
 |===
+|image:{imagesdir}/../GitHub-logo.png[link=https://github.com/tzolov/mind-model-services, width=20, role=left]
+https://github.com/tzolov/mind-model-services[mind-model]
 |image:{imagesdir}/../twitter_logo.png[link=https://twitter.com/christzolov, width=20, role=left]
 https://twitter.com/christzolov[@christzolov]
-
-|image:{imagesdir}/../linkedin-logo.png[https://www.linkedin.com/in/tzolov/, width=20, role=left]
+|image:{imagesdir}/../linkedin-logo.png[link=https://www.linkedin.com/in/tzolov/, width=20, role=left]
 https://www.linkedin.com/in/tzolov/[tzolov]
 |===
+--
 
 :example-caption!:
 
-User manual for the `mind-model-services` collection of projects.
+User manual for the https://github.com/tzolov/mind-model-services[mind-model-services] collection of projects.
 
 == Introduction
-[.lead]
+
 Java libraries for enabling and simplifying the inference of Deep Learning models with java.
 
-image:{imagesdir}/../reference-arch.png[width=90%, role=right]
+image:{imagesdir}/../reference-arch.png[width=80%, role=right]
 Java wrappers for various state-of-the-art deep learning models are provided. You can use them in standalone java
 application, SpringBoot microservices as well as streaming, batch and serverless programing models.
 
 Services for different computer vision and language processing use cases are provided. The implementation relies
-the TensorFlow Java API as well as the DL4J stack and APIs such as JavaCV, ND4J ND4J-Tensorflow.
+the https://www.tensorflow.org/install/lang_java[TensorFlow Java API] as well as the
+https://deeplearning4j.org/docs/latest/nd4j-overview[DL4J] stack and APIs such as https://github.com/bytedeco/javacv[JavaCV],
+https://deeplearning4j.org/docs/latest/nd4j-overview[ND4J] https://github.com/deeplearning4j/deeplearning4j/tree/master/nd4j/nd4j-tensorflow[nd4j-tensorflow].
 
 == Service Catalog
 
