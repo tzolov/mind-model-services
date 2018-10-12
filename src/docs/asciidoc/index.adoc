@@ -1,7 +1,7 @@
 
 = Java Deep Learning Inference Services
 Doc Writer <christian.tzolov@mindmodel.io>
-2018-08-10
+{docdate}
 :revnumber: {project-version}
 
 ifndef::imagesdir[:imagesdir: images]
@@ -29,11 +29,12 @@ User manual for the https://github.com/tzolov/mind-model-services[mind-model-ser
 
 == Introduction
 
-Java libraries for enabling and simplifying the inference of Deep Learning models with Java.
+Java libraries for enabling and simplifying the inference of Deep Learning models.
 
 image:{imagesdir}/../reference-arch.png[width=80%, role=right]
 Provides Java wrappers for various state-of-the-art deep learning models. To be used in standalone Java
-application, SpringBoot microservices as well as streaming, batch and serverless programing models.
+application, https://spring.io/projects/spring-boot[SpringBoot] microservices as well as https://cloud.spring.io/spring-cloud-stream/[Streaming],
+https://spring.io/projects/spring-cloud-task#learn[Task/Batch] and https://cloud.spring.io/spring-cloud-function/[Serverless] programing models.
 
 The implementations use the https://www.tensorflow.org/install/lang_java[TensorFlow Java API] as well as the
 https://deeplearning4j.org/docs/latest/nd4j-overview[DL4J] API stack such as https://github.com/bytedeco/javacv[JavaCV],

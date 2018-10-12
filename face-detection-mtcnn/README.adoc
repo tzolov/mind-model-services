@@ -3,18 +3,21 @@
 ifdef::env-github[:imagesdir: /src/docs/asciidoc/images/images]
 
 [.lead]
-This is just a placeholder for the existing https://github.com/tzolov/mtcnn-java[Face Detection MTCNN-JAVA] project.
+Placeholder for the existing https://github.com/tzolov/mtcnn-java[Face Detection MTCNN-Java] project.
+
+WARNING: The FaceDetection service uses a Tensorflow binding provided by the ND4J stack. Later is not compatible with the Google's TensorFlow Java API.
+This means that you can't have in the same project dependency on the other `mind-model-services`.
 
 [cols="1,2", frame=none, grid=none]
 |===
 |image:{imagesdir}/../face-detection-maxi.gif[alt=Face Detection Maxi, width=100%]
-|WARNING: Mind that this service uses the Tensorflow binding from the ND4J. That means that you can't have in the same project
-dependency on the other `mind-model-services`.
+|`Java` and `Tensorflow` implementation of the https://arxiv.org/abs/1604.02878[MTCNN Face Detector]. Based on
+David Sandberg's https://github.com/davidsandberg/facenet/tree/master/src/align[FaceNet's MTCNN]
+`python` implementation and the original https://arxiv.org/abs/1604.02878[Zhang, K et al. (2016) ZHANG2016] paper
+and https://github.com/kpzhang93/MTCNN_face_detection_alignment[Matlab implementation].
 
-I'm considering moving the `mtcnn-java` code under this project umbrella. But until then follow the instruction provided there.
+We're considering moving the https://github.com/tzolov/mtcnn-java[mtcnn-java] project code under this projects umbrella. Until then follow the instruction provided there.
 |===
-
-
 
 ===== Usage
 

@@ -530,7 +530,7 @@ table.CodeRay td.code>pre{padding:0}
 <span id="author" class="author">Doc Writer</span><br>
 <span id="email" class="email"><a href="mailto:christian.tzolov@mindmodel.io">christian.tzolov@mindmodel.io</a></span><br>
 <span id="revnumber">version 0.0.1-SNAPSHOT,</span>
-<span id="revdate">2018-08-10</span>
+<span id="revdate">2018-10-12</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -581,12 +581,13 @@ table.CodeRay td.code>pre{padding:0}
 <h2 id="introduction"><a class="anchor" href="#introduction"></a>Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Java libraries for enabling and simplifying the inference of Deep Learning models with Java.</p>
+<p>Java libraries for enabling and simplifying the inference of Deep Learning models.</p>
 </div>
 <div class="paragraph">
 <p><span class="image right"><img src="images/reference-arch.png" alt="reference arch" width="80%"></span>
 Provides Java wrappers for various state-of-the-art deep learning models. To be used in standalone Java
-application, SpringBoot microservices as well as streaming, batch and serverless programing models.</p>
+application, <a href="https://spring.io/projects/spring-boot">SpringBoot</a> microservices as well as <a href="https://cloud.spring.io/spring-cloud-stream/">Streaming</a>,
+<a href="https://spring.io/projects/spring-cloud-task#learn">Task/Batch</a> and <a href="https://cloud.spring.io/spring-cloud-function/">Serverless</a> programing models.</p>
 </div>
 <div class="paragraph">
 <p>The implementations use the <a href="https://www.tensorflow.org/install/lang_java">TensorFlow Java API</a> as well as the
@@ -1020,8 +1021,7 @@ For performance reasons you may consider downloading the required label files to
 <div class="sect2">
 <h3 id="semantic-segmentation"><a class="anchor" href="#semantic-segmentation"></a>Semantic Segmentation</h3>
 <div class="paragraph lead">
-<p>Java, real-time Semantic Image Segmentation with Tensorflow. This implementation uses
-the state-of-art deep learning, Tensorflow model: <a href="https://github.com/tensorflow/models/tree/master/research/deeplab">DeepLab</a>.</p>
+<p>Image Semantic Segmentation based on the state-of-art <a href="https://github.com/tensorflow/models/tree/master/research/deeplab">DeepLab</a> Tensorflow model.</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1033,7 +1033,7 @@ the state-of-art deep learning, Tensorflow model: <a href="https://github.com/te
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/VikiMaxiAdi-all.png" alt="VikiMaxiAdi all" width="100%"></span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Semantic Segmentation is the process of associating each pixel of an image with a class label, (such as flower, person, road, sky, ocean, or car).
 Unlike the <code>Instance Segmentation</code>, which produces instance-aware region masks, the <code>Semantic Segmentation</code> produces class-aware masks.
-For implementing <code>Instance Segmentation</code> consult the <a href="/Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/README.adoc">Object Detection Service</a> instead.</p></td>
+For implementing <code>Instance Segmentation</code> consult the <a href="#object-detection">Object Detection Service</a> instead.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1374,7 +1374,20 @@ $ mvn clean install</code></pre>
 <div class="sect2">
 <h3 id="face-detection-mtcnn"><a class="anchor" href="#face-detection-mtcnn"></a>Face Detection (MTCNN)</h3>
 <div class="paragraph lead">
-<p>This is just a placeholder for the existing <a href="https://github.com/tzolov/mtcnn-java">Face Detection MTCNN-JAVA</a> project.</p>
+<p>Placeholder for the existing <a href="https://github.com/tzolov/mtcnn-java">Face Detection MTCNN-Java</a> project.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The FaceDetection service uses a Tensorflow binding provided by the ND4J stack. Later is not compatible with the Google&#8217;s TensorFlow Java API.
+This means that you can&#8217;t have in the same project dependency on the other <code>mind-model-services</code>.
+</td>
+</tr>
+</table>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1384,9 +1397,11 @@ $ mvn clean install</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/face-detection-maxi.gif" alt="Face Detection Maxi" width="100%"></span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WARNING: Mind that this service uses the Tensorflow binding from the ND4J. That means that you can&#8217;t have in the same project
-dependency on the other <code>mind-model-services</code>.</p>
-<p class="tableblock">I&#8217;m considering moving the <code>mtcnn-java</code> code under this project umbrella. But until then follow the instruction provided there.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Java</code> and <code>Tensorflow</code> implementation of the <a href="https://arxiv.org/abs/1604.02878">MTCNN Face Detector</a>. Based on
+David Sandberg&#8217;s <a href="https://github.com/davidsandberg/facenet/tree/master/src/align">FaceNet&#8217;s MTCNN</a>
+<code>python</code> implementation and the original <a href="https://arxiv.org/abs/1604.02878">Zhang, K et al. (2016) ZHANG2016</a> paper
+and <a href="https://github.com/kpzhang93/MTCNN_face_detection_alignment">Matlab implementation</a>.</p>
+<p class="tableblock">We&#8217;re considering moving the <a href="https://github.com/tzolov/mtcnn-java">mtcnn-java</a> project code under this projects umbrella. Until then follow the instruction provided there.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1628,7 +1643,7 @@ SentimentResult tweetSentiment = twitterSentimentService.tweetSentiment(tweet); 
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2018-10-12 11:01:51 CEST
+Last updated 2018-10-12 11:42:05 CEST
 </div>
 </div>
 </body>
