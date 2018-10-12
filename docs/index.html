@@ -581,18 +581,32 @@ table.CodeRay td.code>pre{padding:0}
 <h2 id="introduction"><a class="anchor" href="#introduction"></a>Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Java libraries for enabling and simplifying the inference of Deep Learning models with java.</p>
+<p>Java libraries for enabling and simplifying the inference of Deep Learning models with Java.</p>
 </div>
 <div class="paragraph">
 <p><span class="image right"><img src="images/reference-arch.png" alt="reference arch" width="80%"></span>
-Java wrappers for various state-of-the-art deep learning models are provided. You can use them in standalone java
+Provides Java wrappers for various state-of-the-art deep learning models. To be used in standalone Java
 application, SpringBoot microservices as well as streaming, batch and serverless programing models.</p>
 </div>
 <div class="paragraph">
-<p>Services for different computer vision and language processing use cases are provided. The implementation relies
-the <a href="https://www.tensorflow.org/install/lang_java">TensorFlow Java API</a> as well as the
-<a href="https://deeplearning4j.org/docs/latest/nd4j-overview">DL4J</a> stack and APIs such as <a href="https://github.com/bytedeco/javacv">JavaCV</a>,
+<p>The implementations use the <a href="https://www.tensorflow.org/install/lang_java">TensorFlow Java API</a> as well as the
+<a href="https://deeplearning4j.org/docs/latest/nd4j-overview">DL4J</a> API stack such as <a href="https://github.com/bytedeco/javacv">JavaCV</a>,
 <a href="https://deeplearning4j.org/docs/latest/nd4j-overview">ND4J</a> <a href="https://github.com/deeplearning4j/deeplearning4j/tree/master/nd4j/nd4j-tensorflow">nd4j-tensorflow</a>.</p>
+</div>
+<div class="paragraph">
+<p>The pre-trained TensorFlow models can be loaded from <code>classpath</code>, <code>file</code> or <code>http</code> resource locations.
+Also the models can be loaded directly from their <code>model-zoo</code> pages! For this just use the
+following URI convention:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://&lt;Model's tar.gz URL&gt;#frozen_inference_graph.pb</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Where the <code>frozen_inference_graph.pb</code> is the frozen model&#8217;s file name within the archive specified with the URI.
+Change the fragment name to match the file name within the model archive you use. The <code>frozen_inference_graph.pb</code>
+seems to be used by default in many projects.</p>
 </div>
 </div>
 </div>
@@ -616,13 +630,14 @@ and <a href="https://github.com/tensorflow/models/tree/master/research/object_de
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="image"><img src="images/object_detection_1.jpg" alt="Object Detection 1" width="100%"></span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <a href="/Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionService.java">ObjectDetectionService</a> takes an image or a batch of images and outputs a list of predicted objects bounding boxes
-represented by <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java">ObjectDetection</a>.
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <a href="https://github.com/tzolov/mind-model-services/blob/master/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionService.java">ObjectDetectionService</a>
+takes an image or a batch of images and outputs a list of predicted objects bounding boxes
+represented by <a href="https://github.com/tzolov/mind-model-services/blob/master/object-detection/src/main/java/io/mindmodel/services/object/detection/domain/ObjectDetection.java">ObjectDetection</a>.
 For the models supporting <a href="https://github.com/tensorflow/models/tree/master/research/object_detection#february-9-2018">Instance Segmentation</a>,
 the <code>ObjectDetectionService</code> can predict the instance segmentation <code>masks</code> in addition to object bounding boxes.</p>
-<p class="tableblock">The <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java">JsonMapperFunction</a> permits
+<p class="tableblock">The <a href="https://github.com/tzolov/mind-model-services/blob/master/common/src/main/java/io/mindmodel/services/common/JsonMapperFunction.java">JsonMapperFunction</a> permits
 converting the <code>List&lt;ObjectDetection&gt;</code> into JSON objects and the
-<a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java">ObjectDetectionImageAugmenter</a>
+<a href="https://github.com/tzolov/mind-model-services/blob/master/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java">ObjectDetectionImageAugmenter</a>
 allow to augment the input image with the detected bounding boxes and segmentation masks.</p></td>
 </tr>
 </tbody>
@@ -644,7 +659,7 @@ allow to augment the input image with the detected bounding boxes and segmentati
 <div class="sect4">
 <h5 id="example-1-object-detection"><a class="anchor" href="#example-1-object-detection"></a>Example 1: Object Detection</h5>
 <div class="paragraph">
-<p>The <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/test/java/io/mindmodel/services/object/detection/examples/ExampleObjectDetection.java">ExampleObjectDetection.java</a>
+<p>The <a href="https://github.com/tzolov/mind-model-services/blob/master/object-detection/src/test/java/io/mindmodel/services/object/detection/examples/ExampleObjectDetection.java">ExampleObjectDetection.java</a>
 sample demonstrates how to use the <code>ObjectDetectionService</code> for detecting objects in input images. It also shows how to
 convert the result into JSON format and augment the input image with the detected object bounding boxes.</p>
 </div>
@@ -733,7 +748,7 @@ cached copy (5) instead.</td>
 </div>
 </div>
 <div class="paragraph">
-<p>Use the <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java">ObjectDetectionImageAugmenter</a>
+<p>Use the <a href="https://github.com/tzolov/mind-model-services/blob/master/object-detection/src/main/java/io/mindmodel/services/object/detection/ObjectDetectionImageAugmenter.java">ObjectDetectionImageAugmenter</a>
 to draw the detected objects on top of the input image.</p>
 </div>
 <div class="listingblock">
@@ -742,7 +757,7 @@ to draw the detected objects on top of the input image.</p>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre><span class="type">byte</span><span class="type">[]</span> annotatedImage = <span class="keyword">new</span> ObjectDetectionImageAugmenter(<span class="predefined-constant">false</span>).apply(image, detectedObjects); <i class="conum" data-value="1"></i><b>(1)</b>
+  <td class="code"><pre><span class="type">byte</span><span class="type">[]</span> annotatedImage = <span class="keyword">new</span> ObjectDetectionImageAugmenter().apply(image, detectedObjects); <i class="conum" data-value="1"></i><b>(1)</b>
 IOUtils.write(annotatedImage, <span class="keyword">new</span> <span class="predefined-type">FileOutputStream</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">./object-detection/target/object-detection-augmented.jpg</span><span class="delimiter">&quot;</span></span>)); <i class="conum" data-value="2"></i><b>(2)</b></pre></td>
 </tr></table></code></pre>
 </div>
@@ -779,7 +794,7 @@ Set the <code>ObjectDetectionImageAugmenter#agnosticColors</code> property to <c
 <div class="sect4">
 <h5 id="example-2-instance-segmentation"><a class="anchor" href="#example-2-instance-segmentation"></a>Example 2: Instance Segmentation</h5>
 <div class="paragraph">
-<p>The <a href="file:///Users/ctzolov/Dev/projects/mindmodel/mind-model-services/object-detection/src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java">ExampleInstanceSegmentation.java</a>
+<p>The <a href="https://github.com/tzolov/mind-model-services/blob/master/object-detection/src/test/java/io/mindmodel/services/object/detection/examples/ExampleInstanceSegmentation.java">ExampleInstanceSegmentation.java</a>
 sample shows how to use the <code>ObjectDetectionService</code> for <code>Instance Segmentation</code>.
 NOTE: It requires a trained model that supports <code>Masks</code> as well as setting the instance segmentation (e.g. <code>useMasks</code>) flag to <code>true</code>.</p>
 </div>
@@ -802,6 +817,7 @@ NOTE: It requires a trained model that supports <code>Masks</code> as well as se
 14
 15
 16
+17
 </pre></td>
   <td class="code"><pre>ObjectDetectionService detectionService = <span class="keyword">new</span> ObjectDetectionService(
    <span class="string"><span class="delimiter">&quot;</span><span class="content">http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz#frozen_inference_graph.pb</span><span class="delimiter">&quot;</span></span>, <i class="conum" data-value="1"></i><b>(1)</b>
@@ -817,7 +833,8 @@ NOTE: It requires a trained model that supports <code>Masks</code> as well as se
 <span class="predefined-type">String</span> jsonObjectDetections = <span class="keyword">new</span> JsonMapperFunction().apply(detectedObjects); <i class="conum" data-value="7"></i><b>(7)</b>
 <span class="predefined-type">System</span>.out.println(jsonObjectDetections);
 
-<span class="type">byte</span><span class="type">[]</span> annotatedImage = <span class="keyword">new</span> ObjectDetectionImageAugmenter(<span class="predefined-constant">true</span>).apply(image, detectedObjects); <i class="conum" data-value="8"></i><b>(8)</b>
+<span class="type">byte</span><span class="type">[]</span> annotatedImage = <span class="keyword">new</span> ObjectDetectionImageAugmenter(<span class="predefined-constant">true</span>) <i class="conum" data-value="8"></i><b>(8)</b>
+    .apply(image, detectedObjects);
 IOUtils.write(annotatedImage, <span class="keyword">new</span> <span class="predefined-type">FileOutputStream</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">./object-detection/target/object-detection-segmentation-augmented.jpg</span><span class="delimiter">&quot;</span></span>));</pre></td>
 </tr></table></code></pre>
 </div>
@@ -826,32 +843,36 @@ IOUtils.write(annotatedImage, <span class="keyword">new</span> <span class="pred
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Uses one of the 4 MASK pre-trained models
-&lt;2&gt;</td>
+<td>Uses one of the 4 MASK pre-trained models</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Confidence threshold - Only object with estimate above the threshold are returned</td>
+<td>Object category labels (e.g. names) for the model</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Use masks output - For the pre-trained models instruct to use the extended fetch names that include instance segmentation masks as well.</td>
+<td>Confidence threshold - Only object with estimate above the threshold are returned</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Cache model - Create a local copy of the model to speed up consecutive runs.</td>
+<td>Use masks output - For the pre-trained models instruct to use the extended fetch names that include instance segmentation masks as well.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Evaluate the model to predict the object in the input image.</td>
+<td>Cache model - Create a local copy of the model to speed up consecutive runs.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Convert the detected object in to JSON array. NOTE: that with mask there is an additional filed: <code>mask</code></td>
+<td>Evaluate the model to predict the object in the input image.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Draw the detected object on top of the input image.</td>
+<td>Convert the detected object in to JSON array. NOTE: that with mask there is an additional field: <code>mask</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>Draw the detected object on top of the input image. Mind the <code>true</code> constructor parameter stands for draw detected masks.
+If false only the bounding boxes will be shown.</td>
 </tr>
 </table>
 </div>
@@ -1607,7 +1628,7 @@ SentimentResult tweetSentiment = twitterSentimentService.tweetSentiment(tweet); 
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2018-10-12 10:05:45 CEST
+Last updated 2018-10-12 11:01:51 CEST
 </div>
 </div>
 </body>
