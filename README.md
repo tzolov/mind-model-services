@@ -8,7 +8,7 @@ Documentation: https://tzolov.github.io/mind-model-services
 
 While in experimental stage you may consider skipping the tests:
 
-[source,bash]
-----
+```bash
 mvn clean install -DskipTests
-----
+```
+
