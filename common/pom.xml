@@ -12,7 +12,7 @@
 	<artifactId>common</artifactId>
 
 	<properties>
-		<spring-framework.version>5.0.7.RELEASE</spring-framework.version>
+		<spring-framework.version>5.1.1.RELEASE</spring-framework.version>
 		<jackson.version>2.9.6</jackson.version>
 		<apache.commons.compress>1.17</apache.commons.compress>
 		<tensorflow.version>1.11.0</tensorflow.version>
