@@ -26,7 +26,7 @@ import java.util.function.Function;
 
 import com.google.protobuf.TextFormat;
 import io.mindmodel.services.object.detection.domain.ObjectDetection;
-import io.mindmodel.services.object.detection.domain.StringIntLabelMapOuterClass;
+import io.mindmodel.services.object.detection.protos.StringIntLabelMapOuterClass;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tensorflow.Tensor;

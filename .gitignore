@@ -33,3 +33,4 @@ spring-*/src/main/java/META-INF/MANIFEST.MF
 .idea/
 rebel.xml
 
+object-detection/src/main/java/io/mindmodel/services/object/detection/protos/
