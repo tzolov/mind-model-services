@@ -37,8 +37,7 @@ import org.springframework.core.io.Resource;
 public class TensorFlowService implements AutoCloseable, Function<Map<String, Tensor>, Map<String, Tensor<?>>> {
 
 	private static final Log logger = LogFactory.getLog(TensorFlowService.class);
-
-	private Graph graph;
+	private final Session session;
 
 	private List<String> fetchedNames;
 
@@ -51,9 +50,10 @@ public class TensorFlowService implements AutoCloseable, Function<Map<String, Te
 			logger.info("Loading TensorFlow graph model: " + modelLocation);
 		}
 		this.fetchedNames = fetchedNames;
-		this.graph = new Graph();
-		byte[] model = cacheModel? new CachedModelExtractor().getModel(modelLocation) : new ModelExtractor().getModel(modelLocation);
-		this.graph.importGraphDef(model);
+		Graph graph = new Graph();
+		byte[] model = cacheModel ? new CachedModelExtractor().getModel(modelLocation) : new ModelExtractor().getModel(modelLocation);
+		graph.importGraphDef(model);
+		this.session = new Session(graph);
 	}
 
 	/**
@@ -67,53 +67,51 @@ public class TensorFlowService implements AutoCloseable, Function<Map<String, Te
 	@Override
 	public Map<String, Tensor<?>> apply(Map<String, Tensor> feeds) {
 
-		try (Session session = new Session(graph)) {
+		Runner runner = this.session.runner();
 
-			Runner runner = session.runner();
-
-			// Keep tensor references to release them in the finally block
-			Tensor[] feedTensors = new Tensor[feeds.size()];
-			try {
-				// Feed in the input named tensors
-				int inputIndex = 0;
-				for (Entry<String, Tensor> e : feeds.entrySet()) {
-					String feedName = e.getKey();
-					feedTensors[inputIndex] = e.getValue();
-					runner = runner.feed(feedName, feedTensors[inputIndex]);
-					inputIndex++;
-				}
-
-				// Set the tensor name to be fetched after the evaluation
-				for (String fetchName : this.fetchedNames) {
-					runner.fetch(fetchName);
-				}
-
-				// Evaluate the input
-				List<Tensor<?>> outputTensors = runner.run();
-
-				// Extract the output tensors
-				Map<String, Tensor<?>> outTensorMap = new HashMap<>();
-				for (int outputIndex = 0; outputIndex < this.fetchedNames.size(); outputIndex++) {
-					outTensorMap.put(this.fetchedNames.get(outputIndex), outputTensors.get(outputIndex));
-				}
-				return outTensorMap;
+		// Keep tensor references to release them in the finally block
+		Tensor[] feedTensors = new Tensor[feeds.size()];
+		try {
+			// Feed in the input named tensors
+			int inputIndex = 0;
+			for (Entry<String, Tensor> e : feeds.entrySet()) {
+				String feedName = e.getKey();
+				feedTensors[inputIndex] = e.getValue();
+				runner = runner.feed(feedName, feedTensors[inputIndex]);
+				inputIndex++;
 			}
-			finally {
-				// Release all feed tensors
-				for (Tensor tensor : feedTensors) {
-					if (tensor != null) {
-						tensor.close();
-					}
+
+			// Set the tensor name to be fetched after the evaluation
+			for (String fetchName : this.fetchedNames) {
+				runner.fetch(fetchName);
+			}
+
+			// Evaluate the input
+			List<Tensor<?>> outputTensors = runner.run();
+
+			// Extract the output tensors
+			Map<String, Tensor<?>> outTensorMap = new HashMap<>();
+			for (int outputIndex = 0; outputIndex < this.fetchedNames.size(); outputIndex++) {
+				outTensorMap.put(this.fetchedNames.get(outputIndex), outputTensors.get(outputIndex));
+			}
+			return outTensorMap;
+		}
+		finally {
+			// Release all feed tensors
+			for (Tensor tensor : feedTensors) {
+				if (tensor != null) {
+					tensor.close();
 				}
 			}
 		}
+
 	}
 
 	@Override
 	public void close() {
-		logger.info("Close TensorFlow Graph!");
-		if (graph != null) {
-			graph.close();
+		logger.info("Close TensorFlow Session!");
+		if (this.session != null) {
+			this.session.close();
 		}
 	}
 }
