@@ -65,5 +65,8 @@ include::{docdir}/face-detection-mtcnn/README.adoc[]
 ---
 include::{docdir}/twitter-sentiment/README.adoc[]
 ---
+include::{docdir}/image-recognition/README.adoc[]
+---
+
 
 
