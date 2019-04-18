@@ -40,10 +40,9 @@ public class ImageRecognitionInputConverter implements Function<byte[], Map<Stri
 	public static final String NORMALIZE_IMAGE_GRAPH_INPUT_NAME = "raw_image_input";
 	public static final String NORMALIZE_IMAGE_GRAPH_OUTPUT_NAME = "normalized_image";
 
-	private final Graph graph;
-
 	//private final Output graphOutput;
 	private final String inceptionModelInputNodeName;
+	private final Session session;
 
 	/**
 	 * Normalizes the raw input image into format expected by the pre-trained Inception/MobileNetV1/MobileNetV2 models.
@@ -60,7 +59,7 @@ public class ImageRecognitionInputConverter implements Function<byte[], Map<Stri
 	public ImageRecognitionInputConverter(String inceptionModelInputNodeName,
 			int imageHeight, int imageWidth, float mean, float scale) {
 		this.inceptionModelInputNodeName = inceptionModelInputNodeName;
-		this.graph = this.buildNormalizeImageGraph(imageHeight, imageWidth, mean, scale);
+		this.session = this.buildNormalizeImageGraph(imageHeight, imageWidth, mean, scale);
 	}
 
 	@Override
@@ -69,17 +68,15 @@ public class ImageRecognitionInputConverter implements Function<byte[], Map<Stri
 	}
 
 	private Tensor normalizeImage(byte[] inputImage) {
-		try (Session s = new Session(graph)) {
-			try (Tensor inputTensor = Tensor.create(inputImage)) {
-				return s.runner()
-						.feed(NORMALIZE_IMAGE_GRAPH_INPUT_NAME, inputTensor)
-						.fetch(NORMALIZE_IMAGE_GRAPH_OUTPUT_NAME)
-						.run().get(0);
-			}
+		try (Tensor inputTensor = Tensor.create(inputImage)) {
+			return this.session.runner()
+					.feed(NORMALIZE_IMAGE_GRAPH_INPUT_NAME, inputTensor)
+					.fetch(NORMALIZE_IMAGE_GRAPH_OUTPUT_NAME)
+					.run().get(0);
 		}
 	}
 
-	private Graph buildNormalizeImageGraph(int imageHeight, int imageWidth, float mean, float scale) {
+	private Session buildNormalizeImageGraph(int imageHeight, int imageWidth, float mean, float scale) {
 
 		Graph g = new Graph();
 
@@ -98,14 +95,14 @@ public class ImageRecognitionInputConverter implements Function<byte[], Map<Stri
 		Operand<Float> normalizeOperand = tf.withName(NORMALIZE_IMAGE_GRAPH_OUTPUT_NAME)
 				.div(tf.sub(resizedImage, tf.constant(mean)), tf.constant(scale));
 
-		return g;
+		return new Session(g);
 	}
 
 	@Override
 	public void close() {
 		logger.info("Input Graph Destroyed");
-		if (graph != null) {
-			graph.close();
+		if (this.session != null) {
+			session.close();
 		}
 	}
 }

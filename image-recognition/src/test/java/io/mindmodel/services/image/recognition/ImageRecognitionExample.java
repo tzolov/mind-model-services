@@ -32,7 +32,9 @@ public class ImageRecognitionExample {
 	public static void main(String[] args) throws IOException {
 
 		// MmobileNetV2 models
+		// https://github.com/tensorflow/models/tree/master/research/slim/nets/mobilenet#pretrained-models
 		String mobilenet_v2_modelUri = "https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.4_224.tgz#mobilenet_v2_1.4_224_frozen.pb";
+		//String mobilenet_v2_modelUri = "https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_96.tgz#mobilenet_v2_0.35_96_frozen.pb";
 		ImageRecognitionService recognitionService = ImageRecognitionService.mobilenetModeV2(
 				mobilenet_v2_modelUri,
 				224,
@@ -40,6 +42,7 @@ public class ImageRecognitionExample {
 				true);
 
 		// MmobileNetV1 models
+		//
 		// String mobilenet_v1_modelUri = "http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224.tgz#mobilenet_v1_1.0_224_frozen.pb";
 		//ImageRecognitionService recognitionService = ImageRecognitionService.mobilenetModeV1(mobilenet_v1_modelUri, 224, 5, true);
 
