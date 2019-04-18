@@ -67,12 +67,12 @@ public class ImageRecognitionInputConverter implements Function<byte[], Map<Stri
 		return Collections.singletonMap(this.inceptionModelInputNodeName, this.normalizeImage(input));
 	}
 
-	private Tensor normalizeImage(byte[] inputImage) {
+	private Tensor<Float> normalizeImage(byte[] inputImage) {
 		try (Tensor inputTensor = Tensor.create(inputImage)) {
 			return this.session.runner()
 					.feed(NORMALIZE_IMAGE_GRAPH_INPUT_NAME, inputTensor)
 					.fetch(NORMALIZE_IMAGE_GRAPH_OUTPUT_NAME)
-					.run().get(0);
+					.run().get(0).expect(Float.class);
 		}
 	}
 
