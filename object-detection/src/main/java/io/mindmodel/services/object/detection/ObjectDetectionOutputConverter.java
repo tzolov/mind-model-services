@@ -55,7 +55,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Christian Tzolov
  */
-public class ObjectDetectionOutputConverter implements Function<Map<String, Tensor<?>>, List<List<ObjectDetection>>> {
+public class ObjectDetectionOutputConverter implements Function<Map<String, Tensor<Float>>, List<List<ObjectDetection>>> {
 
 	private static final Log logger = LogFactory.getLog(ObjectDetectionOutputConverter.class);
 
@@ -118,7 +118,7 @@ public class ObjectDetectionOutputConverter implements Function<Map<String, Tens
 	}
 
 	@Override
-	public List<List<ObjectDetection>> apply(Map<String, Tensor<?>> tensorMap) {
+	public List<List<ObjectDetection>> apply(Map<String, Tensor<Float>> tensorMap) {
 
 		try (Tensor<Float> scoresTensor = tensorMap.get(DETECTION_SCORES).expect(Float.class);
 			 Tensor<Float> classesTensor = tensorMap.get(DETECTION_CLASSES).expect(Float.class);

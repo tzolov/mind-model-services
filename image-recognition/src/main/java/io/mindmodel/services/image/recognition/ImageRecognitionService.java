@@ -16,7 +16,7 @@ public class ImageRecognitionService {
 
 	private final ImageRecognitionInputConverter inputConverter;
 	private final ImageRecognitionOutputConverter outputConverter;
-	private final TensorFlowService tensorFlowService;
+	private final TensorFlowService<Float, Float> tensorFlowService;
 
 	/**
 	 *
@@ -33,7 +33,7 @@ public class ImageRecognitionService {
 		this.inputConverter = new ImageRecognitionInputConverter(inputNodeName, imageHeight, imageWidth, mean, scale);
 		this.outputConverter = new ImageRecognitionOutputConverter(new DefaultResourceLoader().getResource(labelsUri),
 				responseSize);
-		this.tensorFlowService = new TensorFlowService(new DefaultResourceLoader().getResource(modelUri),
+		this.tensorFlowService = new TensorFlowService<>(new DefaultResourceLoader().getResource(modelUri),
 				Arrays.asList(outputNodeName), cacheModel);
 	}
 

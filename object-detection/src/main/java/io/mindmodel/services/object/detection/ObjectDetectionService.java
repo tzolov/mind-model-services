@@ -25,10 +25,9 @@ import java.util.List;
 import io.mindmodel.services.common.GraphicsUtils;
 import io.mindmodel.services.common.TensorFlowService;
 import io.mindmodel.services.object.detection.domain.ObjectDetection;
+import org.tensorflow.types.UInt8;
 
 import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.DescriptiveResource;
-import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
 /**
@@ -61,7 +60,7 @@ public class ObjectDetectionService {
 
 	private final ObjectDetectionInputConverter inputConverter;
 	private final ObjectDetectionOutputConverter outputConverter;
-	private final TensorFlowService tensorFlowService;
+	private final TensorFlowService<UInt8, Float> tensorFlowService;
 
 	public ObjectDetectionService() {
 		this("http://dl.bintray.com/big-data/generic/ssdlite_mobilenet_v2_coco_2018_05_09_frozen_inference_graph.pb",
@@ -82,7 +81,7 @@ public class ObjectDetectionService {
 		List<String> fetchNames = withMasks ? FETCH_NAMES_WITH_MASKS : FETCH_NAMES;
 		this.outputConverter = new ObjectDetectionOutputConverter(
 				new DefaultResourceLoader().getResource(labelsUri), confidence, fetchNames);
-		this.tensorFlowService = new TensorFlowService(
+		this.tensorFlowService = new TensorFlowService<UInt8, Float>(
 				new DefaultResourceLoader().getResource(modelUri), fetchNames, cacheModel);
 	}
 

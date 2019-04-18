@@ -34,7 +34,7 @@ import org.springframework.core.io.Resource;
 /**
  * @author Christian Tzolov
  */
-public class TensorFlowService implements AutoCloseable, Function<Map<String, Tensor>, Map<String, Tensor<?>>> {
+public class TensorFlowService<I, O> implements Function<Map<String, Tensor<I>>, Map<String, Tensor<O>>>, AutoCloseable {
 
 	private static final Log logger = LogFactory.getLog(TensorFlowService.class);
 	private final Session session;
@@ -65,7 +65,7 @@ public class TensorFlowService implements AutoCloseable, Function<Map<String, Te
 	 * argument
 	 */
 	@Override
-	public Map<String, Tensor<?>> apply(Map<String, Tensor> feeds) {
+	public Map<String, Tensor<O>> apply(Map<String, Tensor<I>> feeds) {
 
 		Runner runner = this.session.runner();
 
@@ -74,7 +74,7 @@ public class TensorFlowService implements AutoCloseable, Function<Map<String, Te
 		try {
 			// Feed in the input named tensors
 			int inputIndex = 0;
-			for (Entry<String, Tensor> e : feeds.entrySet()) {
+			for (Entry<String, Tensor<I>> e : feeds.entrySet()) {
 				String feedName = e.getKey();
 				feedTensors[inputIndex] = e.getValue();
 				runner = runner.feed(feedName, feedTensors[inputIndex]);
@@ -90,9 +90,9 @@ public class TensorFlowService implements AutoCloseable, Function<Map<String, Te
 			List<Tensor<?>> outputTensors = runner.run();
 
 			// Extract the output tensors
-			Map<String, Tensor<?>> outTensorMap = new HashMap<>();
+			Map<String, Tensor<O>> outTensorMap = new HashMap<>();
 			for (int outputIndex = 0; outputIndex < this.fetchedNames.size(); outputIndex++) {
-				outTensorMap.put(this.fetchedNames.get(outputIndex), outputTensors.get(outputIndex));
+				outTensorMap.put(this.fetchedNames.get(outputIndex), (Tensor<O>) outputTensors.get(outputIndex));
 			}
 			return outTensorMap;
 		}

@@ -19,14 +19,11 @@ package io.mindmodel.services.image.recognition;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,7 +38,7 @@ import org.springframework.util.StreamUtils;
 /**
  * @author Christian Tzolov
  */
-public class ImageRecognitionOutputConverter implements Function<Map<String, Tensor<?>>, Map<String, Double>> {
+public class ImageRecognitionOutputConverter implements Function<Map<String, Tensor<Float>>, Map<String, Double>> {
 
 	private static final Log logger = LogFactory.getLog(ImageRecognitionOutputConverter.class);
 
@@ -63,7 +60,7 @@ public class ImageRecognitionOutputConverter implements Function<Map<String, Ten
 	}
 
 	@Override
-	public Map<String, Double> apply(Map<String, Tensor<?>> tensorMap) {
+	public Map<String, Double> apply(Map<String, Tensor<Float>> tensorMap) {
 		Tensor tensor = tensorMap.entrySet().iterator().next().getValue();
 		final long[] rshape = tensor.shape();
 		if (tensor.numDimensions() != 2 || rshape[0] != 1) {
