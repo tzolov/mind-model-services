@@ -34,7 +34,7 @@ import org.tensorflow.op.core.Placeholder;
 /**
  * @author Christian Tzolov
  */
-public class ImageRecognitionInputConverter implements Function<byte[], Map<String, Tensor<Float>>>, AutoCloseable {
+public class ImageRecognitionInputConverter implements Function<byte[], Map<String, Tensor<?>>>, AutoCloseable {
 
 	private static final Log logger = LogFactory.getLog(ImageRecognitionInputConverter.class);
 	public static final String NORMALIZE_IMAGE_GRAPH_INPUT_NAME = "raw_image_input";
@@ -63,7 +63,7 @@ public class ImageRecognitionInputConverter implements Function<byte[], Map<Stri
 	}
 
 	@Override
-	public Map<String, Tensor<Float>> apply(byte[] input) {
+	public Map<String, Tensor<?>> apply(byte[] input) {
 		return Collections.singletonMap(this.inceptionModelInputNodeName, this.normalizeImage(input));
 	}
 

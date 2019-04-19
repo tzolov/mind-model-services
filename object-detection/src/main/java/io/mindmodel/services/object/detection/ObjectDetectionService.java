@@ -60,7 +60,7 @@ public class ObjectDetectionService {
 
 	private final ObjectDetectionInputConverter inputConverter;
 	private final ObjectDetectionOutputConverter outputConverter;
-	private final TensorFlowService<UInt8, Float> tensorFlowService;
+	private final TensorFlowService tensorFlowService;
 
 	public ObjectDetectionService() {
 		this("http://dl.bintray.com/big-data/generic/ssdlite_mobilenet_v2_coco_2018_05_09_frozen_inference_graph.pb",
@@ -81,7 +81,7 @@ public class ObjectDetectionService {
 		List<String> fetchNames = withMasks ? FETCH_NAMES_WITH_MASKS : FETCH_NAMES;
 		this.outputConverter = new ObjectDetectionOutputConverter(
 				new DefaultResourceLoader().getResource(labelsUri), confidence, fetchNames);
-		this.tensorFlowService = new TensorFlowService<UInt8, Float>(
+		this.tensorFlowService = new TensorFlowService(
 				new DefaultResourceLoader().getResource(modelUri), fetchNames, cacheModel);
 	}
 

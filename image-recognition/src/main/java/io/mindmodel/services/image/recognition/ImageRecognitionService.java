@@ -1,22 +1,28 @@
 package io.mindmodel.services.image.recognition;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.mindmodel.services.common.TensorFlowService;
+import org.tensorflow.Tensor;
 
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.util.StreamUtils;
 
 /**
  * @author Christian Tzolov
  */
 public class ImageRecognitionService {
 
-	private final ImageRecognitionInputConverter inputConverter;
-	private final ImageRecognitionOutputConverter outputConverter;
-	private final TensorFlowService<Float, Float> tensorFlowService;
+	private final Function<byte[], Map<String, Tensor<?>>> inputConverter;
+	private final Function<Map<String, Tensor<?>>, Map<String, Double>> outputConverter;
+	private final Function<Map<String, Tensor<?>>, Map<String, Tensor<?>>> tensorFlowService;
 
 	/**
 	 *
@@ -30,11 +36,30 @@ public class ImageRecognitionService {
 	public ImageRecognitionService(String modelUri, String labelsUri, String inputNodeName,
 			String outputNodeName, int imageHeight, int imageWidth, float mean, float scale,
 			int responseSize, boolean cacheModel) {
-		this.inputConverter = new ImageRecognitionInputConverter(inputNodeName, imageHeight, imageWidth, mean, scale);
-		this.outputConverter = new ImageRecognitionOutputConverter(new DefaultResourceLoader().getResource(labelsUri),
-				responseSize);
-		this.tensorFlowService = new TensorFlowService<>(new DefaultResourceLoader().getResource(modelUri),
-				Arrays.asList(outputNodeName), cacheModel);
+		this(new ImageRecognitionInputConverter(inputNodeName, imageHeight, imageWidth, mean, scale),
+				(responseSize == 1) ?
+						new ImageRecognitionOutputConverterMax(labels(labelsUri)) :
+						new ImageRecognitionOutputConverterTopK(labels(labelsUri), responseSize),
+				new TensorFlowService(new DefaultResourceLoader().getResource(modelUri),
+						Arrays.asList(outputNodeName), cacheModel));
+	}
+
+	public ImageRecognitionService(Function<byte[], Map<String, Tensor<?>>> inputConverter,
+			Function<Map<String, Tensor<?>>, Map<String, Double>> outputConverter,
+			Function<Map<String, Tensor<?>>, Map<String, Tensor<?>>> tensorFlowService) {
+
+		this.inputConverter = inputConverter;
+		this.outputConverter = outputConverter;
+		this.tensorFlowService = tensorFlowService;
+	}
+
+	private static List<String> labels(String labelsUri) {
+		try (InputStream is = new DefaultResourceLoader().getResource(labelsUri).getInputStream()) {
+			return Arrays.asList(StreamUtils.copyToString(is, Charset.forName("UTF-8")).split("\n"));
+		}
+		catch (IOException e) {
+			throw new RuntimeException("Failed to initialize the Vocabulary", e);
+		}
 	}
 
 	/**

@@ -39,7 +39,7 @@ import org.tensorflow.Tensor;
  *
  * @author Christian Tzolov
  */
-public class PoseEstimationTensorflowInputConverter implements Function<byte[][], Map<String, Tensor>> {
+public class PoseEstimationTensorflowInputConverter implements Function<byte[][], Map<String, Tensor<?>>> {
 
 	private static final Log logger = LogFactory.getLog(PoseEstimationTensorflowInputConverter.class);
 
@@ -59,7 +59,7 @@ public class PoseEstimationTensorflowInputConverter implements Function<byte[][]
 	}
 
 	@Override
-	public Map<String, Tensor> apply(byte[][] imageBytesArray) {
+	public Map<String, Tensor<?>> apply(byte[][] imageBytesArray) {
 		try {
 			int batchSize = imageBytesArray.length;
 			FloatBuffer floatBuffer = null;

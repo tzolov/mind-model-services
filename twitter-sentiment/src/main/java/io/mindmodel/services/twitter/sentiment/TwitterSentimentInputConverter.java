@@ -42,7 +42,7 @@ import org.springframework.util.Assert;
  *
  * @author Christian Tzolov
  */
-public class TwitterSentimentInputConverter implements Function<String, Map<String, Tensor>>, AutoCloseable {
+public class TwitterSentimentInputConverter implements Function<String, Map<String, Tensor<?>>>, AutoCloseable {
 
 	public static final Float DROPOUT_KEEP_PROB_VALUE = new Float(1.0);
 
@@ -71,7 +71,7 @@ public class TwitterSentimentInputConverter implements Function<String, Map<Stri
 	}
 
 	@Override
-	public Map<String, Tensor> apply(String tweetText) {
+	public Map<String, Tensor<?>> apply(String tweetText) {
 
 		if (tweetText == null) {
 			tweetText = "";
@@ -81,7 +81,7 @@ public class TwitterSentimentInputConverter implements Function<String, Map<Stri
 
 		Assert.notEmpty(tweetVector, "Failed to vectorize the tweet text: " + tweetText);
 
-		Map<String, Tensor> response = new HashMap<>();
+		Map<String, Tensor<?>> response = new HashMap<>();
 		response.put(DATA_IN, Tensor.create(tweetVector));
 		response.put(DROPOUT_KEEP_PROB, Tensor.create(DROPOUT_KEEP_PROB_VALUE));
 

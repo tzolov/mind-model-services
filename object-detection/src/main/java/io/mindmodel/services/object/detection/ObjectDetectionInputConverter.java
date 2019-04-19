@@ -39,7 +39,7 @@ import org.tensorflow.types.UInt8;
  *
  * @author Christian Tzolov
  */
-public class ObjectDetectionInputConverter implements Function<byte[][], Map<String, Tensor<UInt8>>> {
+public class ObjectDetectionInputConverter implements Function<byte[][], Map<String, Tensor<?>>> {
 
 	private static final Log logger = LogFactory.getLog(ObjectDetectionInputConverter.class);
 
@@ -47,7 +47,7 @@ public class ObjectDetectionInputConverter implements Function<byte[][], Map<Str
 	public static final String IMAGE_TENSOR_FEED_NAME = "image_tensor";
 
 	@Override
-	public Map<String, Tensor<UInt8>> apply(byte[][] input) {
+	public Map<String, Tensor<?>> apply(byte[][] input) {
 		return Collections.singletonMap(IMAGE_TENSOR_FEED_NAME, makeImageTensor(input));
 	}
 

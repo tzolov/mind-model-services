@@ -68,7 +68,7 @@ public class SemanticSegmentationConfiguration {
 	 * Converts the input image (as byte[]) into input tensor
 	 * @return
 	 */
-	public Function<byte[], Map<String, Tensor>> inputConverter() {
+	public Function<byte[], Map<String, Tensor<?>>> inputConverter() {
 		return image -> {
 			BufferedImage scaledImage = SemanticSegmentationUtils.scaledImage(image);
 			Tensor<UInt8> inTensor = SemanticSegmentationUtils.createInputTensor(scaledImage);
