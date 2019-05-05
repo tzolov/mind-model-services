@@ -4,8 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import io.mindmodel.services.common.GraphicsUtils;
-import io.mindmodel.services.common.JsonMapperFunction;
+import io.mindmodel.services.common.attic.GraphicsUtils;
+import io.mindmodel.services.common.attic.JsonMapperFunction;
 import io.mindmodel.services.pose.estimation.PoseEstimateImageAugmenter;
 import io.mindmodel.services.pose.estimation.PoseEstimationService;
 import io.mindmodel.services.pose.estimation.domain.Body;

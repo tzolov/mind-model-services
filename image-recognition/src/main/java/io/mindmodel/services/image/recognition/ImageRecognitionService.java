@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.mindmodel.services.common.TensorFlowService;
+import io.mindmodel.services.common.ImportedGraphRunner;
+import io.mindmodel.services.common.GraphOutputAdapter;
 import org.tensorflow.Tensor;
 
 import org.springframework.core.io.DefaultResourceLoader;
@@ -18,11 +19,13 @@ import org.springframework.util.StreamUtils;
 /**
  * @author Christian Tzolov
  */
-public class ImageRecognitionService {
+public class ImageRecognitionService implements AutoCloseable {
 
-	private final Function<byte[], Map<String, Tensor<?>>> inputConverter;
-	private final Function<Map<String, Tensor<?>>, Map<String, Double>> outputConverter;
-	private final Function<Map<String, Tensor<?>>, Map<String, Tensor<?>>> tensorFlowService;
+	private final ImageRecognitionInputAdapter inputAdapter;
+	private final GraphOutputAdapter<Map<String, Double>> outputAdapter;
+	private final ImportedGraphRunner tensorFlowService;
+
+	public enum ModelType {inception, mobilenetV1, mobilenetV2}
 
 	/**
 	 *
@@ -36,21 +39,22 @@ public class ImageRecognitionService {
 	public ImageRecognitionService(String modelUri, String labelsUri, String inputNodeName,
 			String outputNodeName, int imageHeight, int imageWidth, float mean, float scale,
 			int responseSize, boolean cacheModel) {
-		this(new ImageRecognitionInputConverter(inputNodeName, imageHeight, imageWidth, mean, scale),
+		this(new ImageRecognitionInputAdapter(imageHeight, imageWidth, mean, scale),
 				(responseSize == 1) ?
-						new ImageRecognitionOutputConverterMax(labels(labelsUri)) :
-						new ImageRecognitionOutputConverterTopK(labels(labelsUri), responseSize),
-				new TensorFlowService(new DefaultResourceLoader().getResource(modelUri),
-						Arrays.asList(outputNodeName), cacheModel));
+						new ImageRecognitionOutputAdapterMax(labels(labelsUri)) :
+						new ImageRecognitionOutputAdapterTopK(labels(labelsUri), responseSize),
+				new ImportedGraphRunner(new DefaultResourceLoader().getResource(modelUri),
+						Arrays.asList(inputNodeName), Arrays.asList(outputNodeName), cacheModel));
 	}
 
-	public ImageRecognitionService(Function<byte[], Map<String, Tensor<?>>> inputConverter,
-			Function<Map<String, Tensor<?>>, Map<String, Double>> outputConverter,
-			Function<Map<String, Tensor<?>>, Map<String, Tensor<?>>> tensorFlowService) {
+	public ImageRecognitionService(ImageRecognitionInputAdapter inputConverter,
+			GraphOutputAdapter<Map<String, Double>> outputConverter,
+			ImportedGraphRunner tensorFlowService) {
 
-		this.inputConverter = inputConverter;
-		this.outputConverter = outputConverter;
+		this.inputAdapter = inputConverter;
+		this.outputAdapter = outputConverter;
 		this.tensorFlowService = tensorFlowService;
+
 	}
 
 	private static List<String> labels(String labelsUri) {
@@ -69,12 +73,48 @@ public class ImageRecognitionService {
 	 * @return Returns an ordered map of recognized object names along with with related probability.
 	 */
 	public Map<String, Double> recognizeRaw(byte[] image) {
-		return this.inputConverter.andThen(this.tensorFlowService).andThen(this.outputConverter).apply(image);
+
+		Map<String, Tensor<?>> normalized = this.inputAdapter.apply(image);
+
+		Map<String, Tensor<?>> detectedImages = this.tensorFlowService.apply(
+				Collections.singletonMap(this.tensorFlowService.getFeedNames().get(0),
+						normalized.get(ImageRecognitionInputAdapter.NORMALIZED_IMAGE)));
+
+		Map<String, Double> result = this.outputAdapter.apply(detectedImages);
+
+		//AutoCloseables.all(normalized, detectedImages);
+
+		return result;
+
 	}
 
 	public List<RecognitionResponse> recognize(byte[] image) {
 		return recognizeRaw(image).entrySet().stream()
 				.map(e -> new RecognitionResponse(e.getKey(), e.getValue())).collect(Collectors.toList());
+	}
+
+	/**
+	 *
+	 * @param modelType
+	 * @param modelUri
+	 * @param normalizedImageSize
+	 * @param responseSize
+	 * @param cacheModel
+	 * @return
+	 */
+	public static ImageRecognitionService imageRecognitionService(ModelType modelType, String modelUri,
+			int normalizedImageSize, int responseSize, boolean cacheModel) {
+
+		switch (modelType) {
+		case inception:
+			return inception(modelUri, normalizedImageSize, responseSize, cacheModel);
+		case mobilenetV1:
+			return mobilenetV1(modelUri, normalizedImageSize, responseSize, cacheModel);
+		case mobilenetV2:
+			return mobilenetV2(modelUri, normalizedImageSize, responseSize, cacheModel);
+		}
+
+		throw new RuntimeException("Unknown model type: " + modelType);
 	}
 
 	public static ImageRecognitionService inception(String inceptionModelUri,
@@ -96,7 +136,7 @@ public class ImageRecognitionService {
 	 * @param cacheModel
 	 * @return ImageRecognitionService instance configured with a MobileNetV2 pre-trained model.
 	 */
-	public static ImageRecognitionService mobilenetModeV2(String mobilenetV2ModelUri,
+	public static ImageRecognitionService mobilenetV2(String mobilenetV2ModelUri,
 			int normalizedImageSize, int responseSize, boolean cacheModel) {
 		return new ImageRecognitionService(mobilenetV2ModelUri, "classpath:/labels/mobilenet_labels.txt",
 				"input", "MobilenetV2/Predictions/Reshape_1",
@@ -113,10 +153,22 @@ public class ImageRecognitionService {
 	 * @param cacheModel
 	 * @return
 	 */
-	public static ImageRecognitionService mobilenetModeV1(String mobilenetV1ModelUri,
+	public static ImageRecognitionService mobilenetV1(String mobilenetV1ModelUri,
 			int normalizedImageSize, int responseSize, boolean cacheModel) {
 		return new ImageRecognitionService(mobilenetV1ModelUri, "classpath:/labels/mobilenet_labels.txt",
 				"input", "MobilenetV1/Predictions/Reshape_1",
 				normalizedImageSize, normalizedImageSize, 0f, 127f, responseSize, cacheModel);
+	}
+
+	@Override
+	public void close() {
+		this.inputAdapter.close();
+		this.tensorFlowService.close();
+		try {
+			((AutoCloseable) this.outputAdapter).close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

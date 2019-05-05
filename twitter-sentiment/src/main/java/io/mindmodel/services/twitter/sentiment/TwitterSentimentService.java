@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-import io.mindmodel.services.common.TensorFlowService;
+import io.mindmodel.services.common.attic.TensorFlowService;
 import io.mindmodel.services.twitter.sentiment.domain.SentimentResult;
 
 import org.springframework.core.io.DefaultResourceLoader;

@@ -10,9 +10,9 @@ import java.util.function.Function;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mindmodel.services.common.GraphicsUtils;
-import io.mindmodel.services.common.JsonMapperFunction;
-import io.mindmodel.services.common.TensorFlowService;
+import io.mindmodel.services.common.attic.GraphicsUtils;
+import io.mindmodel.services.common.attic.JsonMapperFunction;
+import io.mindmodel.services.common.attic.TensorFlowService;
 import io.mindmodel.services.pose.estimation.domain.Body;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;

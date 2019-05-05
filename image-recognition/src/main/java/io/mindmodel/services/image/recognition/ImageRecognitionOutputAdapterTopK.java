@@ -16,58 +16,59 @@
 
 package io.mindmodel.services.image.recognition;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
+import io.mindmodel.services.common.AutoCloseables;
+import io.mindmodel.services.common.GraphRunner;
+import io.mindmodel.services.common.GraphOutputAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.tensorflow.Graph;
-import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Placeholder;
-import org.tensorflow.op.core.TopK;
+import org.tensorflow.op.nn.TopK;
 
 /**
  * @author Christian Tzolov
  */
-public class ImageRecognitionOutputConverterTopK implements Function<Map<String, Tensor<?>>, Map<String, Double>>, AutoCloseable {
+public class ImageRecognitionOutputAdapterTopK implements GraphOutputAdapter<Map<String, Double>>, AutoCloseable {
 
-	private static final Log logger = LogFactory.getLog(ImageRecognitionOutputConverterTopK.class);
+	private static final Log logger = LogFactory.getLog(ImageRecognitionOutputAdapterTopK.class);
 
 	private final List<String> labels;
 
-	private final Session session;
+	private final GraphRunner graphRunner;
 
-	public ImageRecognitionOutputConverterTopK(List<String> labels, int responseSize) {
-
+	public ImageRecognitionOutputAdapterTopK(List<String> labels, int responseSize) {
 		this.labels = labels;
-
-		Graph g = new Graph();
-		Ops tf = Ops.create(g);
-		Placeholder<Float> input = tf.withName("recognition_result").placeholder(Float.class);
-		TopK<Float> topK = tf.withName("topK").topK(input, tf.constant(responseSize), TopK.sorted(true));
-
-		this.session = new Session(g);
+		this.graphRunner = new GraphRunner(Arrays.asList("recognition_result"),
+				Arrays.asList("topK")) {
+			@Override
+			protected void doGraphDefinition(Ops tf) {
+				Placeholder<Float> input = tf.withName("recognition_result").placeholder(Float.class);
+				TopK<Float> topK = tf.withName("topK").nn.topK(input, tf.constant(responseSize), TopK.sorted(true));
+			}
+		};
 	}
 
 	@Override
 	public Map<String, Double> apply(Map<String, Tensor<?>> tensorMap) {
 
 		Tensor responseTensor = tensorMap.entrySet().iterator().next().getValue();
-
-		Tensor<Float> topKTensor = this.session.runner()
-				.feed("recognition_result", responseTensor)
-				.fetch("topK")
-				.run().get(0).expect(Float.class);
-
-		float[][] topK = new float[(int) topKTensor.shape()[0]][(int) topKTensor.shape()[1]];
 		float[][] results = new float[(int) responseTensor.shape()[0]][(int) responseTensor.shape()[1]];
-		topKTensor.copyTo(topK);
 		responseTensor.copyTo(results);
+
+		Map<String, Tensor<?>> detectedImages = this.graphRunner.apply(
+				Collections.singletonMap("recognition_result", responseTensor));
+
+		Tensor<Float> topKTensor = detectedImages.get("topK").expect(Float.class);
+		float[][] topK = new float[(int) topKTensor.shape()[0]][(int) topKTensor.shape()[1]];
+		topKTensor.copyTo(topK);
 
 		float min = topK[0][topK[0].length - 1];
 
@@ -82,13 +83,15 @@ public class ImageRecognitionOutputConverterTopK implements Function<Map<String,
 			map.put(labels.get(valueToIndex.get(tk)), (double) tk);
 		}
 
+		AutoCloseables.all(detectedImages);
+
 		return map;
 	}
 
 	@Override
 	public void close() {
-		if (this.session != null) {
-			this.session.close();
+		if (this.graphRunner != null) {
+			this.graphRunner.close();
 		}
 	}
 }

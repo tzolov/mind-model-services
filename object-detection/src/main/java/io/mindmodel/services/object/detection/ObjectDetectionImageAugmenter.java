@@ -19,14 +19,13 @@ package io.mindmodel.services.object.detection;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.BiFunction;
 
 import javax.imageio.ImageIO;
 
-import io.mindmodel.services.common.GraphicsUtils;
+import io.mindmodel.services.common.attic.GraphicsUtils;
 import io.mindmodel.services.object.detection.domain.ObjectDetection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

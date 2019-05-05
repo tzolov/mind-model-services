@@ -7,11 +7,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import io.mindmodel.services.common.GraphicsUtils;
+import io.mindmodel.services.common.attic.GraphicsUtils;
+import io.mindmodel.services.semantic.segmentation.attic.SemanticSegmentationService;
 import org.apache.commons.io.IOUtils;
-
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christian Tzolov
@@ -26,11 +24,11 @@ public class SemanticSegmentationExample {
 
 		byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi.jpg");
 
-		// Read get the segmentation mask as separate image
+		// Read get the segmentation maskImage as separate image
 		byte[] imageMask = segmentationService.masksAsImage(inputImage);
 		writeImage(imageMask, "png", "./semantic-segmentation/target/VikiMaxiAdi_masks.png");
 
-		// Blend the segmentation mask on top of the original image
+		// Blend the segmentation maskImage on top of the original image
 		byte[] augmentedImage = segmentationService.augment(inputImage);
 		IOUtils.write(augmentedImage,
 				new FileOutputStream("./semantic-segmentation/target/VikiMaxiAdi_augmented.jpg"));

@@ -18,20 +18,17 @@ package io.mindmodel.services.object.detection.examples;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
-import io.mindmodel.services.common.GraphicsUtils;
-import io.mindmodel.services.common.JsonMapperFunction;
+import io.mindmodel.services.common.attic.GraphicsUtils;
+import io.mindmodel.services.common.attic.JsonMapperFunction;
 import io.mindmodel.services.object.detection.ObjectDetectionImageAugmenter;
 import io.mindmodel.services.object.detection.ObjectDetectionService;
 import io.mindmodel.services.object.detection.domain.ObjectDetection;
 import org.apache.commons.io.IOUtils;
 
 import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.StreamUtils;
 
 /**
  * 4 of the pre-trained model in the model zoo (https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.mindmodel.services.common;
+package io.mindmodel.services.common.attic;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import io.mindmodel.services.common.CachedModelExtractor;
+import io.mindmodel.services.common.ModelExtractor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tensorflow.Graph;
@@ -37,18 +39,27 @@ import org.springframework.core.io.Resource;
 public class TensorFlowService implements Function<Map<String, Tensor<?>>, Map<String, Tensor<?>>>, AutoCloseable {
 
 	private static final Log logger = LogFactory.getLog(TensorFlowService.class);
-	private final Session session;
 
-	private List<String> fetchedNames;
+	private final Session session;
+	private final List<String> fetchedNames;
+	private final boolean autoCloseFeedTensors;
 
 	public TensorFlowService(Resource modelLocation, List<String> fetchedNames) {
 		this(modelLocation, fetchedNames, false);
 	}
 
 	public TensorFlowService(Resource modelLocation, List<String> fetchedNames, boolean cacheModel) {
+		this(modelLocation, fetchedNames, cacheModel, false);
+	}
+
+	public TensorFlowService(Resource modelLocation, List<String> fetchedNames, boolean cacheModel,
+			boolean autoCloseFeedTensors) {
+
 		if (logger.isInfoEnabled()) {
 			logger.info("Loading TensorFlow graph model: " + modelLocation);
 		}
+
+		this.autoCloseFeedTensors = autoCloseFeedTensors;
 		this.fetchedNames = fetchedNames;
 		Graph graph = new Graph();
 		byte[] model = cacheModel ? new CachedModelExtractor().getModel(modelLocation) : new ModelExtractor().getModel(modelLocation);
@@ -97,10 +108,12 @@ public class TensorFlowService implements Function<Map<String, Tensor<?>>, Map<S
 			return outTensorMap;
 		}
 		finally {
-			// Release all feed tensors
-			for (Tensor tensor : feedTensors) {
-				if (tensor != null) {
-					tensor.close();
+			if (this.autoCloseFeedTensors) {
+				// Release all feed tensors
+				for (Tensor tensor : feedTensors) {
+					if (tensor != null) {
+						tensor.close();
+					}
 				}
 			}
 		}

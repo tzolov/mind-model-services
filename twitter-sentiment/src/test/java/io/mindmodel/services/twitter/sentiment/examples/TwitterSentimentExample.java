@@ -1,6 +1,6 @@
 package io.mindmodel.services.twitter.sentiment.examples;
 
-import io.mindmodel.services.common.JsonMapperFunction;
+import io.mindmodel.services.common.attic.JsonMapperFunction;
 import io.mindmodel.services.twitter.sentiment.TwitterSentimentService;
 import io.mindmodel.services.twitter.sentiment.domain.SentimentResult;
 

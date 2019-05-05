@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.mindmodel.services.common.JsonMapperFunction;
+import io.mindmodel.services.common.attic.JsonMapperFunction;
 import io.mindmodel.services.object.detection.domain.ObjectDetection;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;

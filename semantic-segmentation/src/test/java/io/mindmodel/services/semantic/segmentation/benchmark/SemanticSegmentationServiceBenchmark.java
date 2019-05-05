@@ -17,8 +17,8 @@ package io.mindmodel.services.semantic.segmentation.benchmark;
 
 import java.io.IOException;
 
-import io.mindmodel.services.common.GraphicsUtils;
-import io.mindmodel.services.semantic.segmentation.SemanticSegmentationService;
+import io.mindmodel.services.common.attic.GraphicsUtils;
+import io.mindmodel.services.semantic.segmentation.attic.SemanticSegmentationService;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;

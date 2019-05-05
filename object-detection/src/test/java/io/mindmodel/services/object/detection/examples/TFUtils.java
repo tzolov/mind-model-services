@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.protobuf.ByteString;
-import io.mindmodel.services.common.GraphicsUtils;
+import io.mindmodel.services.common.attic.GraphicsUtils;
 import org.tensorflow.example.BytesList;
 import org.tensorflow.example.Example;
 import org.tensorflow.example.Feature;

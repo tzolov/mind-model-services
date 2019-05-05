@@ -27,7 +27,7 @@ import java.util.function.Function;
 
 import javax.imageio.ImageIO;
 
-import io.mindmodel.services.common.GraphicsUtils;
+import io.mindmodel.services.common.attic.GraphicsUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tensorflow.Tensor;

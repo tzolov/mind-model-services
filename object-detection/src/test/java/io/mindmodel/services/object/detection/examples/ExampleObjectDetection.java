@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import io.mindmodel.services.common.JsonMapperFunction;
+import io.mindmodel.services.common.attic.JsonMapperFunction;
 import io.mindmodel.services.object.detection.ObjectDetectionImageAugmenter;
 import io.mindmodel.services.object.detection.ObjectDetectionService;
 import io.mindmodel.services.object.detection.domain.ObjectDetection;

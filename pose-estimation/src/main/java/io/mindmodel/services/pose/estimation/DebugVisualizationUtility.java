@@ -33,7 +33,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import io.mindmodel.services.common.GraphicsUtils;
+import io.mindmodel.services.common.attic.GraphicsUtils;
 import io.mindmodel.services.pose.estimation.domain.Limb;
 import io.mindmodel.services.pose.estimation.domain.Model;
 import io.mindmodel.services.pose.estimation.domain.Part;

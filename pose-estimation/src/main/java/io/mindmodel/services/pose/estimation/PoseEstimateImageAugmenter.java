@@ -32,7 +32,7 @@ import java.util.function.BiFunction;
 
 import javax.imageio.ImageIO;
 
-import io.mindmodel.services.common.GraphicsUtils;
+import io.mindmodel.services.common.attic.GraphicsUtils;
 import io.mindmodel.services.pose.estimation.domain.Body;
 import io.mindmodel.services.pose.estimation.domain.Limb;
 import io.mindmodel.services.pose.estimation.domain.Model;

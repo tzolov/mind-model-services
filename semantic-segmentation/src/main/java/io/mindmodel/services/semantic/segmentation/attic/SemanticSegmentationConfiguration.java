@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.mindmodel.services.semantic.segmentation;
+package io.mindmodel.services.semantic.segmentation.attic;
 
 import java.awt.image.BufferedImage;
 import java.util.Collections;
@@ -22,7 +22,8 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.mindmodel.services.common.GraphicsUtils;
+import io.mindmodel.services.common.attic.GraphicsUtils;
+import io.mindmodel.services.semantic.segmentation.SegmentationInputConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tensorflow.Tensor;
@@ -39,7 +40,7 @@ public class SemanticSegmentationConfiguration {
 	private static final int BATCH_SIZE = 1;
 
 	/**
-	 * Blended mask transparency. Value is between 0.0 (0% transparency) and 1.0 (100% transparent).
+	 * Blended maskImage transparency. Value is between 0.0 (0% transparency) and 1.0 (100% transparent).
 	 */
 	private double maskTransparency = 0.3;
 
@@ -68,7 +69,11 @@ public class SemanticSegmentationConfiguration {
 	 * Converts the input image (as byte[]) into input tensor
 	 * @return
 	 */
-	public Function<byte[], Map<String, Tensor<?>>> inputConverter() {
+	public SegmentationInputConverter inputConverter() {
+		return new SegmentationInputConverter();
+	}
+
+	public Function<byte[], Map<String, Tensor<?>>> inputConverter2() {
 		return image -> {
 			BufferedImage scaledImage = SemanticSegmentationUtils.scaledImage(image);
 			Tensor<UInt8> inTensor = SemanticSegmentationUtils.createInputTensor(scaledImage);
@@ -91,7 +96,7 @@ public class SemanticSegmentationConfiguration {
 	}
 
 	/**
-	 * Takes the input image (byte[]) and mask pixels (long[][]) and outputs the same image (byte[]) augmented
+	 * Takes the input image (byte[]) and maskImage pixels (long[][]) and outputs the same image (byte[]) augmented
 	 * with masks overlays.
 	 * @return Returns the input image augmented with masks's overlays
 	 */
@@ -120,8 +125,8 @@ public class SemanticSegmentationConfiguration {
 	}
 
 	/**
-	 * Converts the pixels (long[][]) into mask image (byte[])
-	 * @return Image representing the mask pixels
+	 * Converts the pixels (long[][]) into maskImage image (byte[])
+	 * @return Image representing the maskImage pixels
 	 */
 	public Function<long[][], byte[]> pixelsToMaskImage() {
 		return maskPixels -> {

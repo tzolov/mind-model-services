@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.mindmodel.services.common;
+package io.mindmodel.services.common.attic;
 
 import java.util.function.Function;
 

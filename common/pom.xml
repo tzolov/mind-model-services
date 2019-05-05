@@ -15,20 +15,26 @@
 		<spring-framework.version>5.1.6.RELEASE</spring-framework.version>
 		<jackson.version>2.9.8</jackson.version>
 		<apache.commons.compress>1.18</apache.commons.compress>
-		<tensorflow.version>1.13.1</tensorflow.version>
+<!--		<tensorflow.version>1.13.1</tensorflow.version>-->
+		<tensorflow.version>1.14.0-SNAPSHOT</tensorflow.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.tensorflow</groupId>
-			<artifactId>tensorflow</artifactId>
+			<artifactId>libtensorflow</artifactId>
 			<version>${tensorflow.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.tensorflow</groupId>
-			<artifactId>proto</artifactId>
-			<version>${tensorflow.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.tensorflow</groupId>-->
+<!--			<artifactId>tensorflow</artifactId>-->
+<!--			<version>${tensorflow.version}</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>org.tensorflow</groupId>-->
+<!--			<artifactId>proto</artifactId>-->
+<!--			<version>${tensorflow.version}</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -53,6 +59,11 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.26</version>
 		</dependency>
 
 	</dependencies>

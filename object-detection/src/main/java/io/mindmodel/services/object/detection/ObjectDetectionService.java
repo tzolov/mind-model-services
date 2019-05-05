@@ -22,10 +22,9 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import io.mindmodel.services.common.GraphicsUtils;
-import io.mindmodel.services.common.TensorFlowService;
+import io.mindmodel.services.common.attic.GraphicsUtils;
+import io.mindmodel.services.common.attic.TensorFlowService;
 import io.mindmodel.services.object.detection.domain.ObjectDetection;
-import org.tensorflow.types.UInt8;
 
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.util.StreamUtils;

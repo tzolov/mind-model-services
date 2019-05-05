@@ -1,4 +1,4 @@
-package io.mindmodel.services.semantic.segmentation;
+package io.mindmodel.services.semantic.segmentation.attic;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -17,8 +17,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mindmodel.services.common.GraphicsUtils;
-import io.mindmodel.services.common.TensorFlowService;
+import io.mindmodel.services.common.attic.GraphicsUtils;
+import io.mindmodel.services.common.attic.TensorFlowService;
 import org.tensorflow.Tensor;
 import org.tensorflow.types.UInt8;
 

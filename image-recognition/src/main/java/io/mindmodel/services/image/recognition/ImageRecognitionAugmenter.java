@@ -51,7 +51,6 @@ public class ImageRecognitionAugmenter implements BiFunction<byte[], List<Recogn
 	public ImageRecognitionAugmenter() {
 	}
 
-
 	/**
 	 * Augment the input image by adding the recognized classes.
 	 *
