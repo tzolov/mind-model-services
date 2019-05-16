@@ -56,7 +56,7 @@ public class PoseEstimationServiceTest {
 		//JSONArray expected = new JSONArray(resourceToString("classpath:/pose-tourists.json"));
 		//JSONAssert.assertEquals(expected, new JSONArray(posesJson), false);
 
-		// Augment the input image with detected poses
+		// Augment the input image fromMemory detected poses
 		byte[] augmentedImage = new PoseEstimateImageAugmenter().apply(inputImage, poses);
 
 		byte[] expectedAugmentedImage = resourceToByteArray("classpath:/images/tourists_augmented.jpg");
@@ -75,7 +75,7 @@ public class PoseEstimationServiceTest {
 		byte[] inputImage = resourceToByteArray("classpath:/images/S1P-2018-boot-small.jpg");
 		List<Body> poses = poseEstimationService.detect(inputImage);
 
-		// Augment the input image with detected poses
+		// Augment the input image fromMemory detected poses
 		byte[] augmentedImage = new PoseEstimateImageAugmenter().apply(inputImage, poses);
 
 		IOUtils.write(augmentedImage, new FileOutputStream("./target/S1P-2018-boot-small-augmented.jpg"));

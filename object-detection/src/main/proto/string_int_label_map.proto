@@ -1,6 +1,6 @@
 // Message to store the mapping from class label strings to class id. Datasets
 // use string labels to represent classes while the object detection framework
-// works with class ids. This message maps them so they can be converted back
+// works fromMemory class ids. This message maps them so they can be converted back
 // and forth as needed.
 syntax = "proto2";
 

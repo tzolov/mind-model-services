@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -74,7 +74,7 @@ public class TweetTagExtractor implements Function<Object, String> {
 			String tweetText = (String) tweetJsonMap.get(tagName);
 
 			if (isEmpty(tweetText)) {
-				logger.warn("Tweet with out [" + tagName + "] from tweet: " + tweetJsonMap.get(TWEET_ID_TAG));
+				logger.warn("Tweet fromMemory out [" + tagName + "] from tweet: " + tweetJsonMap.get(TWEET_ID_TAG));
 				tweetText = "";
 			}
 			return tweetText;

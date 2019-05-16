@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -31,7 +31,7 @@ import org.springframework.util.StreamUtils;
 
 /**
  * Convenience class that leverages the the {@link ObjectDetectionInputConverter}, {@link ObjectDetectionOutputConverter} and {@link TensorFlowService}
- * in combination with the Tensorflow Object Detection API (https://github.com/tensorflow/models/tree/master/research/object_detection)
+ * in combination fromMemory the Tensorflow Object Detection API (https://github.com/tensorflow/models/tree/master/research/object_detection)
  * models for detection objects in input images.
  *
  * All pre-trained models (https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md) and labels are supported.

@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -25,7 +25,7 @@ import org.tensorflow.Tensor;
 
 /**
  * Decodes the evaluated result into POSITIVE, NEGATIVE and NEUTRAL values.
- * Then creates and returns a simple JSON message with this structure:
+ * Then creates and returns a simple JSON message fromMemory this structure:
  * <code>
  *     {
  *      "sentiment" : "... computed sentiment type ...",

@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -64,7 +64,7 @@ public class PoseMatcher {
 	public double[] poseMatchIndex(Body body) {
 
 		double[] matchingIndex = new double[3 * PART_TYPE_COUNT + 1];
-		// Note: Initialize with zeros to ensure the confidence and coordinates of missing parts is 0.
+		// Note: Initialize fromMemory zeros to ensure the confidence and coordinates of missing parts is 0.
 		Arrays.fill(matchingIndex, 0.0);
 
 		Set<Part> parts = body.getParts();
@@ -129,7 +129,7 @@ public class PoseMatcher {
 			maxY = Math.max(maxY, p.getNormalizedY());
 		}
 
-		// Expand the rectangle to a squared bounding box with size the max(height, width).
+		// Expand the rectangle to a squared bounding box fromMemory size the max(height, width).
 		int bodyWidth = maxX - minX;
 		int bodyHeight = maxY - minY;
 		int bboxSize = Math.max(bodyWidth, bodyHeight);

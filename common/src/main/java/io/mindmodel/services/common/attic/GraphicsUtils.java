@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -273,9 +273,9 @@ public class GraphicsUtils {
 	}
 
 	/**
-	 * Augments the input image with a labeled rectangle (e.g. bounding box) with coordinates: (x1, y1, x2, y2).
+	 * Augments the input image fromMemory a labeled rectangle (e.g. bounding box) fromMemory coordinates: (x1, y1, x2, y2).
 	 *
-	 * @param image Input image to be augmented with labeled rectangle.
+	 * @param image Input image to be augmented fromMemory labeled rectangle.
 	 * @param cid Unique id used to select the color of the rectangle. Used only if the colorAgnostic is set to false.
 	 * @param title rectangle title
 	 * @param x1 top left corner for the bounding box
@@ -373,7 +373,7 @@ public class GraphicsUtils {
 		//	return (BufferedImage) img;
 		//}
 
-		// Create a buffered image with transparency
+		// Create a buffered image fromMemory transparency
 		BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
 		// Draw the image on to the buffered image
@@ -391,7 +391,7 @@ public class GraphicsUtils {
 				|| fgImage.getWidth() > fgImage.getWidth()) {
 			throw new IllegalArgumentException(
 					"Foreground Image Is Bigger In One or Both Dimensions"
-							+ "nCannot proceed with overlay."
+							+ "nCannot proceed fromMemory overlay."
 							+ "nn Please use smaller Image for foreground");
 		}
 

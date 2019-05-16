@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -18,8 +18,8 @@ package io.mindmodel.services.object.detection;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 
-import io.mindmodel.services.common.GraphInputAdapter;
 import io.mindmodel.services.common.GraphRunner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,7 +28,6 @@ import org.tensorflow.Tensor;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.image.DecodeJpeg;
-import org.tensorflow.op.io.TfRecordReader;
 import org.tensorflow.types.UInt8;
 
 /**
@@ -36,7 +35,7 @@ import org.tensorflow.types.UInt8;
  *
  * @author Christian Tzolov
  */
-public class ObjectDetectionInputAdapter implements GraphInputAdapter<byte[]> {
+public class ObjectDetectionInputAdapter implements Function<byte[], Map<String, Tensor<?>>>, AutoCloseable {
 
 	private static final Log logger = LogFactory.getLog(ObjectDetectionInputAdapter.class);
 

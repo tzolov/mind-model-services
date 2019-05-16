@@ -8,7 +8,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import io.mindmodel.services.common.attic.GraphicsUtils;
-import io.mindmodel.services.semantic.segmentation.attic.SemanticSegmentationService;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
@@ -23,44 +22,47 @@ public class SemanticSegmentationServiceTest {
 
 	@Test
 	public void testADE20K() throws IOException {
-		SemanticSegmentationService segmentationService = new SemanticSegmentationService(modelADE20K, true);
+		SemanticSegmentation segmentationService = new SemanticSegmentation(modelADE20K,
+						SegmentationColorMap.ADE20K_COLORMAP, null, 0.45f);
 
 		byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/interior.jpg");
 
-		byte[] augmented = segmentationService.augment(inputImage);
+		byte[] augmented = segmentationService.blendMask(inputImage);
 		//Assert.assertArrayEquals(GraphicsUtils.loadAsByteArray("classpath:/images/interior_augmented.jpg"), augmented);
 		IOUtils.write(augmented, new FileOutputStream("./target/out2.jpg"));
 
-		byte[] masks = segmentationService.masksAsImage(inputImage);
+		byte[] masks = segmentationService.maskImage(inputImage);
 		IOUtils.write(masks, new FileOutputStream("./target/masks.jpg"));
 
 	}
 
 	@Test
 	public void testModelCITYSCAPE() throws IOException {
-		SemanticSegmentationService segmentationService = new SemanticSegmentationService(modelCITYSCAPE, true);
+		SemanticSegmentation segmentationService = new SemanticSegmentation(modelCITYSCAPE,
+				SegmentationColorMap.CITYMAP_COLORMAP, null, 0.45f);
 
 		byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/amsterdam-cityscape1.jpg");
 
-		byte[] augmented = segmentationService.augment(inputImage);
+		byte[] augmented = segmentationService.blendMask(inputImage);
 		//Assert.assertArrayEquals(GraphicsUtils.loadAsByteArray("classpath:/images/amsterdam-cityscape1_augmented.jpg"), augmented);
 		IOUtils.write(augmented, new FileOutputStream("./target/out3.jpg"));
 
-		byte[] masks = segmentationService.masksAsImage(inputImage);
+		byte[] masks = segmentationService.maskImage(inputImage);
 
 	}
 
 	@Test
 	public void testModelPASCALVOC2012() throws IOException {
-		SemanticSegmentationService segmentationService = new SemanticSegmentationService(modelPASCALVOC2012, true);
+		SemanticSegmentation segmentationService = new SemanticSegmentation(modelPASCALVOC2012,
+				SegmentationColorMap.ADE20K_COLORMAP, null, 0.45f);
 
 		byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi.jpg");
 
-		byte[] augmented = segmentationService.augment(inputImage);
+		byte[] augmented = segmentationService.blendMask(inputImage);
 		//Assert.assertArrayEquals(GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi_augmented.jpg"), augmented);
 		IOUtils.write(augmented, new FileOutputStream("./target/out2.jpg"));
 
-		byte[] masks = segmentationService.masksAsImage(inputImage);
+		byte[] masks = segmentationService.maskImage(inputImage);
 		writeImage(masks, "jpg", "./target/masks1.jpg");
 //		Assert.assertArrayEquals(GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi_masks.png"), masks);
 	}

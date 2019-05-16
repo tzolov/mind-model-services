@@ -28,6 +28,12 @@
 			<version>${commons-io.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.tensorflow</groupId>
+			<artifactId>proto</artifactId>
+			<version>1.13.1</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 

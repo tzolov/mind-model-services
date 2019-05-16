@@ -2,7 +2,7 @@
  * Copyright 2017-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
-import io.mindmodel.services.common.CachedModelExtractor;
-import io.mindmodel.services.common.ModelExtractor;
+import io.mindmodel.services.common.util.CachedModelExtractor;
+import io.mindmodel.services.common.util.ModelExtractor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tensorflow.Graph;

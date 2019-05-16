@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.mindmodel.services.common;
+package io.mindmodel.services.common.util;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -44,7 +44,7 @@ import org.springframework.util.StringUtils;
  * Models can be extract either from raw files or form compressed archives. When  extracted from an archive the model
  * file name can optionally be provided as an URI fragment. For example for resource: http://myarchive.tar.gz#model.pb
  * the myarchive.tar.gz is traversed to uncompress and extract the model.pb file as byte array.
- * If the file name is not provided as URI fragment then the first file in the archive with extension .pb is extracted.
+ * If the file name is not provided as URI fragment then the first file in the archive fromMemory extension .pb is extracted.
  *
  * @author Christian Tzolov
  */
@@ -54,7 +54,7 @@ public class ModelExtractor {
 
 	/**
 	 * When an archive resource if referred, but no fragment URI is provided (to specify the target file name in
-	 * the archive) then the extractor selects the first file in the archive with the extension that match
+	 * the archive) then the extractor selects the first file in the archive fromMemory the extension that match
 	 * the frozenGraphFileExtension (defaults to .pb).
 	 */
 	public final String frozenGraphFileExtension;
@@ -87,7 +87,7 @@ public class ModelExtractor {
 				try (CompressorInputStream cis = new CompressorStreamFactory().createCompressorInputStream(compressor, bi)) {
 					if (StringUtils.hasText(archive)) {
 						try (ArchiveInputStream ais = new ArchiveStreamFactory().createArchiveInputStream(archive, cis)) {
-							// Compressor with Archive
+							// Compressor fromMemory Archive
 							return findInArchiveStream(fragment, ais);
 						}
 					}
@@ -139,7 +139,7 @@ public class ModelExtractor {
 	/**
 	 * Detect the Archive and the Compressor from the file extension
 	 *
-	 * @param fileName File name with extension
+	 * @param fileName File name fromMemory extension
 	 * @return Returns a tuple of the detected (Archive, Compressor). Null stands for not available archive or detector.
 	 * The (null, null) response stands for no Archive or Compressor discovered.
 	 */

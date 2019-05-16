@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.CollectionUtils;
 
 /**
- * Augment the input image with detected object bounding boxes and categories.
+ * Augment the input image fromMemory detected object bounding boxes and categories.
  * For mask models and withMask set to true it draws the instance segmentation image as well.
  *
  * @author Christian Tzolov

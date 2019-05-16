@@ -8,7 +8,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import io.mindmodel.services.common.attic.GraphicsUtils;
-import io.mindmodel.services.semantic.segmentation.attic.SemanticSegmentationService;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -20,16 +19,17 @@ public class SemanticSegmentationExample {
 	public static void main(String[] args) throws IOException {
 		String PASCAL_VOC_2012_MODEL =
 				"http://download.tensorflow.org/models/deeplabv3_mnv2_pascal_trainval_2018_01_29.tar.gz#frozen_inference_graph.pb";
-		SemanticSegmentationService segmentationService = new SemanticSegmentationService(PASCAL_VOC_2012_MODEL, true);
+		SemanticSegmentation segmentation = new SemanticSegmentation(PASCAL_VOC_2012_MODEL,
+				SegmentationColorMap.ADE20K_COLORMAP, null, 0.45f);
 
 		byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi.jpg");
 
 		// Read get the segmentation maskImage as separate image
-		byte[] imageMask = segmentationService.masksAsImage(inputImage);
+		byte[] imageMask = segmentation.maskImage(inputImage);
 		writeImage(imageMask, "png", "./semantic-segmentation/target/VikiMaxiAdi_masks.png");
 
 		// Blend the segmentation maskImage on top of the original image
-		byte[] augmentedImage = segmentationService.augment(inputImage);
+		byte[] augmentedImage = segmentation.blendMask(inputImage);
 		IOUtils.write(augmentedImage,
 				new FileOutputStream("./semantic-segmentation/target/VikiMaxiAdi_augmented.jpg"));
 	}

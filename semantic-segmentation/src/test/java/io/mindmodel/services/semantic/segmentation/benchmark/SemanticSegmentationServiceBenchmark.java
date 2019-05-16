@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -18,7 +18,8 @@ package io.mindmodel.services.semantic.segmentation.benchmark;
 import java.io.IOException;
 
 import io.mindmodel.services.common.attic.GraphicsUtils;
-import io.mindmodel.services.semantic.segmentation.attic.SemanticSegmentationService;
+import io.mindmodel.services.semantic.segmentation.SegmentationColorMap;
+import io.mindmodel.services.semantic.segmentation.SemanticSegmentation;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -38,15 +39,15 @@ public class SemanticSegmentationServiceBenchmark {
 	@State(Scope.Benchmark)
 	public static class ExecutionPlan {
 
-		private SemanticSegmentationService segmentationService;
+		private SemanticSegmentation segmentationService;
 		private byte[] inputImage;
 
 		@Setup(Level.Trial)
 		public void setUp() throws IOException {
 
-			String MODEL_URI = "http://download.tensorflow.org/models/xception_65_coco_pretrained_2018_10_02.tar.gz#frozen_inference_graph.pb";
-			String MODEL_URI2 = "http://download.tensorflow.org/models/deeplabv3_mnv2_dm05_pascal_trainaug_2018_10_01.tar.gz#frozen_inference_graph.pb";
-			segmentationService = new SemanticSegmentationService(MODEL_URI, true);
+			//String MODEL_URI = "http://download.tensorflow.org/models/xception_65_coco_pretrained_2018_10_02.tar.gz#frozen_inference_graph.pb";
+			String MODEL_URI = "http://download.tensorflow.org/models/deeplabv3_mnv2_dm05_pascal_trainaug_2018_10_01.tar.gz#frozen_inference_graph.pb";
+			segmentationService = new SemanticSegmentation(MODEL_URI, SegmentationColorMap.ADE20K_COLORMAP, null, 0.45f);
 
 			inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/VikiMaxiAdi.jpg");
 		}
@@ -56,8 +57,8 @@ public class SemanticSegmentationServiceBenchmark {
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@Threads(value = 1)
-	public void poseEstimationThinGraph(ExecutionPlan plan) {
-		byte[] result = plan.segmentationService.masksAsImage(plan.inputImage);
+	public void semanticSegmentationMaskImage(ExecutionPlan plan) {
+		byte[] result = plan.segmentationService.maskImage(plan.inputImage);
 	}
 
 	public static void main(String[] args) throws IOException, RunnerException {

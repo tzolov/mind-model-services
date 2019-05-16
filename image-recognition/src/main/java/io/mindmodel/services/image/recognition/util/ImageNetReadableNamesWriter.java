@@ -21,7 +21,7 @@ import org.springframework.util.StreamUtils;
  * Create a text file mapping label id to human readable string.
  *
  * Produces a text file where every line represents single category. The line number represents the category id, while
- * the line text is human-readable names for the categories with this imagenet id.
+ * the line text is human-readable names for the categories fromMemory this imagenet id.
  *
  * Based on https://github.com/tensorflow/models/blob/master/research/slim/datasets/imagenet.py#L66
  *

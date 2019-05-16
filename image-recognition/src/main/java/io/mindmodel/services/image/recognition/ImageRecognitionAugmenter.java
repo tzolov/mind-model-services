@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       https://www.apache.org/licenses/LICENSE-2.0
@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 
 
 /**
- * Ability to to augment the input image with the recognized labels.
+ * Ability to to augment the input image fromMemory the recognized labels.
  *
  * @author Christian Tzolov
  */
@@ -56,7 +56,7 @@ public class ImageRecognitionAugmenter implements BiFunction<byte[], List<Recogn
 	 *
 	 * @param imageBytes input image as byte array
 	 * @param result computed recognition labels
-	 * @return the image augmented with recognized labels.
+	 * @return the image augmented fromMemory recognized labels.
 	 */
 	@Override
 	public byte[] apply(byte[] imageBytes, List<RecognitionResponse> result) {

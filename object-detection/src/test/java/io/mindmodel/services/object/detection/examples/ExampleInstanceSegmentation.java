@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -63,10 +63,10 @@ public class ExampleInstanceSegmentation {
 		// You can cache the TF model on the local file system to improve the bootstrap performance on consecutive runs!
 		boolean CACHE_TF_MODEL = true;
 
-		// For the pre-trained models with mask you can set the INSTANCE_SEGMENTATION to enable object instance segmentation as well
+		// For the pre-trained models fromMemory mask you can set the INSTANCE_SEGMENTATION to enable object instance segmentation as well
 		boolean INSTANCE_SEGMENTATION = true;
 
-		// Only object with confidence above the threshold are returned
+		// Only object fromMemory confidence above the threshold are returned
 		float CONFIDENCE_THRESHOLD = 0.4f;
 
 		ObjectDetectionService detectionService =

@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -38,14 +38,14 @@ public class ImageRecognitionExample {
 		// https://github.com/tensorflow/models/tree/master/research/slim/nets/mobilenet#pretrained-models
 		String mobilenet_v2_modelUri = "https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.4_224.tgz#mobilenet_v2_1.4_224_frozen.pb";
 		//String mobilenet_v2_modelUri = "https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_0.35_96.tgz#mobilenet_v2_0.35_96_frozen.pb";
-		try (ImageRecognitionService recognitionService = ImageRecognitionService.imageRecognitionService(
-				ImageRecognitionService.ModelType.mobilenetV2,
+		try (ImageRecognition imageRecognition = ImageRecognition.mobileNetV2(
 				mobilenet_v2_modelUri,
 				224,
 				5,
 				true)) {
 
-			List<RecognitionResponse> recognizedObjects = recognitionService.recognize(inputImage);
+			List<RecognitionResponse> recognizedObjects =
+					ImageRecognition.toRecognitionResponse(imageRecognition.recognizeTopK(inputImage));
 
 			// Draw the predicted labels on top of the input image.
 			byte[] augmentedImage = new ImageRecognitionAugmenter().apply(inputImage, recognizedObjects);
@@ -58,14 +58,14 @@ public class ImageRecognitionExample {
 
 
 		String mobilenet_v1_modelUri = "http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224.tgz#mobilenet_v1_1.0_224_frozen.pb";
-		try (ImageRecognitionService recognitionService = ImageRecognitionService.imageRecognitionService(
-				ImageRecognitionService.ModelType.mobilenetV1,
+		try (ImageRecognition recognitionService = ImageRecognition.mobileNetV1(
 				mobilenet_v1_modelUri,
 				224,
 				5,
 				true)) {
 
-			List<RecognitionResponse> recognizedObjects = recognitionService.recognize(inputImage);
+			List<RecognitionResponse> recognizedObjects =
+					ImageRecognition.toRecognitionResponse(recognitionService.recognizeTopK(inputImage));
 
 			// Draw the predicted labels on top of the input image.
 			byte[] augmentedImage = new ImageRecognitionAugmenter().apply(inputImage, recognizedObjects);
@@ -77,14 +77,14 @@ public class ImageRecognitionExample {
 		}
 
 		String inception_modelUri = "https://dl.bintray.com/big-data/generic/tensorflow_inception_graph.pb";
-		try (ImageRecognitionService recognitionService = ImageRecognitionService.imageRecognitionService(
-				ImageRecognitionService.ModelType.inception,
+		try (ImageRecognition recognitionService = ImageRecognition.inception(
 				inception_modelUri,
 				224,
 				5,
 				true)) {
 
-			List<RecognitionResponse> recognizedObjects = recognitionService.recognize(inputImage);
+			List<RecognitionResponse> recognizedObjects =
+					ImageRecognition.toRecognitionResponse(recognitionService.recognizeTopK(inputImage));
 
 			// Draw the predicted labels on top of the input image.
 			byte[] augmentedImage = new ImageRecognitionAugmenter().apply(inputImage, recognizedObjects);

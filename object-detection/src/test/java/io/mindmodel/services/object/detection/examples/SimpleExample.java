@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -39,7 +39,7 @@ public class SimpleExample {
 		String labels = "https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/mscoco_label_map.pbtxt";
 
 		ObjectDetectionService detectionService = new ObjectDetectionService(model, labels,
-				0.4f, // Only object with confidence above the threshold are returned. Confidence range is [0, 1].
+				0.4f, // Only object fromMemory confidence above the threshold are returned. Confidence range is [0, 1].
 				false, // No instance segmentation
 				true); // cache the TF model locally
 

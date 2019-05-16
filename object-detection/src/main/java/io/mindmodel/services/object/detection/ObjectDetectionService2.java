@@ -6,8 +6,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import io.mindmodel.services.common.GraphRunner;
+import io.mindmodel.services.common.ProtoBufGraphDefinition;
 import io.mindmodel.services.common.attic.GraphicsUtils;
-import io.mindmodel.services.common.ImportedGraphRunner;
 import io.mindmodel.services.object.detection.domain.ObjectDetection;
 import org.tensorflow.Tensor;
 
@@ -30,11 +31,11 @@ public class ObjectDetectionService2 implements AutoCloseable {
 			ObjectDetectionOutputConverter.NUM_DETECTIONS);
 
 	private final ObjectDetectionInputAdapter inputAdapter;
-	private final ImportedGraphRunner objectDetectionGraph;
+	private final GraphRunner objectDetectionGraph;
 	private final ObjectDetectionOutputConverter outputConverter;
 
 	public ObjectDetectionService2(ObjectDetectionInputAdapter inputAdapter,
-			ImportedGraphRunner objectDetectionGraphRunner, ObjectDetectionOutputConverter outputConverter) {
+			GraphRunner objectDetectionGraphRunner, ObjectDetectionOutputConverter outputConverter) {
 		this.inputAdapter = inputAdapter;
 		this.objectDetectionGraph = objectDetectionGraphRunner;
 		this.outputConverter = outputConverter;
@@ -62,8 +63,9 @@ public class ObjectDetectionService2 implements AutoCloseable {
 		String modelUri = "http://dl.bintray.com/big-data/generic/ssdlite_mobilenet_v2_coco_2018_05_09_frozen_inference_graph.pb";
 		String labelUri = "http://dl.bintray.com/big-data/generic/mscoco_label_map.pbtxt";
 
-		ImportedGraphRunner runner = new ImportedGraphRunner(new DefaultResourceLoader().getResource(modelUri),
-				FEED_NAMES, FETCH_NAMES, true, false);
+		GraphRunner runner = new GraphRunner(FEED_NAMES, FETCH_NAMES)
+				.withGraphDefinition(new ProtoBufGraphDefinition(new DefaultResourceLoader().getResource(modelUri), true));
+
 		ObjectDetectionOutputConverter outputAdapter = new ObjectDetectionOutputConverter(
 				new DefaultResourceLoader().getResource(labelUri), 0.4f, FETCH_NAMES);
 

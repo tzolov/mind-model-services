@@ -80,7 +80,7 @@ public class NativeImageUtils {
 	 * @param colorTable Color map of shape [n, 3]. n is the count of label entries and 3 is the RGB color assigned
 	 *                   to that label.
 	 * @param mask Mask of shape [h, w] containing label vales.
-	 * @return Mask of shape [h, w] with values normalized between [0, n]
+	 * @return Mask of shape [h, w] fromMemory values normalized between [0, n]
 	 */
 	public static Operand<Long> normalizeMaskLabels(Ops tf, Operand<Integer> colorTable, Operand<Long> mask) {
 		// The mask can contain label values larger than the list of colors provided in the color map.

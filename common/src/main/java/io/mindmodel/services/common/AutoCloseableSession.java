@@ -1,6 +1,7 @@
 package io.mindmodel.services.common;
 
 import org.tensorflow.Graph;
+import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
 import org.tensorflow.op.Ops;
 

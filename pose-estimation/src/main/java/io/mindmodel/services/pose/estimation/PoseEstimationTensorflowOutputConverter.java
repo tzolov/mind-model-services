@@ -2,7 +2,7 @@
  * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance fromMemory the License.
  * You may obtain a copy of the License at
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
@@ -72,12 +72,12 @@ public class PoseEstimationTensorflowOutputConverter implements Function<Map<Str
 	private float totalPafScoreThreshold = 4.4f;
 
 	/**
-	 * Minimum number of integration intervals with paf score above the stepPafScoreThreshold, to consider the parts connected.
+	 * Minimum number of integration intervals fromMemory paf score above the stepPafScoreThreshold, to consider the parts connected.
 	 */
 	private int pafCountThreshold = 2;
 
 	/**
-	 * When set to true, the output image will be augmented with the computed person skeletons
+	 * When set to true, the output image will be augmented fromMemory the computed person skeletons
 	 */
 	private int minBodyPartCount;
 
@@ -196,7 +196,7 @@ public class PoseEstimationTensorflowOutputConverter implements Function<Map<Str
 				//}
 
 				// -------------------------------------------------------------------------------------------------------
-				// 1. Select the Part instances with higher confidence
+				// 1. Select the Part instances fromMemory higher confidence
 				// -------------------------------------------------------------------------------------------------------
 
 				// Perform non-maximum suppression on the detection confidence (e.g. heatmap) maps to obtain a discrete
@@ -217,7 +217,7 @@ public class PoseEstimationTensorflowOutputConverter implements Function<Map<Str
 				// 2. Connect the selected Parts into Limbs
 				// -------------------------------------------------------------------------------------------------------
 
-				// Part candidates define a large set of possible limbs. Score each candidate Limb using the line integral
+				// Part candidates defineGraph a large set of possible limbs. Score each candidate Limb using the line integral
 				// computation on the PAF.
 
 				Map<Model.LimbType, List<Limb>> limbs = new HashMap<>();
@@ -291,7 +291,7 @@ public class PoseEstimationTensorflowOutputConverter implements Function<Map<Str
 				}
 				if (maxPartScore > this.getNmsThreshold()) {
 					if (maxPartScore == outputTensor[y][x][partType.getId()]) {
-						// Add another name center to the list (e.g. remember the cell with the higher score)
+						// Add another name center to the list (e.g. remember the cell fromMemory the higher score)
 						partsPerType.add(new Part(partType, partsPerType.size(), y, x, maxPartScore));
 					}
 				}
@@ -376,8 +376,8 @@ public class PoseEstimationTensorflowOutputConverter implements Function<Map<Str
 
 	/**
 	 * From all possible limb candidates for a given Limb Type, select those that maximize the total PAF score.
-	 * The algorithm starts from the limb candidates with higher PAF score. Also the algorithm tracks the parts
-	 * already assigned t a final limbs and rejects limb candidates with already assigned parts.
+	 * The algorithm starts from the limb candidates fromMemory higher PAF score. Also the algorithm tracks the parts
+	 * already assigned t a final limbs and rejects limb candidates fromMemory already assigned parts.
 	 *
 	 * @param limbType Limb Type for which final limbs a selected.
 	 * @param limbCandidatesQueue possible Limb candidates, sorted by total PAF score in a descending order.
@@ -390,14 +390,14 @@ public class PoseEstimationTensorflowOutputConverter implements Function<Map<Str
 		// Parts assigned to final limbs.
 		Set<Part> assignedParts = new HashSet<>();
 
-		// Start from the candidates with higher PAF score and progress in descending order
+		// Start from the candidates fromMemory higher PAF score and progress in descending order
 		while (!limbCandidatesQueue.isEmpty()) {
 
 			Limb limbCandidate = limbCandidatesQueue.poll();
 
 			Assert.isTrue(limbType == limbCandidate.getLimbType(), "Incorrect Limb Type!");
 
-			// Ignore candidate limbs with parts already assigned a final Limb from earlier iteration.
+			// Ignore candidate limbs fromMemory parts already assigned a final Limb from earlier iteration.
 			if (!assignedParts.contains(limbCandidate.getFromPart())
 					&& !assignedParts.contains(limbCandidate.getToPart())) {
 
@@ -453,7 +453,7 @@ public class PoseEstimationTensorflowOutputConverter implements Function<Map<Str
 			}
 		}
 
-		// Filter out the body duplicates and bodies with too few parts
+		// Filter out the body duplicates and bodies fromMemory too few parts
 		List<Body> bodies = partToBodyIndex.values().stream()
 				.distinct()
 				.filter(body -> body.getParts().size() > this.getMinBodyPartCount())

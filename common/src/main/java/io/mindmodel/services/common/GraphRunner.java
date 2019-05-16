@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
+import org.tensorflow.op.Ops;
 
 import org.springframework.util.Assert;
 
@@ -16,6 +17,11 @@ import org.springframework.util.Assert;
  */
 public class GraphRunner extends AutoCloseableSession
 		implements Function<Map<String, Tensor<?>>, Map<String, Tensor<?>>> {
+
+	/**
+	 * Interface providing Graph's model.
+	 */
+	private GraphDefinition graphDefinition;
 
 	/**
 	 * Names expected in the named Tensor inside the input {@link GraphRunner#apply(Map)}.
@@ -28,86 +34,111 @@ public class GraphRunner extends AutoCloseableSession
 	 */
 	private final List<String> fetchNames;
 
-	private final boolean autoCloseFeedTensors;
+	/**
+	 * When set and the input takes a single feed, then the name of the input tensor is automatically mapped
+	 * to the expected input name. E.g. no need to rename the input names explicitly.
+	 */
+	private boolean autoBinding;
 
 	public GraphRunner(String feedName, String fetchedName) {
-		this(feedName, fetchedName, true);
+		this(Arrays.asList(feedName), Arrays.asList(fetchedName));
 	}
 
 	public GraphRunner(List<String> feedNames, List<String> fetchedNames) {
-		this(feedNames, fetchedNames, true);
-	}
-
-	public GraphRunner(String feedName, String fetchedName, boolean autoCloseFeedTensors) {
-		this(Arrays.asList(feedName), Arrays.asList(fetchedName), autoCloseFeedTensors);
-	}
-
-	public GraphRunner(List<String> feedNames, List<String> fetchedNames, boolean autoCloseFeedTensors) {
 		this.feedNames = feedNames;
 		this.fetchNames = fetchedNames;
-		this.autoCloseFeedTensors = autoCloseFeedTensors;
+		this.autoBinding = feedNames.size() == 1;
 	}
 
 	@Override
 	public Map<String, Tensor<?>> apply(Map<String, Tensor<?>> feeds) {
 
-		try {
-			Assert.isTrue(feeds.keySet().containsAll(feedNames),
-					"Applied feeds:" + feeds.keySet()
-							+ "\n, don't match the expected feeds contract:" + this.feedNames);
+		Assert.notNull(this.graphDefinition, "Graph Definition is compulsory!");
 
-			Session.Runner runner = this.getSession().runner();
-
-			// Feed in the input named tensors
-			for (Map.Entry<String, Tensor<?>> e : feeds.entrySet()) {
-				String feedName = e.getKey();
-				runner = runner.feed(feedName, e.getValue());
-			}
-
-			// Set the tensor name to be fetched after the evaluation
-			for (String fetchName : this.fetchNames) {
-				runner.fetch(fetchName);
-			}
-
-			// Evaluate the input
-			List<Tensor<?>> outputTensors = runner.run();
-
-			// Extract the output tensors
-			Map<String, Tensor<?>> outTensorMap = new HashMap<>();
-			for (int outputIndex = 0; outputIndex < this.fetchNames.size(); outputIndex++) {
-				outTensorMap.put(this.fetchNames.get(outputIndex), outputTensors.get(outputIndex));
-			}
-
-			return outTensorMap;
+		if (!this.isAutoBinding() && !feeds.keySet().containsAll(this.feedNames)) {
+			throw new IllegalArgumentException("Applied feeds:" + feeds.keySet()
+					+ "\n, don't match the expected feeds contract:" + this.feedNames);
 		}
-		finally {
-			if (this.autoCloseFeedTensors) {
-				for (Tensor<?> t : feeds.values()) {
-					t.close();
-				}
-			}
+
+		if (this.isAutoBinding() && (feeds.size() != 1)) {
+			throw new IllegalArgumentException("Feed auto-binding expects a " +
+					"single feed tensors but found: " + feeds);
 		}
+
+		Session.Runner runner = this.getSession().runner();
+
+		// Feed in the input named tensors
+		for (Map.Entry<String, Tensor<?>> feedEntry : feeds.entrySet()) {
+			String feedName = (this.isAutoBinding()) ? this.feedNames.get(0) : feedEntry.getKey();
+			runner = runner.feed(feedName, feedEntry.getValue());
+		}
+
+		// Set the tensor name to be fetched after the evaluation
+		for (String fetchName : this.fetchNames) {
+			runner.fetch(fetchName);
+		}
+
+		// Evaluate the input
+		List<Tensor<?>> outputTensors = runner.run();
+
+		// Extract the output tensors
+		Map<String, Tensor<?>> outTensorMap = new HashMap<>();
+		for (int outputIndex = 0; outputIndex < this.fetchNames.size(); outputIndex++) {
+			outTensorMap.put(this.fetchNames.get(outputIndex), outputTensors.get(outputIndex));
+		}
+
+		return outTensorMap;
 	}
 
 	public List<String> getFeedNames() {
-		return feedNames;
+		return this.feedNames;
 	}
 
-	public String getFeedName() {
+	public String getSingleøøƶFeedName() {
 		Assert.isTrue(feedNames.size() == 1, "Assumes a single feed input");
-		return feedNames.get(0);
+		return this.feedNames.get(0);
 	}
 
 	public List<String> getFetchNames() {
-		return fetchNames;
+		return this.fetchNames;
 	}
 
-	public String getFetchName() {
-		Assert.isTrue(fetchNames.size() == 1, "Assumes a single fetch output");
-		return fetchNames.get(0);
+	public String getSingleFetchName() {
+		Assert.isTrue(this.fetchNames.size() == 1, "Assumes a single fetch output");
+		return this.fetchNames.get(0);
 	}
 
-	public boolean isAutoCloseFeedTensors() {
-		return autoCloseFeedTensors;
+	public boolean isAutoBinding() {
+		return this.autoBinding;
+	}
+
+	public GraphRunner disableAutoBinding() {
+		this.autoBinding = false;
+		return this;
+	}
+
+	public GraphRunner enableAutoBinding() {
+		if (this.getFeedNames().size() != 1) {
+			throw new IllegalArgumentException("Auto-binding is permitted for Graphs with single input feed, but " +
+					" found: " + this.getFeedNames());
+		}
+		this.autoBinding = true;
+		return this;
+	}
+
+	public GraphRunner withGraphDefinition(GraphDefinition graphDefinition) {
+		this.graphDefinition = graphDefinition;
+		return this;
+	}
+
+	@Override
+	protected void doGraphDefinition(Ops tf) {
+		this.graphDefinition.defineGraph(tf);
+	}
+
+	@Override
+	public String toString() {
+		return String.format("(%s) -> (%s)", String.join(",", this.feedNames),
+				String.join(",", this.fetchNames));
 	}
 }
