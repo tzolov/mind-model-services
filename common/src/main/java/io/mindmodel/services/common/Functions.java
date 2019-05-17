@@ -21,7 +21,7 @@ public class Functions {
 	 */
 	public static Function<Map<String, Tensor<?>>, Map<String, Tensor<?>>> enrichWith(
 			String tensorName, Tensor<?> tensor) {
-		return tensorMap -> rename(tensorMap, tensorName, tensor);
+		return tensorMap -> enrich(tensorMap, tensorName, tensor);
 	}
 
 	/**
@@ -33,11 +33,11 @@ public class Functions {
 	 */
 	public static Function<Map<String, Tensor<?>>, Map<String, Tensor<?>>> enrichFromMemory(
 			GraphRunnerMemory memory, String tensorName) {
-		return tensorMap -> rename(tensorMap, tensorName, memory.getTensorMap().get(tensorName));
+		return tensorMap -> enrich(tensorMap, tensorName, memory.getTensorMap().get(tensorName));
 	}
 
-	private static Map<String, Tensor<?>> rename(Map<String, Tensor<?>> tensorMap, String key, Tensor<?> value) {
-		Map<String, Tensor<?>> newMap = new HashMap<>(tensorMap);
+	private static Map<String, Tensor<?>> enrich(Map<String, Tensor<?>> inputTensorMap, String key, Tensor<?> value) {
+		Map<String, Tensor<?>> newMap = new HashMap<>(inputTensorMap);
 		newMap.put(key, value);
 		return newMap;
 	}

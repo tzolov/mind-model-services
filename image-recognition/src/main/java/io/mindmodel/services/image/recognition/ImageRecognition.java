@@ -1,6 +1,5 @@
 package io.mindmodel.services.image.recognition;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -15,8 +14,6 @@ import java.util.stream.Collectors;
 import io.mindmodel.services.common.GraphRunner;
 import io.mindmodel.services.common.GraphRunnerMemory;
 import io.mindmodel.services.common.ProtoBufGraphDefinition;
-import io.mindmodel.services.common.attic.GraphicsUtils;
-import org.apache.commons.io.IOUtils;
 import org.tensorflow.Operand;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.core.Placeholder;
@@ -68,10 +65,10 @@ public class ImageRecognition implements AutoCloseable {
 		 * also 192x192, 160x160, 128128, 92x92. Use the (imageHeight, imageWidth) to set the desired size.
 		 * The colors, represented as R, G, B in 1-byte each were converted to float using (Value - Mean)/Scale.
 		 *
-		 * @param imageHeight normalized image height.
-		 * @param imageWidth normalized image width.
-		 * @param mean mean value to normalize the input image.
-		 * @param scale scale to normalize the input image.
+		 *  imageHeight normalized image height.
+		 *  imageWidth normalized image width.
+		 *  mean mean value to normalize the input image.
+		 *  scale scale to normalize the input image.
 		 */
 		this.imageNormalization = new GraphRunner("raw_image", "normalized_image")
 				.withGraphDefinition(tf -> {
@@ -267,40 +264,5 @@ public class ImageRecognition implements AutoCloseable {
 		this.imageRecognition.close();
 		this.maxProbability.close();
 		this.topKProbabilities.close();
-	}
-
-	public static void main(String[] args) throws IOException {
-
-		ImageRecognitionAugmenter augmenter = new ImageRecognitionAugmenter();
-
-		byte[] inputImage = GraphicsUtils.loadAsByteArray("classpath:/images/giant_panda_in_beijing_zoo_1.jpg");
-
-		ImageRecognition inceptions = ImageRecognition.inception(
-				"https://dl.bintray.com/big-data/generic/tensorflow_inception_graph.pb",
-				224, 10, true);
-		System.out.println(inceptions.recognizeMax(inputImage));
-		System.out.println(inceptions.recognizeTopK(inputImage));
-		System.out.println(ImageRecognition.toRecognitionResponse(inceptions.recognizeTopK(inputImage)));
-		IOUtils.write(augmenter.apply(inputImage, ImageRecognition.toRecognitionResponse(inceptions.recognizeTopK(inputImage))),
-				new FileOutputStream("./image-recognition/target/image-augmented-inceptions.jpg"));
-		inceptions.close();
-
-		ImageRecognition mobileNetV2 = ImageRecognition.mobileNetV2(
-				"https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.4_224.tgz#mobilenet_v2_1.4_224_frozen.pb",
-				224, 10, true);
-		System.out.println(mobileNetV2.recognizeMax(inputImage));
-		System.out.println(mobileNetV2.recognizeTopK(inputImage));
-		IOUtils.write(augmenter.apply(inputImage, ImageRecognition.toRecognitionResponse(mobileNetV2.recognizeTopK(inputImage))),
-				new FileOutputStream("./image-recognition/target/image-augmented-mobilnetV2.jpg"));
-		mobileNetV2.close();
-
-		ImageRecognition mobileNetV1 = ImageRecognition.mobileNetV1(
-				"http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224.tgz#mobilenet_v1_1.0_224_frozen.pb",
-				224, 10, true);
-		System.out.println(mobileNetV1.recognizeMax(inputImage));
-		System.out.println(mobileNetV1.recognizeTopK(inputImage));
-		IOUtils.write(augmenter.apply(inputImage, ImageRecognition.toRecognitionResponse(mobileNetV1.recognizeTopK(inputImage))),
-				new FileOutputStream("./image-recognition/target/image-augmented-mobilnetV1.jpg"));
-		mobileNetV1.close();
 	}
 }
