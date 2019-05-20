@@ -5,6 +5,7 @@ import io.mindmodel.services.common.util.ModelExtractor;
 import org.tensorflow.Graph;
 import org.tensorflow.op.Ops;
 
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
 /**
@@ -21,6 +22,10 @@ public class ProtoBufGraphDefinition implements GraphDefinition {
 	 * If set true the pre-trained model is cached on the local file system.
 	 */
 	private final boolean cacheModel;
+
+	public ProtoBufGraphDefinition(String modelUri, boolean cacheModel) {
+		this(new DefaultResourceLoader().getResource(modelUri), cacheModel);
+	}
 
 	public ProtoBufGraphDefinition(Resource modelLocation, boolean cacheModel) {
 		this.modelLocation = modelLocation;

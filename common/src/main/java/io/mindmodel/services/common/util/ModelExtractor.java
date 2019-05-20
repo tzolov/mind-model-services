@@ -44,7 +44,7 @@ import org.springframework.util.StringUtils;
  * Models can be extract either from raw files or form compressed archives. When  extracted from an archive the model
  * file name can optionally be provided as an URI fragment. For example for resource: http://myarchive.tar.gz#model.pb
  * the myarchive.tar.gz is traversed to uncompress and extract the model.pb file as byte array.
- * If the file name is not provided as URI fragment then the first file in the archive fromMemory extension .pb is extracted.
+ * If the file name is not provided as URI fragment then the first file in the archive with extension .pb is extracted.
  *
  * @author Christian Tzolov
  */
@@ -54,7 +54,7 @@ public class ModelExtractor {
 
 	/**
 	 * When an archive resource if referred, but no fragment URI is provided (to specify the target file name in
-	 * the archive) then the extractor selects the first file in the archive fromMemory the extension that match
+	 * the archive) then the extractor selects the first file in the archive with the extension that match
 	 * the frozenGraphFileExtension (defaults to .pb).
 	 */
 	public final String frozenGraphFileExtension;
