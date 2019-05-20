@@ -67,7 +67,7 @@ public class ModelExtractor {
 		this.frozenGraphFileExtension = frozenGraphFileExtension;
 	}
 
-	public byte[] getModel(String  modelUri) {
+	public byte[] getModel(String modelUri) {
 		return getModel(new DefaultResourceLoader().getResource(modelUri));
 	}
 
@@ -139,9 +139,9 @@ public class ModelExtractor {
 	/**
 	 * Detect the Archive and the Compressor from the file extension
 	 *
-	 * @param fileName File name fromMemory extension
-	 * @return Returns a tuple of the detected (Archive, Compressor). Null stands for not available archive or detector.
-	 * The (null, null) response stands for no Archive or Compressor discovered.
+	 * @param fileName File name with extension
+	 * @return Returns a tuple of the detected (Archive, Compressor). Null stands for not available
+	 * archive or detector. The (null, null) response stands for no Archive or Compressor discovered.
 	 */
 	private String[] detectArchiveAndCompressor(String fileName) {
 

@@ -1,5 +1,6 @@
 package io.mindmodel.services.common;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.tensorflow.SavedModelBundle;
@@ -15,6 +16,22 @@ public class GraphRunner extends AbstractGraphRunner implements AutoCloseable {
 
 	private SavedModelBundle savedModelBundle;
 	private AutoCloseableSession autoCloseableSession;
+
+	public GraphRunner(List<String> feedNames, String fetchedName) {
+		super(feedNames, Arrays.asList(fetchedName));
+	}
+	public GraphRunner(String feedName, List<String> fetchedNames) {
+		super(Arrays.asList(feedName), fetchedNames);
+	}
+
+	public GraphRunner(String feedName, String fetchedName) {
+		super(feedName, fetchedName);
+	}
+
+	public GraphRunner(List<String> feedNames, List<String> fetchedNames) {
+		super(feedNames, fetchedNames);
+	}
+
 
 	@Override
 	public Session doGetSession() {
@@ -34,18 +51,9 @@ public class GraphRunner extends AbstractGraphRunner implements AutoCloseable {
 		throw new IllegalStateException("Either SavedModel or GraphDefinition can be set! None found");
 	}
 
-	public GraphRunner(String feedName, String fetchedName) {
-		super(feedName, fetchedName);
-	}
-
-	public GraphRunner(List<String> feedNames, List<String> fetchedNames) {
-		super(feedNames, fetchedNames);
-	}
-
 	public GraphRunner withGraphDefinition(GraphDefinition graphDefinition) {
 		Assert.isNull(this.savedModelBundle, "Either SavedModel or GraphDefinition can be set! " +
 				"SavedModelBundle is found: " + this.savedModelBundle);
-		//this.graphDefinition = graphDefinition;
 
 		this.autoCloseableSession = new AutoCloseableSession() {
 			@Override
