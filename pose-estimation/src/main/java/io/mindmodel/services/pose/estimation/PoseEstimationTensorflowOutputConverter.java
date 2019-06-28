@@ -185,7 +185,8 @@ public class PoseEstimationTensorflowOutputConverter implements Function<Map<Str
 			for (int batchIndex = 0; batchIndex < batchSize; batchIndex++) {
 
 				// [H] [W] [Heat + PAF]
-				float[][][] tensorData = openPoseOutputTensor.copyTo(new float[1][height][width][heatmapPafmapCount])[batchIndex];
+				//float[][][] tensorData = openPoseOutputTensor.copyTo(new float[1][height][width][heatmapPafmapCount])[batchIndex];
+				float[][][] tensorData = openPoseOutputTensor.copyTo(new float[batchSize][height][width][heatmapPafmapCount])[batchIndex];
 
 				//if (this.isDebugVisualizationEnabled) {
 				//	byte[] inputImage = (byte[]) processorContext.get("inputImage");

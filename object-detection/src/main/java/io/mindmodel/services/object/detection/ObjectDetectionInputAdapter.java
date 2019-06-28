@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tensorflow.Operand;
 import org.tensorflow.Tensor;
-import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.image.DecodeJpeg;
 import org.tensorflow.types.UInt8;
