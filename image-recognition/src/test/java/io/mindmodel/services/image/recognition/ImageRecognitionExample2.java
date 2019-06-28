@@ -28,7 +28,7 @@ public class ImageRecognitionExample2 {
 		inceptions.close();
 
 		ImageRecognition mobileNetV2 = ImageRecognition.mobileNetV2(
-				"x#mobilenet_v2_1.4_224_frozen.pb",
+				"https://storage.googleapis.com/mobilenet_v2/checkpoints/mobilenet_v2_1.4_224.tgz#mobilenet_v2_1.4_224_frozen.pb",
 				224, 10, true);
 		System.out.println(mobileNetV2.recognizeMax(inputImage));
 		System.out.println(mobileNetV2.recognizeTopK(inputImage));
